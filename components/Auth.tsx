@@ -57,7 +57,7 @@ const Auth: React.FC = () => {
     };
 
     return (
-        <div className="min-h-[100dvh] bg-brand-bg flex justify-center p-4 relative overflow-y-auto">
+        <div className="h-[100dvh] bg-brand-bg flex justify-center p-4 relative overflow-y-auto">
             {/* Background Elements */}
             <div className="fixed top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
                 <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-brand-primary/20 rounded-full blur-[120px]" />
