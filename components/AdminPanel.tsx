@@ -1,0 +1,736 @@
+
+import React, { useState, useEffect, useRef } from 'react';
+import { BibleData, AcademyContent, AcademyCategory, AcademyVisibility, AcademyCourse, AcademyResource } from '../types';
+import { Upload, Database, GraduationCap, Plus, Trash2, CheckCircle2, AlertTriangle, Settings, Zap, Loader2, Youtube, Edit2, FileText, X, Eye, EyeOff, Lock, Link, Image as ImageIcon, LayoutGrid, List, ImagePlus } from 'lucide-react';
+import { getLogoUrl, uploadLogo, ensureBucketExists } from '../services/logoService';
+import { supabase } from '../services/supabaseClient';
+
+import { useAcademy } from '../contexts/AcademyContext';
+import { useDataContext } from '../contexts/DataContext';
+
+const AdminPanel: React.FC = () => {
+  const { bibleData, updateBibleData: setBibleData, cloudSyncStatus } = useDataContext();
+  const { 
+    courses: academyCourses, 
+    setAcademyCourses, 
+    content: academyContent, 
+    setAcademyContent, 
+    categories: academyCategories, 
+    setAcademyCategories 
+  } = useAcademy();
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'bible' | 'courses' | 'lessons' | 'users' | 'config'>('bible');
+  const [profiles, setProfiles] = useState<{ id: string, email: string, created_at: string }[]>([]);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  // Estados para upload de logo
+  const [currentLogoUrl, setCurrentLogoUrl] = useState<string>('/logo-v2.png');
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
+  const logoInputRef = useRef<HTMLInputElement>(null);
+
+  // Carrega o logo atual e usuários ao montar
+  useEffect(() => {
+    getLogoUrl().then(url => setCurrentLogoUrl(url));
+    ensureBucketExists(); // Garante que o bucket existe
+
+    // Carregar usuários
+    const fetchProfiles = async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (!error && data) {
+        setProfiles(data);
+      }
+    };
+    fetchProfiles();
+  }, []);
+
+  // Estados de Cursos
+  const [editingCourseId, setEditingCourseId] = useState<string | null>(null);
+  const [newCourse, setNewCourse] = useState<Partial<AcademyCourse>>({
+    title: '',
+    description: '',
+    categoryId: academyCategories?.[0]?.id || '1',
+    thumbnailUrl: '',
+    visibility: 'público'
+  });
+
+  // Estados de Aulas (Lições)
+  const [editingModuleId, setEditingModuleId] = useState<string | null>(null);
+  const [newModule, setNewModule] = useState<Partial<AcademyContent>>({
+    title: '',
+    description: '',
+    courseId: '',
+    categoryId: academyCategories?.[0]?.id || '1',
+    type: 'video',
+    url: '',
+    resources: [],
+    visibility: 'público'
+  });
+
+  const [resourceForm, setResourceForm] = useState<Partial<AcademyResource>>({
+    type: 'video',
+    title: '',
+    url: '',
+    content: ''
+  });
+  const [editingResourceId, setEditingResourceId] = useState<string | null>(null);
+
+  // Normalizador Ultra-Tolerante (Lida com múltiplos formatos de JSON bíblico)
+  const normalizeBibleData = (raw: any): BibleData => {
+    let rawBooks = Array.isArray(raw) ? raw : (raw.books || raw.Books || raw.biblia || raw.Bible || []);
+
+    if (!Array.isArray(rawBooks) || rawBooks.length === 0) {
+      throw new Error("Estrutura JSON não reconhecida. Certifique-se de que o arquivo contém uma lista de livros.");
+    }
+
+    return {
+      books: rawBooks.map((b: any) => {
+        const bookName = b.name || b.nome || b.book || b.label || 'Livro';
+        const rawChapters = b.chapters || b.capitulos || b.content || [];
+
+        return {
+          name: bookName,
+          chapters: (Array.isArray(rawChapters) ? rawChapters : []).map((c: any, i: number) => {
+            // Se o capítulo for uma lista direta de strings (versículos)
+            if (Array.isArray(c) && typeof c[0] === 'string') {
+              return {
+                number: i + 1,
+                verses: c.map((text: string, j: number) => ({ number: j + 1, text }))
+              };
+            }
+
+            // Se o capítulo for um objeto com lista de versículos
+            const rawVerses = c.verses || c.versiculos || c.content || (Array.isArray(c) ? c : []);
+            return {
+              number: c.number || i + 1,
+              verses: (Array.isArray(rawVerses) ? rawVerses : []).map((v: any, j: number) => {
+                if (typeof v === 'string') return { number: j + 1, text: v };
+                return {
+                  number: v.number || v.versiculo || j + 1,
+                  text: v.text || v.texto || v.v || ''
+                };
+              })
+            };
+          })
+        };
+      })
+    };
+  };
+
+  const handleBibleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsProcessing(true);
+    setError(null);
+    setSuccess(false);
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      try {
+        const jsonText = event.target?.result as string;
+        const parsed = JSON.parse(jsonText);
+        const normalized = normalizeBibleData(parsed);
+
+        // Grava no IndexedDB através da função do App.tsx
+        console.log("Processando Bíblia...");
+        await setBibleData(normalized);
+        console.log("Bíblia processada e salva localmente.");
+
+        setSuccess(true);
+        setTimeout(() => setSuccess(false), 5000);
+      } catch (err: any) {
+        console.error("Erro na importação:", err);
+        setError(err.message || "Erro desconhecido ao processar JSON.");
+      } finally {
+        setIsProcessing(false);
+        e.target.value = ''; // Reseta o input
+      }
+    };
+
+    reader.onerror = () => {
+      setError("Erro físico na leitura do arquivo.");
+      setIsProcessing(false);
+    };
+
+    reader.readAsText(file);
+  };
+
+  const handleAddOrUpdateCourse = () => {
+    if (!newCourse.title) return;
+
+    if (editingCourseId) {
+      setAcademyCourses(academyCourses.map(c =>
+        c.id === editingCourseId ? { ...c, ...newCourse as AcademyCourse } : c
+      ));
+      setEditingCourseId(null);
+    } else {
+      const course: AcademyCourse = {
+        id: Date.now().toString(),
+        title: newCourse.title!,
+        description: newCourse.description || '',
+        categoryId: newCourse.categoryId || '1',
+        thumbnailUrl: newCourse.thumbnailUrl,
+        visibility: newCourse.visibility || 'público',
+        createdAt: new Date().toISOString()
+      };
+      setAcademyCourses([course, ...academyCourses]);
+    }
+
+    setNewCourse({ title: '', description: '', categoryId: academyCategories?.[0]?.id || '1', thumbnailUrl: '', visibility: 'público' });
+    setSuccess(true);
+    setTimeout(() => setSuccess(false), 3000);
+  };
+
+  const handleAddOrUpdateModule = () => {
+    if (!newModule.title || !newModule.courseId) return;
+
+    if (editingModuleId) {
+      const updatedModule = { ...newModule } as AcademyContent;
+      console.log('✏️ ADMIN DEBUG - Editando aula:', updatedModule);
+      const updatedContent = academyContent.map(item =>
+        item.id === editingModuleId ? { ...item, ...updatedModule } : item
+      );
+      setAcademyContent(updatedContent);
+      setEditingModuleId(null);
+    } else {
+      const content: AcademyContent = {
+        id: Date.now().toString(),
+        title: newModule.title!,
+        description: newModule.description || '',
+        courseId: newModule.courseId,
+        categoryId: newModule.categoryId || '1',
+        type: newModule.resources && newModule.resources.length > 1 ? 'mixed' : (newModule.type || 'video'),
+        resources: newModule.resources || [],
+        visibility: newModule.visibility || 'público'
+      };
+      console.log('📚 ADMIN DEBUG - Criando nova aula:', content);
+      console.log('📚 ADMIN DEBUG - Recursos da aula:', content.resources);
+      setAcademyContent([content, ...academyContent]);
+    }
+
+    setNewModule({ title: '', description: '', courseId: '', categoryId: academyCategories?.[0]?.id || '1', type: 'video', url: '', resources: [], visibility: 'público' });
+    setSuccess(true);
+    setTimeout(() => setSuccess(false), 3000);
+  };
+
+  const addResource = () => {
+    if (!resourceForm.title) return;
+
+    if (editingResourceId) {
+      const updatedResource = { ...resourceForm } as AcademyResource;
+      console.log('✏️ ADMIN DEBUG - Editando recurso:', updatedResource);
+      setNewModule({
+        ...newModule,
+        resources: (newModule.resources || []).map(r =>
+          r.id === editingResourceId ? { ...r, ...updatedResource } : r
+        )
+      });
+      setEditingResourceId(null);
+    } else {
+      const resource: AcademyResource = {
+        id: Date.now().toString(),
+        type: resourceForm.type || 'video',
+        title: resourceForm.title,
+        url: resourceForm.url,
+        content: resourceForm.content
+      };
+      console.log('➕ ADMIN DEBUG - Adicionando novo recurso:', resource);
+      setNewModule({
+        ...newModule,
+        resources: [...(newModule.resources || []), resource]
+      });
+    }
+    setResourceForm({ type: 'video', title: '', url: '', content: '' });
+  };
+
+  const removeResource = (id: string) => {
+    setNewModule({
+      ...newModule,
+      resources: (newModule.resources || []).filter(r => r.id !== id)
+    });
+  };
+
+  return (
+    <div className="h-full flex flex-col space-y-10 animate-in fade-in duration-700 pb-24">
+      <header className="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-white/5 pb-8">
+        <div>
+          <h1 className="text-5xl font-black text-white tracking-tighter uppercase neon-text flex items-center gap-4">
+            <Settings size={42} className="text-brand" />
+            Admin
+          </h1>
+          <p className="text-gray-500 mt-2 font-medium">Controle de Dados e Infraestrutura.</p>
+        </div>
+        <div className="flex bg-[#161b22] p-1.5 rounded-2xl border border-white/5 shadow-2xl">
+          {(['bible', 'courses', 'lessons', 'users', 'config'] as const).map(tab => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-6 md:px-10 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === tab ? 'bg-brand text-white shadow-lg shadow-brand/20' : 'text-gray-600 hover:text-gray-300'}`}
+            >
+              {tab === 'bible' ? 'Escrituras' : tab === 'courses' ? 'Cursos' : tab === 'lessons' ? 'Aulas' : tab === 'users' ? 'Usuários' : 'Config'}
+            </button>
+          ))}
+        </div>
+      </header>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        {/* Lado Esquerdo: Formulários */}
+        <div className={`lg:col-span-12 xl:col-span-7 bg-[#161b22] p-10 rounded-[56px] border shadow-2xl space-y-10 relative overflow-hidden group transition-all duration-500 ${(editingModuleId || editingCourseId) ? 'border-brand/40 ring-1 ring-brand/20' : 'border-white/5'}`}>
+          <div className="absolute top-0 right-0 p-16 opacity-[0.03] group-hover:scale-110 transition-transform pointer-events-none select-none">
+            {activeTab === 'bible' ? <Database size={180} className="text-brand" /> : activeTab === 'courses' ? <LayoutGrid size={180} className="text-brand" /> : <GraduationCap size={180} className="text-brand" />}
+          </div>
+
+          {activeTab === 'bible' && (
+            <div className="space-y-10 animate-in slide-in-from-left duration-500">
+              <div className="flex items-center gap-6">
+                <div className="w-20 h-20 bg-brand/10 text-brand rounded-[28px] flex items-center justify-center border border-brand/20 shadow-xl">
+                  <Database size={36} />
+                </div>
+                <div>
+                  <h2 className="text-3xl font-black text-white uppercase tracking-tighter">Bíblia Digital</h2>
+                  <div className="flex flex-col gap-1">
+                    <p className="text-xs text-gray-500 font-bold uppercase tracking-[0.2em]">
+                      {bibleData ? `${bibleData.books.length} Livros em Memória Local` : 'Aguardando Importação JSON'}
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <div className={`w-1.5 h-1.5 rounded-full ${cloudSyncStatus['crentify_bible_data'] ? 'bg-emerald-500' : 'bg-rose-500'}`}></div>
+                      <span className={`text-[8px] font-black uppercase tracking-widest ${cloudSyncStatus['crentify_bible_data'] ? 'text-emerald-500/80' : 'text-rose-500/80'}`}>
+                        {cloudSyncStatus['crentify_bible_data'] ? 'Sincronizado na Nuvem' : 'Não Detectado na Nuvem'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {!cloudSyncStatus['crentify_bible_data'] && bibleData && (
+                <div className="bg-rose-500/10 border border-rose-500/20 p-6 rounded-3xl flex items-start gap-4 mx-2">
+                  <AlertTriangle className="text-rose-500 flex-shrink-0" size={20} />
+                  <p className="text-[10px] font-bold text-rose-200/60 leading-relaxed uppercase tracking-wide">
+                    A Bíblia está salva localmente, mas <span className="text-rose-400">não foi detectada na nuvem</span>.
+                    Tente subir o arquivo novamente e verifique o console (F12) para erros.
+                  </p>
+                </div>
+              )}
+
+              <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-white/10 rounded-[40px] cursor-pointer bg-black/20 hover:border-brand/40 hover:bg-brand/5 transition-all group/upload relative">
+                {isProcessing ? (
+                  <div className="flex flex-col items-center gap-4">
+                    <Loader2 className="animate-spin text-brand" size={48} />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-brand animate-pulse text-center">
+                      Gravando Dados Localmente...<br />
+                      <span className="text-[8px] opacity-50 mt-1 block">A sincronização com a nuvem continuará em segundo plano</span>
+                    </span>
+                  </div>
+                ) : (
+                  <>
+                    <Upload className="text-gray-700 mb-4 group-hover/upload:text-brand transition-all" size={48} />
+                    <p className="text-[11px] font-black uppercase text-gray-500 tracking-[0.3em] text-center max-w-xs px-10">Importar Arquivo JSON (NVI, Almeida, etc)</p>
+                    <input type="file" className="hidden" accept=".json" onChange={handleBibleUpload} />
+                  </>
+                )}
+              </label>
+            </div>
+          )}
+
+
+          {activeTab === 'courses' && (
+            <div className="space-y-10 animate-in slide-in-from-right duration-500">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-6">
+                  <div className="w-20 h-20 bg-brand/10 text-brand rounded-[28px] flex items-center justify-center border border-brand/20 shadow-xl">
+                    <LayoutGrid size={36} />
+                  </div>
+                  <div>
+                    <h2 className="text-3xl font-black text-white uppercase tracking-tighter">
+                      {editingCourseId ? 'Editar Curso' : 'Novo Curso Academy'}
+                    </h2>
+                    <p className="text-xs text-gray-500 font-bold uppercase tracking-[0.2em]">Gerencie trilhas de conhecimento</p>
+                  </div>
+                </div>
+                {editingCourseId && (
+                  <button onClick={() => { setEditingCourseId(null); setNewCourse({ title: '', description: '', thumbnailUrl: '', visibility: 'público' }); }} className="text-rose-500 hover:scale-110 transition-all"><X size={24} /></button>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Título do Curso</label>
+                  <input type="text" placeholder="Ex: Teologia Sistemática" value={newCourse.title} onChange={e => setNewCourse({ ...newCourse, title: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Capa (URL)</label>
+                  <div className="relative">
+                    <ImageIcon size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-700" />
+                    <input type="text" placeholder="https://..." value={newCourse.thumbnailUrl} onChange={e => setNewCourse({ ...newCourse, thumbnailUrl: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] pl-14 pr-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Categoria</label>
+                  <div className="relative">
+                    <select value={newCourse.categoryId} onChange={e => setNewCourse({ ...newCourse, categoryId: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none cursor-pointer hover:border-brand/30 transition-all">
+                      {academyCategories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                    </select>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Visibilidade</label>
+                  <div className="relative">
+                    <select value={newCourse.visibility} onChange={e => setNewCourse({ ...newCourse, visibility: e.target.value as AcademyVisibility })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none cursor-pointer hover:border-brand/30 transition-all">
+                      <option value="público">Público</option>
+                      <option value="não listado">Não Listado</option>
+                      <option value="privado">Privado</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="md:col-span-2 space-y-2">
+                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Descrição</label>
+                  <textarea placeholder="Objetivo do curso..." value={newCourse.description} onChange={e => setNewCourse({ ...newCourse, description: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[32px] px-8 py-5 font-medium outline-none focus:ring-2 focus:ring-brand/30 h-32 resize-none" />
+                </div>
+              </div>
+
+              <button onClick={handleAddOrUpdateCourse} className="w-full bg-brand text-white py-6 rounded-[28px] font-black uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
+                {editingCourseId ? <CheckCircle2 size={24} /> : <Plus size={24} strokeWidth={3} />}
+                {editingCourseId ? 'SALVAR CURSO' : 'CRIAR CURSO'}
+              </button>
+            </div>
+          )}
+
+          {activeTab === 'lessons' && (
+            <div className="space-y-10 animate-in slide-in-from-right duration-500">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-6">
+                  <div className="w-20 h-20 bg-brand/10 text-brand rounded-[28px] flex items-center justify-center border border-brand/20 shadow-xl">
+                    <GraduationCap size={36} />
+                  </div>
+                  <div>
+                    <h2 className="text-3xl font-black text-white uppercase tracking-tighter">
+                      {editingModuleId ? 'Editar Aula' : 'Nova Aula'}
+                    </h2>
+                    <p className="text-xs text-gray-500 font-bold uppercase tracking-[0.2em]">Adicione conteúdos e recursos</p>
+                  </div>
+                </div>
+                {editingModuleId && (
+                  <button onClick={() => { setEditingModuleId(null); setNewModule({ title: '', description: '', courseId: '', resources: [], visibility: 'público' }); }} className="text-rose-500 hover:scale-110 transition-all"><X size={24} /></button>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Título da Aula</label>
+                  <input type="text" placeholder="Nome da Aula" value={newModule.title} onChange={e => setNewModule({ ...newModule, title: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Pertence ao Curso</label>
+                  <div className="relative">
+                    <select value={newModule.courseId} onChange={e => {
+                      const course = academyCourses.find(c => c.id === e.target.value);
+                      setNewModule({ ...newModule, courseId: e.target.value, categoryId: course?.categoryId });
+                    }} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none cursor-pointer hover:border-brand/30 transition-all">
+                      <option value="">Selecione um curso...</option>
+                      {academyCourses.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Gerenciamento de Recursos */}
+              <div className="space-y-6 pt-6 border-t border-white/5">
+                <h3 className="text-xs font-black text-white uppercase tracking-[0.2em]">Recursos da Aula</h3>
+
+                <div className="bg-black/20 p-8 rounded-[40px] border border-white/5 space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <div className="md:col-span-3">
+                      <select value={resourceForm.type} onChange={e => setResourceForm({ ...resourceForm, type: e.target.value as any })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-xl px-4 py-3 text-[10px] font-black outline-none">
+                        <option value="video">Vídeo (YT)</option>
+                        <option value="link">Link Externo</option>
+                        <option value="text">Texto Livre</option>
+                      </select>
+                    </div>
+                    <div className="md:col-span-9">
+                      <input type="text" placeholder="Nome do Recurso (ex: Aula Prática, PDF Complementar)" value={resourceForm.title} onChange={e => setResourceForm({ ...resourceForm, title: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-xl px-6 py-3 text-white text-[10px] font-black outline-none" />
+                    </div>
+                  </div>
+
+                  {resourceForm.type !== 'text' ? (
+                    <div className="relative">
+                      <Link size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
+                      <input type="text" placeholder="URL do Recurso" value={resourceForm.url} onChange={e => setResourceForm({ ...resourceForm, url: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-xl pl-12 pr-6 py-3 text-white text-[10px] font-medium outline-none" />
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <textarea placeholder="Insira o texto aqui... (Suporta rolagem se for longo)" value={resourceForm.content} onChange={e => setResourceForm({ ...resourceForm, content: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-2xl px-6 py-4 text-xs font-medium outline-none h-32 resize-none custom-scrollbar" />
+                      <p className="text-[8px] text-gray-500 uppercase font-bold text-right">Limite sugerido: ~3000 caracteres por recurso</p>
+                    </div>
+                  )}
+
+                  <div className="flex gap-2">
+                    <button onClick={addResource} className="flex-1 bg-white/5 border border-white/10 text-white py-3 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-brand hover:border-brand transition-all flex items-center justify-center gap-2">
+                      {editingResourceId ? <CheckCircle2 size={14} /> : <Plus size={14} />}
+                      {editingResourceId ? 'ATUALIZAR RECURSO' : 'ADICIONAR RECURSO'}
+                    </button>
+                    {editingResourceId && (
+                      <button onClick={() => { setEditingResourceId(null); setResourceForm({ type: 'video', title: '', url: '', content: '' }); }} className="px-4 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-xl hover:bg-rose-500 hover:text-white transition-all">
+                        <X size={14} />
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Lista de Recursos Adicionados */}
+                <div className="space-y-3">
+                  {newModule.resources?.map(r => (
+                    <div key={r.id} className="flex items-center justify-between p-4 bg-[#0b0e14]/50 rounded-2xl border border-white/5 group">
+                      <div className="flex items-center gap-4">
+                        <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-500 group-hover:text-brand transition-colors">
+                          {r.type === 'video' ? <Youtube size={14} /> : r.type === 'text' ? <FileText size={14} /> : <Link size={14} />}
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black text-white uppercase tracking-tight">{r.title}</p>
+                          <span className="text-[8px] text-gray-500 font-bold uppercase">{r.type}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button onClick={() => { setEditingResourceId(r.id); setResourceForm(r); }} className="text-gray-700 hover:text-brand transition-colors p-1">
+                          <Edit2 size={16} />
+                        </button>
+                        <button onClick={() => removeResource(r.id)} className="text-gray-700 hover:text-rose-500 transition-colors p-1">
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <button onClick={handleAddOrUpdateModule} className="w-full bg-brand text-white py-6 rounded-[28px] font-black uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
+                {editingModuleId ? <CheckCircle2 size={24} /> : <Zap size={24} strokeWidth={3} />}
+                {editingModuleId ? 'SALVAR AULA' : 'PUBLICAR AULA'}
+              </button>
+            </div>
+          )}
+
+          {activeTab === 'config' && (
+            <div className="space-y-10 animate-in slide-in-from-right duration-500">
+              <div className="flex items-center gap-6">
+                <div className="w-20 h-20 bg-brand/10 text-brand rounded-[28px] flex items-center justify-center border border-brand/20 shadow-xl">
+                  <ImagePlus size={36} />
+                </div>
+                <div>
+                  <h2 className="text-3xl font-black text-white uppercase tracking-tighter">Logo do App</h2>
+                  <p className="text-xs text-gray-500 font-bold uppercase tracking-[0.2em]">Atualização dinâmica sem precisar de deploy</p>
+                </div>
+              </div>
+
+              {/* Preview do Logo Atual */}
+              <div className="flex flex-col items-center gap-6 p-10 bg-[#1a1e26] rounded-[40px] border border-white/5">
+                <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Logo Atual</p>
+                <img
+                  src={currentLogoUrl}
+                  alt="Logo Atual"
+                  className="w-32 h-32 object-contain rounded-2xl"
+                  style={{ filter: 'saturate(1.5) brightness(1.15) hue-rotate(-10deg)' }}
+                  onError={(e) => { e.currentTarget.src = '/logo-v2.png'; }}
+                />
+              </div>
+
+              {/* Upload de Novo Logo */}
+              <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-white/10 rounded-[40px] cursor-pointer bg-black/20 hover:border-brand/40 hover:bg-brand/5 transition-all group/upload relative">
+                {isUploadingLogo ? (
+                  <div className="flex flex-col items-center gap-4">
+                    <Loader2 className="animate-spin text-brand" size={48} />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-brand animate-pulse">
+                      Fazendo Upload...
+                    </span>
+                  </div>
+                ) : (
+                  <>
+                    <ImagePlus className="text-gray-700 mb-4 group-hover/upload:text-brand transition-all" size={48} />
+                    <p className="text-[11px] font-black uppercase text-gray-500 tracking-[0.3em] text-center max-w-xs px-10">Selecionar Novo Logo (PNG, JPG, WebP)</p>
+                    <input
+                      type="file"
+                      ref={logoInputRef}
+                      className="hidden"
+                      accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+
+                        setIsUploadingLogo(true);
+                        setError(null);
+
+                        try {
+                          const newUrl = await uploadLogo(file);
+                          if (newUrl) {
+                            setCurrentLogoUrl(newUrl);
+                            // Dispara evento para atualizar logo em outros componentes
+                            window.dispatchEvent(new CustomEvent('logoUpdated', { detail: newUrl }));
+                            setSuccess(true);
+                            setTimeout(() => setSuccess(false), 3000);
+                          } else {
+                            setError('Falha ao fazer upload do logo. Verifique as permissões do bucket.');
+                          }
+                        } catch (err: any) {
+                          setError(err.message || 'Erro ao fazer upload');
+                        } finally {
+                          setIsUploadingLogo(false);
+                          e.target.value = '';
+                        }
+                      }}
+                    />
+                  </>
+                )}
+              </label>
+
+              <div className="bg-brand/5 border border-brand/20 p-6 rounded-3xl">
+                <p className="text-[10px] font-bold text-brand/80 leading-relaxed uppercase tracking-wide text-center">
+                  💡 <span className="text-brand">DICA:</span> O novo logo aparecerá automaticamente na Sidebar e na página de Login após o upload. Não é necessário fazer deploy!
+                </p>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'users' && (
+            <div className="space-y-10 animate-in slide-in-from-right duration-500">
+              <div className="flex items-center gap-6">
+                <div className="w-20 h-20 bg-brand/10 text-brand rounded-[28px] flex items-center justify-center border border-brand/20 shadow-xl">
+                  <LayoutGrid size={36} />
+                </div>
+                <div>
+                  <h2 className="text-3xl font-black text-white uppercase tracking-tighter">Gestão de Usuários</h2>
+                  <p className="text-xs text-gray-500 font-bold uppercase tracking-[0.2em]">Visualize todos os membros da plataforma</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4">
+                {profiles.length === 0 ? (
+                  <div className="p-10 text-center bg-black/20 rounded-[40px] border border-white/5">
+                    <p className="text-gray-500 font-black uppercase text-[10px] tracking-widest">Nenhum usuário encontrado ou tabela ainda não configurada.</p>
+                  </div>
+                ) : (
+                  profiles.map(profile => (
+                    <div key={profile.id} className="flex items-center justify-between p-6 bg-[#0b0e14]/50 rounded-[32px] border border-white/5 hover:border-brand/30 transition-all group">
+                      <div className="flex items-center gap-5">
+                        <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-gray-500 group-hover:text-brand transition-colors font-black text-xs">
+                          {profile.email.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                          <p className="text-sm font-black text-white uppercase tracking-tight">{profile.email}</p>
+                          <p className="text-[8px] text-gray-600 font-bold uppercase tracking-widest">ID: {profile.id}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-[9px] font-black text-brand uppercase tracking-widest">
+                          Membro desde
+                        </p>
+                        <p className="text-[10px] text-gray-500 font-black">
+                          {new Date(profile.created_at).toLocaleDateString('pt-BR')}
+                        </p>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
+
+          {success && (
+            <div className="p-6 bg-emerald-500/10 border border-emerald-500/30 rounded-[32px] text-emerald-500 text-center font-black uppercase text-[10px] tracking-widest animate-in zoom-in shadow-2xl flex items-center justify-center gap-3">
+              <CheckCircle2 size={18} /> Operação concluída com êxito!
+            </div>
+          )}
+          {error && (
+            <div className="p-6 bg-rose-500/10 border border-rose-500/30 rounded-[32px] text-rose-500 text-center font-black uppercase text-[10px] tracking-widest flex items-center justify-center gap-3">
+              <AlertTriangle size={18} /> Erro: {error}
+            </div>
+          )}
+        </div>
+
+        {/* Lado Direito: Listagem */}
+        <div className="lg:col-span-12 xl:col-span-5 space-y-8">
+          {activeTab === 'courses' ? (
+            <div className="bg-[#161b22] p-10 rounded-[48px] border border-white/5 shadow-2xl">
+              <h3 className="text-[10px] font-black text-brand uppercase tracking-[0.3em] mb-8">Cursos Ativos ({academyCourses.length})</h3>
+              <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+                {academyCourses.map(item => (
+                  <div key={item.id} className={`flex items-center justify-between p-6 rounded-[32px] border transition-all group ${editingCourseId === item.id ? 'bg-brand/10 border-brand' : 'bg-[#0b0e14]/50 border-white/5 hover:border-brand/30'}`}>
+                    <div className="flex items-center gap-4 overflow-hidden">
+                      {item.thumbnailUrl && (
+                        <img src={item.thumbnailUrl} alt={item.title} className="w-12 h-12 rounded-xl object-cover border border-white/10" />
+                      )}
+                      <div className="truncate">
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-black text-white uppercase truncate tracking-tight">{item.title}</p>
+                          {item.visibility === 'privado' && <Lock size={12} className="text-rose-500" />}
+                        </div>
+                        <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">
+                          {academyCategories.find(c => c.id === item.categoryId)?.name}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                      <button onClick={() => { setEditingCourseId(item.id); setNewCourse(item); setActiveTab('courses'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-gray-500 hover:text-brand transition-colors p-2">
+                        <Edit2 size={18} />
+                      </button>
+                      <button onClick={() => {
+                        if (confirm('Excluir curso e todas as suas aulas?')) {
+                          setAcademyCourses(academyCourses.filter(c => c.id !== item.id));
+                          setAcademyContent(academyContent.filter(a => a.courseId !== item.id));
+                        }
+                      }} className="text-gray-500 hover:text-rose-500 transition-colors p-2">
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : activeTab === 'lessons' ? (
+            <div className="bg-[#161b22] p-10 rounded-[48px] border border-white/5 shadow-2xl">
+              <h3 className="text-[10px] font-black text-brand uppercase tracking-[0.3em] mb-8">Aulas Ativas ({academyContent.length})</h3>
+              <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+                {academyContent.map(item => (
+                  <div key={item.id} className={`flex items-center justify-between p-6 rounded-[32px] border transition-all group ${editingModuleId === item.id ? 'bg-brand/10 border-brand' : 'bg-[#0b0e14]/50 border-white/5 hover:border-brand/30'}`}>
+                    <div className="flex items-center gap-4 overflow-hidden">
+                      <div className="w-10 h-10 bg-brand/10 text-brand rounded-xl flex items-center justify-center border border-brand/20 flex-shrink-0">
+                        <List size={20} />
+                      </div>
+                      <div className="truncate">
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-black text-white uppercase truncate tracking-tight">{item.title}</p>
+                        </div>
+                        <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">
+                          {academyCourses.find(c => c.id === item.courseId)?.title || 'Curso não encontrado'}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                      <button onClick={() => { setEditingModuleId(item.id); setNewModule(item); setActiveTab('lessons'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-gray-500 hover:text-brand transition-colors p-2">
+                        <Edit2 size={18} />
+                      </button>
+                      <button onClick={() => { if (confirm('Excluir aula?')) setAcademyContent(academyContent.filter(c => c.id !== item.id)); }} className="text-gray-500 hover:text-rose-500 transition-colors p-2">
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="bg-brand/5 p-12 rounded-[56px] border border-brand/20 text-center">
+              <Database className="text-brand mx-auto mb-6" size={48} />
+              <h4 className="text-xl font-black text-white uppercase tracking-tighter mb-4">Banco de Dados Bíblico</h4>
+              <p className="text-xs text-gray-500 font-bold leading-relaxed uppercase tracking-widest">Importe arquivos JSON para atualizar as escrituras em tempo real para todos os usuários.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div >
+  );
+};
+
+export default AdminPanel;

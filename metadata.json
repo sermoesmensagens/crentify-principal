@@ -1,0 +1,8 @@
+{
+  "name": "CRENTIFY",
+  "description": "Uma plataforma multiuso para cristãos focada em crescimento espiritual, desenvolvimento profissional e organização pessoal.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

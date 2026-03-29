@@ -1,0 +1,50 @@
+﻿eb5280e | 2026-03-07 | dado finan├ºa
+2064ba1 | 2026-03-07 | geral
+ff522ed | 2026-03-07 | finan├ºas
+ceacf97 | 2026-03-07 | autenticacao sidebar
+97099f3 | 2026-03-07 | LOGO
+aa46e03 | 2026-03-07 | LOGO
+0254df1 | 2026-03-06 | saude
+b719132 | 2026-03-06 | feat: otimiza├º├úo de imagens, sincroniza├º├úo de receitas e suporte a v├¡deos
+a9a3bfc | 2026-03-06 | saude
+aa2f3fd | 2026-03-06 | saude2
+d76ff4b | 2026-03-06 | app sync
+ac2b318 | 2026-03-06 | saude
+09ad827 | 2026-03-05 | SALVAMENTO
+393cb46 | 2026-03-04 | habitos
+9e04289 | 2026-03-02 | SAVE3
+6119029 | 2026-03-02 | SIDE2
+86a7df2 | 2026-03-02 | SAVE2
+88f14bb | 2026-03-02 | sidebar
+9a54428 | 2026-02-04 | ADMIN AUTH SIDE BAR
+f92dfaa | 2026-02-03 | logo
+023084e | 2026-02-03 | logo dinamico
+0f5f8aa | 2026-02-03 | deletar vercel.json
+7e96ce2 | 2026-02-03 | correcao pra voltar tudo e usar supabase
+b3ac408 | 2026-02-03 | correca rewrite
+1b28072 | 2026-02-03 | correcao
+de8be21 | 2026-02-03 | tentar correcao update logo
+fe694d6 | 2026-02-03 | logo update corre├º├úo
+6a539cc | 2026-02-02 | logo atualizacao
+2ab28ca | 2026-02-02 | logo
+11de291 | 2026-01-23 | PROTE├ç├âO DADOS FINAN
+c9a9bf6 | 2026-01-23 | install button
+858fa38 | 2026-01-23 | tela corr err
+0ee7f71 | 2026-01-23 | corre├º├úo tela preta defini
+8c45f9d | 2026-01-23 | COR TELA
+769c829 | 2026-01-22 | tela preta corre├º├úo
+8c9d4b1 | 2026-01-22 | botao corrigido 2
+a8936cf | 2026-01-22 | instaalar cor
+31bcc16 | 2026-01-22 | erro deploy corr
+cef8781 | 2026-01-22 | botao instalar
+3eb1773 | 2026-01-22 | workflow correcao
+a2cb368 | 2026-01-21 | mudan├ºa workflow
+afba5ac | 2026-01-21 | marcar varios restaurado
+9bb3fae | 2026-01-18 | MELHORA ESPA├çO
+5d16a22 | 2026-01-18 | TENTA MELHORAR ESPA├çO AULA
+ec1fd6e | 2026-01-18 | CAMPO DE VISAO
+71e25f0 | 2026-01-18 | ACADEMIA
+8c82082 | 2026-01-17 | workflow corre├º├úo
+7deede0 | 2026-01-17 | corre├º├úo scroll layout
+aeb5d86 | 2026-01-17 | update finance
+b4c4ab4 | 2026-01-17 | corre├º├úo finan├ºas modo compartilhado

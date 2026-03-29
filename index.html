@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#8743f2" />
+  <meta name="description"
+    content="Sua Jornada com Propósito - Aplicativo completo para gerenciar sua vida espiritual, hábitos e projetos" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="apple-touch-icon" href="/icon-192.png" />
+  <title>CRENTIFY - Sua Jornada com Propósito</title>
+  <link rel="icon" href="/logo.png" type="image/png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --brand-purple: #8743f2;
+      --brand-purple-glow: rgba(135, 67, 242, 0.4);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0b0e14;
+      color: white;
+      overflow: hidden;
+    }
+
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #0b0e14;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #8743f2;
+      border-radius: 10px;
+    }
+
+    .neon-glow {
+      box-shadow: 0 0 20px var(--brand-purple-glow);
+    }
+
+    .neon-text {
+      text-shadow: 0 0 10px var(--brand-purple-glow);
+    }
+
+    .neon-border {
+      border-color: rgba(135, 67, 242, 0.3);
+      box-shadow: inset 0 0 10px rgba(135, 67, 242, 0.1);
+    }
+
+    .glass-card {
+      background: rgba(22, 27, 34, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#8743f2',
+              light: '#b276ff',
+              dark: '#6a2cd1',
+              bg: '#0b0e14',
+              surface: '#161b22'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="/index.css">
+</head>
+
+<body class="bg-[#0b0e14] text-white">
+  <div id="root"></div>
+  <script type="module" src="./index.tsx"></script>
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then((registration) => {
+            console.log('ServiceWorker registered:', registration.scope);
+          })
+          .catch((error) => {
+            console.log('ServiceWorker registration failed:', error);
+          });
+      });
+    }
+
+    // PWA Install Prompt
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent the mini-infobar from appearing on mobile
+      e.preventDefault();
+      // Stash the event so it can be triggered later
+      deferredPrompt = e;
+      console.log('PWA install prompt ready');
+
+      // Optional: Show custom install button
+      // You can dispatch a custom event here to show an install button in your React app
+      window.dispatchEvent(new CustomEvent('pwa-install-available'));
+    });
+
+    window.addEventListener('appinstalled', () => {
+      console.log('PWA was installed');
+      deferredPrompt = null;
+    });
+  </script>
+</body>
+
+</html>
