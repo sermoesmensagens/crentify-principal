@@ -30,30 +30,41 @@ const Auth: React.FC = () => {
                     password,
                 });
                 if (error) throw error;
+                setSuccessMessage('Login feito com sucesso! Entrando...');
             } else {
                 const { error } = await supabase.auth.signUp({
                     email,
                     password,
                 });
                 if (error) throw error;
-                setSuccessMessage('Cadastro realizado! Verifique seu email para confirmar.');
+                setSuccessMessage('Cadastro feito com sucesso! Vá para seu e-mail e clique no link para confirmar.');
             }
         } catch (error: any) {
-            setErrorMessage(error.message || 'Ocorreu um erro durante a autenticação.');
+            let msg = error.message;
+            if (msg.includes('Email not confirmed')) {
+                msg = 'Vá para seu e-mail para confirmar a conta! O Crentify te enviou um link de liberação de acesso.';
+            } else if (msg.includes('Invalid login credentials')) {
+                msg = 'E-mail ou senha inválidos. Tente novamente.';
+            } else if (msg.includes('User already registered')) {
+                msg = 'Esse e-mail já possui cadastro. Por favor, clique em "Faça login" lá embaixo.';
+            } else if (msg.includes('Password should be at least')) {
+                msg = 'Sua senha deve ter no mínimo 6 caracteres.';
+            }
+            setErrorMessage(msg);
         } finally {
             setIsLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen bg-brand-bg flex flex-col items-center justify-center p-4 py-8 relative overflow-y-auto">
+        <div className="min-h-[100dvh] bg-brand-bg flex justify-center p-4 relative overflow-y-auto">
             {/* Background Elements */}
-            <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+            <div className="fixed top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
                 <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-brand-primary/20 rounded-full blur-[120px]" />
                 <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full blur-[120px]" />
             </div>
 
-            <div className="w-full max-w-md z-10">
+            <div className="w-full max-w-md z-10 my-auto py-10">
                 <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl">
                     {/* Banner de Aviso Crentify Hábitos */}
                     <div className="bg-[#4D9DE0]/10 border border-[#4D9DE0]/30 p-4 rounded-xl mb-8 text-center relative overflow-hidden group">
