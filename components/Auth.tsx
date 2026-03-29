@@ -55,6 +55,22 @@ const Auth: React.FC = () => {
 
             <div className="w-full max-w-md z-10">
                 <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl">
+                    {/* Banner de Aviso Crentify Hábitos */}
+                    <div className="bg-[#4D9DE0]/10 border border-[#4D9DE0]/30 p-4 rounded-xl mb-8 text-center relative overflow-hidden group">
+                        <div className="absolute inset-0 bg-[#4D9DE0]/5 group-hover:bg-[#4D9DE0]/10 transition-colors" />
+                        <p className="text-[#4D9DE0] text-sm font-medium mb-3 relative z-10">
+                            Procurando pelo <strong className="text-white">Crentify Hábitos</strong>? <br />
+                            Ele mudou de endereço!
+                        </p>
+                        <a 
+                            href="https://habitos.crentify.app/" 
+                            className="relative z-10 inline-flex items-center justify-center gap-2 w-full py-2.5 bg-[#4D9DE0]/20 hover:bg-[#4D9DE0]/40 border border-[#4D9DE0]/50 text-white font-semibold rounded-lg transition-all text-sm shadow-lg"
+                        >
+                            Acessar habitos.crentify.app
+                            <ArrowRight className="h-4 w-4" />
+                        </a>
+                    </div>
+
                     {/* Logo */}
                     <div className="flex justify-center mb-6">
                         <div className="relative group">
