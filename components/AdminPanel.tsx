@@ -67,6 +67,8 @@ const AdminPanel: React.FC = () => {
     categoryId: academyCategories?.[0]?.id || '1',
     type: 'video',
     url: '',
+    week: '',
+    day: '',
     resources: [],
     visibility: 'público'
   });
@@ -75,7 +77,9 @@ const AdminPanel: React.FC = () => {
     type: 'video',
     title: '',
     url: '',
-    content: ''
+    content: '',
+    duration: '',
+    instruction: ''
   });
   const [editingResourceId, setEditingResourceId] = useState<string | null>(null);
 
@@ -205,6 +209,8 @@ const AdminPanel: React.FC = () => {
         courseId: newModule.courseId,
         categoryId: newModule.categoryId || '1',
         type: newModule.resources && newModule.resources.length > 1 ? 'mixed' : (newModule.type || 'video'),
+        week: newModule.week || 'Semana 1',
+        day: newModule.day || 'Segunda',
         resources: newModule.resources || [],
         visibility: newModule.visibility || 'público'
       };
@@ -213,7 +219,7 @@ const AdminPanel: React.FC = () => {
       setAcademyContent([content, ...academyContent]);
     }
 
-    setNewModule({ title: '', description: '', courseId: '', categoryId: academyCategories?.[0]?.id || '1', type: 'video', url: '', resources: [], visibility: 'público' });
+    setNewModule({ title: '', description: '', courseId: '', categoryId: academyCategories?.[0]?.id || '1', type: 'video', url: '', week: '', day: '', resources: [], visibility: 'público' });
     setSuccess(true);
     setTimeout(() => setSuccess(false), 3000);
   };
@@ -237,7 +243,9 @@ const AdminPanel: React.FC = () => {
         type: resourceForm.type || 'video',
         title: resourceForm.title,
         url: resourceForm.url,
-        content: resourceForm.content
+        content: resourceForm.content,
+        duration: resourceForm.duration,
+        instruction: resourceForm.instruction
       };
       console.log('➕ ADMIN DEBUG - Adicionando novo recurso:', resource);
       setNewModule({
@@ -245,7 +253,7 @@ const AdminPanel: React.FC = () => {
         resources: [...(newModule.resources || []), resource]
       });
     }
-    setResourceForm({ type: 'video', title: '', url: '', content: '' });
+    setResourceForm({ type: 'video', title: '', url: '', content: '', duration: '', instruction: '' });
   };
 
   const removeResource = (id: string) => {
@@ -421,8 +429,8 @@ const AdminPanel: React.FC = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Título da Aula</label>
-                  <input type="text" placeholder="Nome da Aula" value={newModule.title} onChange={e => setNewModule({ ...newModule, title: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
+                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Título do Bloco (Dia)</label>
+                  <input type="text" placeholder="Ex: Estudo, Descanso..." value={newModule.title} onChange={e => setNewModule({ ...newModule, title: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Pertence ao Curso</label>
@@ -436,6 +444,14 @@ const AdminPanel: React.FC = () => {
                     </select>
                   </div>
                 </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Semana (Grupo)</label>
+                  <input type="text" placeholder="Ex: Semana 1" value={newModule.week || ''} onChange={e => setNewModule({ ...newModule, week: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Dia da Semana</label>
+                  <input type="text" placeholder="Ex: Segunda-feira" value={newModule.day || ''} onChange={e => setNewModule({ ...newModule, day: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
+                </div>
               </div>
 
               {/* Gerenciamento de Recursos */}
@@ -446,24 +462,32 @@ const AdminPanel: React.FC = () => {
                   <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
                     <div className="md:col-span-3">
                       <select value={resourceForm.type} onChange={e => setResourceForm({ ...resourceForm, type: e.target.value as any })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-xl px-4 py-3 text-[10px] font-black outline-none">
+                        <option value="leitura">Leitura Bíblica</option>
                         <option value="video">Vídeo (YT)</option>
                         <option value="link">Link Externo</option>
                         <option value="text">Texto Livre</option>
                       </select>
                     </div>
-                    <div className="md:col-span-9">
-                      <input type="text" placeholder="Nome do Recurso (ex: Aula Prática, PDF Complementar)" value={resourceForm.title} onChange={e => setResourceForm({ ...resourceForm, title: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-xl px-6 py-3 text-white text-[10px] font-black outline-none" />
+                    <div className="md:col-span-6">
+                      <input type="text" placeholder="Nome da Tarefa (ex: Leitura de Êxodo 20)" value={resourceForm.title} onChange={e => setResourceForm({ ...resourceForm, title: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-xl px-6 py-3 text-white text-[10px] font-black outline-none" />
+                    </div>
+                    <div className="md:col-span-3">
+                      <input type="text" placeholder="Tempo (ex: 15 min)" value={resourceForm.duration || ''} onChange={e => setResourceForm({ ...resourceForm, duration: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-xl px-6 py-3 text-white text-[10px] font-black outline-none" />
                     </div>
                   </div>
 
-                  {resourceForm.type !== 'text' ? (
+                  <div className="relative">
+                    <textarea placeholder="Como Fazer (Instruções da Tarefa)..." value={resourceForm.instruction || ''} onChange={e => setResourceForm({ ...resourceForm, instruction: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-xs font-medium outline-none h-20 resize-none custom-scrollbar" />
+                  </div>
+
+                  {resourceForm.type !== 'text' && resourceForm.type !== 'leitura' ? (
                     <div className="relative">
                       <Link size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
-                      <input type="text" placeholder="URL do Recurso" value={resourceForm.url} onChange={e => setResourceForm({ ...resourceForm, url: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-xl pl-12 pr-6 py-3 text-white text-[10px] font-medium outline-none" />
+                      <input type="text" placeholder="URL do Vídeo / Link Externo" value={resourceForm.url} onChange={e => setResourceForm({ ...resourceForm, url: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-xl pl-12 pr-6 py-3 text-white text-[10px] font-medium outline-none" />
                     </div>
                   ) : (
                     <div className="space-y-2">
-                      <textarea placeholder="Insira o texto aqui... (Suporta rolagem se for longo)" value={resourceForm.content} onChange={e => setResourceForm({ ...resourceForm, content: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-2xl px-6 py-4 text-xs font-medium outline-none h-32 resize-none custom-scrollbar" />
+                      <textarea placeholder="Conteúdo (Se for texto livre ou versículos de leitura)..." value={resourceForm.content} onChange={e => setResourceForm({ ...resourceForm, content: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-2xl px-6 py-4 text-xs font-medium outline-none h-32 resize-none custom-scrollbar" />
                       <p className="text-[8px] text-gray-500 uppercase font-bold text-right">Limite sugerido: ~3000 caracteres por recurso</p>
                     </div>
                   )}
