@@ -420,7 +420,7 @@ const Academy: React.FC = () => {
                   <h4 className="flex items-center gap-3 text-[11px] font-black text-brand uppercase tracking-[0.3em] mb-4">
                     <Info size={18} /> COMO FAZER
                   </h4>
-                  <div className="text-gray-300 text-sm leading-relaxed font-medium whitespace-pre-wrap">{activeResource.instruction}</div>
+                  <div className="text-gray-200 text-base md:text-lg leading-relaxed font-medium whitespace-pre-wrap">{activeResource.instruction}</div>
                 </div>
               )}
 
@@ -434,7 +434,7 @@ const Academy: React.FC = () => {
 
               {(activeResource.type === 'text' || activeResource.type === 'leitura') && activeResource.content && (
                 <div className="bg-[#0b0e14]/60 border border-white/10 rounded-[32px] px-8 py-10 shadow-inner max-w-full">
-                  <div className="text-gray-300 text-sm md:text-base leading-loose font-medium whitespace-pre-wrap">
+                  <div className="text-gray-100 text-lg md:text-xl leading-relaxed font-medium whitespace-pre-wrap">
                     {activeResource.content}
                   </div>
                 </div>
