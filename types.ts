@@ -29,10 +29,12 @@ export type AcademyVisibility = 'público' | 'não listado' | 'privado';
 
 export interface AcademyResource {
   id: string;
-  type: 'video' | 'link' | 'text';
+  type: 'video' | 'link' | 'text' | 'leitura';
   title: string;
   url?: string; // For video or link
   content?: string; // For text
+  duration?: string; // e.g. "15 min", "1 cap"
+  instruction?: string; // Support for "COMO FAZER" instructions
 }
 
 export interface AcademyCourse {
@@ -53,6 +55,8 @@ export interface AcademyContent {
   categoryId: string;
   type: 'video' | 'text' | 'audio' | 'mixed'; // mixed for multi-resource
   url?: string; // Legacy/Default url
+  week?: string; // e.g. "Semana 1" or "1"
+  day?: string; // e.g. "Segunda", "Sábado - Descanso"
   resources?: AcademyResource[]; // New: list of resources
   visibility?: AcademyVisibility;
 }
