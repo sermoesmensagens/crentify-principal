@@ -265,6 +265,7 @@ const Academy: React.FC = () => {
                           </div>
                         ))}
                       </div>
+                    )}
                   </div>
                 );
               });
