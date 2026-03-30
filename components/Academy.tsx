@@ -460,7 +460,7 @@ const Academy: React.FC = () => {
                     value={reflectionText}
                     onChange={e => setReflectionText(e.target.value)}
                     placeholder="Escreva aqui tudo o que chamou sua atenção, anote suas respostas das tarefas ou insights do dia..."
-                    className="relative w-full bg-[#0b0e14] border border-white/5 rounded-[32px] p-8 text-white text-sm font-medium outline-none h-48 resize-none focus:border-brand/30 transition-all custom-scrollbar placeholder:text-gray-700"
+                    className="w-full h-48 bg-[#0b0e14] border border-white/5 rounded-[32px] p-8 text-white font-medium text-sm md:text-base focus:ring-2 focus:ring-brand/30 outline-none resize-none placeholder:text-gray-800 italic font-serif leading-relaxed"
                   />
                 </div>
               </div>
