@@ -77,16 +77,21 @@ export const AcademyProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }, [isSharedDataLoading, sharedData]);
 
     // Sync to Cloud
-    const canSync = isDataLoaded && !isInitialLoading;
-    useDataSync(canSync ? 'crentify_academy_reflections' : '', reflections);
-    useDataSync(canSync ? 'crentify_academy_progress' : '', progress);
+    // SAFETY: We only sync if data is fully loaded and NOT empty during initialization
+    // to prevent overwriting cloud data with local empty defaults.
+    const isAllDataLoaded = isDataLoaded && !isInitialLoading && !isSharedDataLoading;
+    
+    useDataSync(isAllDataLoaded ? 'crentify_academy_reflections' : '', reflections);
+    useDataSync(isAllDataLoaded ? 'crentify_academy_progress' : '', progress);
 
     // Shared data sync (Admins only)
-    useDataSync((isAdmin && canSync) ? 'crentify_academy_courses' : '', isAdmin ? courses : null);
-    useDataSync((isAdmin && canSync) ? 'crentify_academy_content' : '', isAdmin ? content : null);
-    useDataSync((isAdmin && canSync) ? 'crentify_academy_categories' : '', isAdmin ? categories : null);
-    useDataSync((isAdmin && canSync) ? 'crentify_academy_weeks' : '', isAdmin ? weekCategories : null);
-    useDataSync((isAdmin && canSync) ? 'crentify_academy_days' : '', isAdmin ? dayCategories : null);
+    // CRITICAL SAFETY: Only sync shared keys if list has elements OR after significant time to avoid init-race
+    const canSyncShared = isAdmin && isAllDataLoaded;
+    useDataSync((canSyncShared && (courses.length > 0 || sharedData.crentify_academy_courses)) ? 'crentify_academy_courses' : '', isAdmin ? courses : null);
+    useDataSync((canSyncShared && (content.length > 0 || sharedData.crentify_academy_content)) ? 'crentify_academy_content' : '', isAdmin ? content : null);
+    useDataSync((canSyncShared && (categories.length > 0 || sharedData.crentify_academy_categories)) ? 'crentify_academy_categories' : '', isAdmin ? categories : null);
+    useDataSync((canSyncShared && (weekCategories.length > 0 || sharedData.crentify_academy_weeks)) ? 'crentify_academy_weeks' : '', isAdmin ? weekCategories : null);
+    useDataSync((canSyncShared && (dayCategories.length > 0 || sharedData.crentify_academy_days)) ? 'crentify_academy_days' : '', isAdmin ? dayCategories : null);
 
     // Local Storage
     useEffect(() => {

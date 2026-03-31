@@ -70,11 +70,26 @@ export const loadSharedData = async (adminEmails: string[]): Promise<Record<stri
     const sharedData: Record<string, any> = {};
     if (data) {
         console.log(`📋 Encontrados ${data.length} registros no total para chaves compartilhadas.`);
+        
+        // Helper to check if value is effectively "empty" (empty array)
+        const isEmpty = (val: any) => Array.isArray(val) && val.length === 0;
+
+        // Group by key and find the best one
         data.forEach((item) => {
-            // Como ordenamos por updated_at DESC, o primeiro que encontrarmos para cada chave é o mais recente.
             if (!sharedData[item.key]) {
-                sharedData[item.key] = item.value;
-                console.log(`✅ Chave [${item.key}] carregada (Versão: ${item.updated_at})`);
+                // If the latest is empty, we keep looking for a non-empty one further down the (ordered) list
+                if (isEmpty(item.value)) {
+                    const betterRecord = data.find(d => d.key === item.key && !isEmpty(d.value));
+                    if (betterRecord) {
+                        sharedData[item.key] = betterRecord.value;
+                        console.log(`✅ Chave [${item.key}] carregada (Recuperada de versão anterior devido a erro de sobrescrita vazia)`);
+                    } else {
+                        sharedData[item.key] = item.value;
+                    }
+                } else {
+                    sharedData[item.key] = item.value;
+                    console.log(`✅ Chave [${item.key}] carregada (Versão: ${item.updated_at})`);
+                }
             }
         });
     }
