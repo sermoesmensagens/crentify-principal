@@ -148,7 +148,8 @@ const Academy: React.FC = () => {
     
     updatedRecords[resourceId] = {
       completed: !isCompleted,
-      timeSpent: (currentRecord.timeSpent || 0) + (seconds || 0)
+      timeSpent: (currentRecord.timeSpent || 0) + (seconds || 0),
+      completedAt: !isCompleted ? new Date().toISOString() : undefined
     };
     
     setProgress({ ...progress, completedLessons: updatedList, records: updatedRecords });
@@ -386,6 +387,34 @@ const Academy: React.FC = () => {
                             <h4 className="text-xl font-black text-white uppercase tracking-tight mb-2 group-hover:text-brand transition-colors line-clamp-2">{course.title}</h4>
                             <p className="text-sm text-gray-500 line-clamp-2 mb-6 flex-1">{course.description}</p>
                             
+                            {/* Course Progress Bar on Card */}
+                            {(() => {
+                              const courseContent = content.filter(l => l.courseId === course.id);
+                              const totalRes = courseContent.reduce((a, b) => a + (b.resources?.length || 0), 0);
+                              const compRes = courseContent.reduce((a, b) => a + (b.resources?.filter(r => progress.completedLessons.includes(r.id)).length || 0), 0);
+                              const pct = totalRes === 0 ? 0 : Math.round((compRes / totalRes) * 100);
+                              
+                              if (totalRes === 0) return null;
+                              
+                              return (
+                                <div className="mb-6 bg-black/40 p-4 rounded-2xl border border-white/5 shadow-inner">
+                                  <div className="flex justify-between items-center mb-2">
+                                    <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest">Progresso</span>
+                                    <span className="text-[10px] font-black text-brand uppercase tracking-tighter">{pct}%</span>
+                                  </div>
+                                  <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden shadow-inner translate-y-0">
+                                    <div 
+                                      className="h-full bg-gradient-to-r from-brand to-[#9d5cff] shadow-[0_0_8px_rgba(var(--brand-rgb),0.3)] transition-all duration-1000 ease-out"
+                                      style={{ width: `${pct}%` }}
+                                    />
+                                  </div>
+                                  <p className="text-[7px] font-black text-gray-600 uppercase tracking-widest mt-2">
+                                    {compRes} de {totalRes} Tarefas
+                                  </p>
+                                </div>
+                              );
+                            })()}
+
                             <div className="pt-4 border-t border-white/5 flex items-center justify-between mt-auto">
                               <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest">
                                 {content.filter(l => l.courseId === course.id).reduce((a, b) => a + (b.resources?.length || 0), 0)} Tarefas

@@ -15,6 +15,7 @@ export enum Section {
 export interface AcademyProgressRecord {
   completed: boolean;
   timeSpent?: number; // Time in seconds
+  completedAt?: string; // ISO date string
 }
 
 export interface AcademyProgress {
@@ -218,6 +219,7 @@ export interface BibleData {
 
 export interface BibleProgress {
   completedChapters: Record<string, number[]>;
+  completionDates?: Record<string, Record<number, string>>; // bookName -> chapterNumber -> ISO date string
 }
 
 export interface FinancialTransaction {

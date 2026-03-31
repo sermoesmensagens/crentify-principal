@@ -68,8 +68,23 @@ const BibleView: React.FC = () => {
 
   const toggleChapter = (bookName: string, chapterNum: number) => {
     const current = progress.completedChapters[bookName] || [];
-    const updated = current.includes(chapterNum) ? current.filter(c => c !== chapterNum) : [...current, chapterNum];
-    setProgress({ ...progress, completedChapters: { ...progress.completedChapters, [bookName]: updated } });
+    const isCompleted = current.includes(chapterNum);
+    const updated = isCompleted ? current.filter(c => c !== chapterNum) : [...current, chapterNum];
+    
+    // Update completion dates
+    const updatedDates = { ...(progress.completionDates || {}) };
+    if (!isCompleted) {
+      if (!updatedDates[bookName]) updatedDates[bookName] = {};
+      updatedDates[bookName][chapterNum] = new Date().toISOString();
+    } else if (updatedDates[bookName]) {
+      delete updatedDates[bookName][chapterNum];
+    }
+    
+    setProgress({ 
+      ...progress, 
+      completedChapters: { ...progress.completedChapters, [bookName]: updated },
+      completionDates: updatedDates
+    });
   };
 
   const openSelectionModal = () => {
@@ -81,12 +96,24 @@ const BibleView: React.FC = () => {
 
   const handleConfirmMultiMark = () => {
     if (!selectedBook) return;
+    
+    const updatedDates = { ...(progress.completionDates || {}) };
+    if (!updatedDates[selectedBook.name]) updatedDates[selectedBook.name] = {};
+    
+    const now = new Date().toISOString();
+    tempSelectedChapters.forEach(ch => {
+      if (!updatedDates[selectedBook.name][ch]) {
+        updatedDates[selectedBook.name][ch] = now;
+      }
+    });
+
     setProgress({
       ...progress,
       completedChapters: {
         ...progress.completedChapters,
         [selectedBook.name]: [...tempSelectedChapters]
-      }
+      },
+      completionDates: updatedDates
     });
     setShowSelectionModal(false);
   };

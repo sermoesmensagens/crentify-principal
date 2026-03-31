@@ -15,7 +15,7 @@ const Dashboard: React.FC = () => {
   const { entries: diaryEntries } = useDiary();
   const { tasks } = useTarefas();
   const { habits } = useHabits();
-  const { progress: academyProgress } = useAcademy();
+  const { progress: academyProgress, content } = useAcademy();
   const { studies } = useStudies();
   
   // Fetch Project Reminders
@@ -44,6 +44,12 @@ const Dashboard: React.FC = () => {
   const TOTAL_BIBLE_CHAPTERS = 1189;
   const bibleProgressPercent = Math.round((totalCompletedChapters / TOTAL_BIBLE_CHAPTERS) * 100);
   const readingPercentage = ((totalCompletedChapters / TOTAL_BIBLE_CHAPTERS) * 100).toFixed(1);
+
+  // Academy Progress Calculation
+  const totalAcademyResources = content.reduce((acc, l) => acc + (l.resources?.length || 0), 0);
+  const completedAcademyRes = content.reduce((acc, l) => acc + (l.resources?.filter(r => academyProgress.completedLessons.includes(r.id)).length || 0), 0);
+  const academyProgressPercent = totalAcademyResources === 0 ? 0 : Math.round((completedAcademyRes / totalAcademyResources) * 100);
+
 
 
   const [today, setToday] = useState(getLocalDateString());
@@ -158,6 +164,38 @@ const Dashboard: React.FC = () => {
               <div 
                 className="h-full bg-gradient-to-r from-brand to-brand-light rounded-full transition-all duration-1000 ease-out relative shadow-[0_0_20px_rgba(135,67,242,0.4)]"
                 style={{ width: `${bibleProgressPercent}%` }}
+              >
+                <div className="absolute inset-0 bg-white/10 animate-pulse"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Academy Progress Bar Segment */}
+      <div className="bg-[#161b22] p-8 rounded-[40px] border border-blue-500/20 shadow-xl shadow-black/40 group hover:border-blue-500/40 transition-all duration-300 min-h-[140px] flex flex-col justify-center">
+        <div className="flex flex-col xl:flex-row justify-between items-center gap-10">
+          <div className="flex items-center gap-6 min-w-max">
+            <div className="w-16 h-16 bg-blue-500/10 text-blue-500 rounded-[24px] flex items-center justify-center shadow-lg transition-transform group-hover:rotate-6">
+              <GraduationCap size={32} />
+            </div>
+            <div>
+              <p className="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1">Jornada de Estudo Academia</p>
+              <div className="flex items-baseline gap-2">
+                <p className="text-4xl font-black text-white tracking-tighter uppercase">{completedAcademyRes}</p>
+                <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">/ {totalAcademyResources} Tarefas</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex-1 w-full relative">
+            <div className="flex justify-between w-full mb-3">
+              <span className="text-[10px] font-black text-blue-500 uppercase tracking-widest">Progresso Total</span>
+              <span className="text-sm font-black text-blue-500 uppercase tracking-tighter">{academyProgressPercent}% Concluído</span>
+            </div>
+            <div className="w-full bg-white/5 rounded-full h-10 overflow-hidden border border-white/5 p-2 shadow-inner shadow-black/60 relative">
+              <div 
+                className="h-full bg-gradient-to-r from-blue-600 to-cyan-400 rounded-full transition-all duration-1000 ease-out relative shadow-[0_0_20px_rgba(37,99,235,0.4)]"
+                style={{ width: `${academyProgressPercent}%` }}
               >
                 <div className="absolute inset-0 bg-white/10 animate-pulse"></div>
               </div>
@@ -396,37 +434,177 @@ const Dashboard: React.FC = () => {
         </div>
       </section>
 
-      {/* Memórias Recentes - Estilo Horizontal */}
+      {/* Memórias Recentes - Histórico de Atividades */}
       <section className="bg-[#161b22] p-12 rounded-[56px] border border-white/5 shadow-2xl overflow-hidden w-full">
-        <div className="flex items-center justify-between mb-10 text-white">
-          <h3 className="text-xl font-black uppercase tracking-tighter flex items-center gap-3">
-            <MessageSquare size={24} className="text-brand" />
-            Memórias Recentes
-          </h3>
-          <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest">Últimos registros</span>
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-12 gap-6">
+          <div>
+            <h3 className="text-3xl font-black uppercase tracking-tighter flex items-center gap-4 text-white">
+              <div className="p-3 bg-brand/10 rounded-2xl border border-brand/20">
+                <MessageSquare size={28} className="text-brand" />
+              </div>
+              Memórias Recentes
+            </h3>
+            <p className="text-gray-500 text-sm mt-2 font-medium">Sua jornada de fidelidade registrada no tempo.</p>
+          </div>
+          <div className="flex items-center gap-3 bg-black/40 px-6 py-3 rounded-2xl border border-white/5">
+            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Acompanhamento Ativo</span>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {(diaryEntries || []).slice(0, 3).map((entry: DiaryEntry) => (
-            <div key={entry.id} className="bg-[#0b0e14]/50 p-8 rounded-[40px] border border-white/5 hover:border-brand/30 transition-all group flex flex-col gap-6">
-              <div className="w-14 h-14 bg-brand/5 rounded-[22px] flex items-center justify-center text-brand border border-brand/10 group-hover:bg-brand group-hover:text-white transition-all shadow-lg">
-                <MessageSquare size={24} />
-              </div>
-              <div>
-                <h5 className="font-black text-white text-lg uppercase tracking-tight line-clamp-1">{entry.title}</h5>
-                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-2 flex items-center gap-2">
-                  <CalendarCheck size={12} /> {new Date(entry.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
-                </p>
-              </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+          {/* Timeline de Atividades */}
+          <div className="lg:col-span-8 space-y-8">
+            {(() => {
+              // Agregação de atividades por data
+              const activityLog: Record<string, any[]> = {};
+              const addToLog = (date: string, type: string, label: string) => {
+                const d = date.split('T')[0];
+                if (!activityLog[d]) activityLog[d] = [];
+                activityLog[d].push({ type, label });
+              };
+
+              // 1. Bíblia
+              if (bibleProgress?.completionDates) {
+                Object.keys(bibleProgress.completionDates).forEach(book => {
+                  Object.keys(bibleProgress.completionDates![book]).forEach(ch => {
+                    addToLog(bibleProgress.completionDates![book][Number(ch)], 'bible', `Capítulo ${ch} de ${book}`);
+                  });
+                });
+              }
+
+              // 2. Academia
+              if (academyProgress?.records) {
+                Object.keys(academyProgress.records).forEach(resId => {
+                  const rec = academyProgress.records![resId];
+                  if (rec.completed && rec.completedAt) {
+                    addToLog(rec.completedAt, 'academy', 'Tarefa concluída');
+                  }
+                });
+              }
+
+              // 3. Hábitos (Últimos 7 dias)
+              const last7Days = Array.from({length: 7}, (_, i) => {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                return d.toISOString().split('T')[0];
+              });
+
+              habits.forEach(h => {
+                last7Days.forEach(d => {
+                  if (h.completions[d]) addToLog(d, 'habit', h.category);
+                });
+              });
+
+              tasks.forEach(t => {
+                last7Days.forEach(d => {
+                  if (t.completions[d]) addToLog(d, 'task', t.category);
+                });
+              });
+
+              studies.forEach(s => {
+                last7Days.forEach(d => {
+                  if (s.completions[d]) addToLog(d, 'study', s.category);
+                });
+              });
+
+              // Ordenar datas
+              const sortedDates = Object.keys(activityLog).sort((a, b) => b.localeCompare(a)).slice(0, 5);
+
+              if (sortedDates.length === 0) {
+                return (
+                  <div className="py-20 text-center border-2 border-dashed border-white/5 rounded-[40px] opacity-20">
+                    <Zap size={48} className="mx-auto mb-4 text-gray-500" />
+                    <p className="text-sm font-black uppercase tracking-widest italic">Inicie sua jornada hoje para ver seu histórico aqui...</p>
+                  </div>
+                );
+              }
+
+              return (
+                <div className="space-y-6">
+                  {sortedDates.map(date => {
+                    const activities = activityLog[date];
+                    const isToday = date === today;
+                    return (
+                      <div key={date} className="relative pl-10 group">
+                        {/* Linha da Timeline */}
+                        <div className="absolute left-4 top-0 bottom-0 w-px bg-white/5 group-last:bg-transparent"></div>
+                        <div className={`absolute left-2 top-2 w-4 h-4 rounded-full border-4 border-[#161b22] z-10 transition-all ${isToday ? 'bg-brand scale-125 shadow-[0_0_10px_rgba(var(--brand-rgb),0.5)]' : 'bg-gray-700'}`}></div>
+                        
+                        <div className="bg-[#0b0e14]/40 p-6 rounded-[32px] border border-white/5 hover:border-white/10 transition-all">
+                          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                            <h4 className="text-lg font-black text-white uppercase tracking-tighter flex items-center gap-3">
+                              {new Date(date + 'T12:00:00').toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit' })}
+                              {isToday && <span className="bg-brand/20 text-brand text-[8px] px-2 py-0.5 rounded-full font-black tracking-widest">HOJE</span>}
+                            </h4>
+                            <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest bg-black/40 px-3 py-1.5 rounded-xl border border-white/5">
+                              {activities.length} {activities.length === 1 ? 'Atividade' : 'Atividades'}
+                            </span>
+                          </div>
+                          
+                          <div className="flex flex-wrap gap-2">
+                            {activities.slice(0, 6).map((act, i) => (
+                              <div key={i} className={`text-[8px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg border flex items-center gap-2 ${
+                                act.type === 'bible' ? 'bg-brand/10 text-brand border-brand/20' :
+                                act.type === 'academy' ? 'bg-blue-500/10 text-blue-500 border-blue-500/20' :
+                                act.type === 'habit' ? 'bg-orange-500/10 text-orange-500 border-orange-500/20' :
+                                'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
+                              }`}>
+                                <div className={`w-1.5 h-1.5 rounded-full ${
+                                  act.type === 'bible' ? 'bg-brand' :
+                                  act.type === 'academy' ? 'bg-blue-500' :
+                                  act.type === 'habit' ? 'bg-orange-500' :
+                                  'bg-emerald-500'
+                                }`}></div>
+                                {act.label}
+                              </div>
+                            ))}
+                            {activities.length > 6 && <span className="text-[8px] font-black text-gray-700 self-center">+ {activities.length - 6} mais</span>}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })()}
+          </div>
+
+          {/* Últimos Registros do Diário (Agora como Notas Laterais) */}
+          <div className="lg:col-span-4 space-y-6">
+            <h5 className="text-[10px] font-black text-gray-500 uppercase tracking-[0.3em] pl-2 flex items-center gap-2">
+              <Book size={14} className="text-brand" /> Notas do Diário
+            </h5>
+            <div className="space-y-4">
+              {(diaryEntries || []).slice(0, 3).map((entry: DiaryEntry) => (
+                <div key={entry.id} className="bg-[#0b0e14]/80 p-6 rounded-[28px] border border-white/5 hover:border-brand/30 transition-all group">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-10 h-10 bg-brand/5 rounded-xl flex items-center justify-center text-brand border border-brand/10 group-hover:bg-brand group-hover:text-white transition-all">
+                      <MessageSquare size={18} />
+                    </div>
+                    <div className="min-w-0">
+                      <h6 className="font-black text-white text-xs uppercase tracking-tight truncate">{entry.title}</h6>
+                      <p className="text-[8px] text-gray-600 font-bold uppercase tracking-widest mt-0.5">
+                        {new Date(entry.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}
+                      </p>
+                    </div>
+                  </div>
+                  <p className="text-gray-500 text-[11px] leading-relaxed line-clamp-2 font-medium italic">"{entry.content.slice(0, 100)}..."</p>
+                </div>
+              ))}
+              {diaryEntries.length === 0 && (
+                <div className="p-8 text-center bg-black/20 rounded-[32px] border border-dashed border-white/5 opacity-30">
+                  <p className="text-[8px] font-black uppercase tracking-widest">Nenhuma nota registrada</p>
+                </div>
+              )}
+              <button className="w-full py-4 text-[9px] font-black uppercase tracking-[0.2em] text-brand hover:text-white transition-colors">
+                Ver Todo o Diário
+              </button>
             </div>
-          ))}
-          {diaryEntries.length === 0 && (
-            <div className="col-span-full py-16 text-center border-2 border-dashed border-white/5 rounded-[40px] opacity-20">
-              <p className="text-sm font-black uppercase tracking-widest italic">Inicie seu diário espiritual hoje...</p>
-            </div>
-          )}
+          </div>
         </div>
       </section>
+
 
       <style>{`
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
