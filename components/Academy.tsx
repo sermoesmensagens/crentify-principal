@@ -187,9 +187,25 @@ const Academy: React.FC = () => {
                   return acc;
                 }, {} as Record<string, AcademyContent[]>);
 
-                return Object.entries(groupedByWeek).map(([weekName, lessons]) => {
-                  // Sort by roughly sequential days (ignoring strictly mapping, trust admin sort or natural string comparison usually works)
-                  // For better UX, we just keep their creation order or alphabetical title if they added Day 1, Day 2.
+                const dayOrder = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo', 'Dom'];
+
+                // Sort weeks numerically
+                const sortedWeekNames = Object.keys(groupedByWeek).sort((a, b) => {
+                  const numA = parseInt(a.replace(/\D/g, '')) || 0;
+                  const numB = parseInt(b.replace(/\D/g, '')) || 0;
+                  return numA - numB;
+                });
+
+                return sortedWeekNames.map(weekName => {
+                  const lessons = groupedByWeek[weekName];
+                  
+                  // Sort lessons within the week by dayOrder
+                  const sortedDayLessons = [...lessons].sort((a, b) => {
+                    const indexA = dayOrder.findIndex(d => (a.day || '').includes(d));
+                    const indexB = dayOrder.findIndex(d => (b.day || '').includes(d));
+                    return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
+                  });
+
                   const isExpanded = expandedWeeks.includes(weekName);
                   const isWeekComplete = (lessons.reduce((acc, l) => acc + (l.resources?.filter(r => progress.completedLessons.includes(r.id)).length || 0), 0) === lessons.reduce((acc, l) => acc + (l.resources?.length || 0), 0)) && lessons.length > 0;
 
