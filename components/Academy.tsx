@@ -476,10 +476,24 @@ const Academy: React.FC = () => {
               )}
 
               {/* Renderização de Mídia / Texto Dinâmico */}
-              {activeResource.type === 'video' && activeResource.url && (
+              {(activeResource.type === 'video' || activeResource.type === 'youtube' || activeResource.type === 'link') && activeResource.url && (
                 <div className="w-full rounded-[32px] overflow-hidden shadow-2xl border border-white/10 bg-black aspect-video relative group">
                   <div className="absolute inset-0 bg-brand/20 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
-                  <iframe src={getEmbedUrl(activeResource.url)} className="w-full h-full relative z-10" frameBorder="0" allowFullScreen></iframe>
+                  {activeResource.url.includes('youtube.com') || activeResource.url.includes('youtu.be') ? (
+                    <iframe 
+                      src={getEmbedUrl(activeResource.url)} 
+                      className="w-full h-full relative z-10" 
+                      frameBorder="0" 
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                      allowFullScreen
+                    ></iframe>
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center gap-4 bg-[#0b0e14] p-10 text-center relative z-10">
+                      <Zap size={48} className="text-brand animate-pulse" />
+                      <p className="text-white font-black uppercase tracking-widest text-xs">Este conteúdo é um link externo</p>
+                      <a href={activeResource.url} target="_blank" rel="noopener noreferrer" className="bg-brand text-white px-8 py-4 rounded-2xl font-black uppercase tracking-tighter hover:scale-105 transition-all">ABRIR CONTEÚDO</a>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -508,10 +522,11 @@ const Academy: React.FC = () => {
                 <div className="relative group">
                   <div className="absolute -inset-1 bg-gradient-to-b from-brand/20 to-transparent rounded-[32px] blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
                   <textarea
+                    autoFocus
                     value={reflectionText}
                     onChange={e => setReflectionText(e.target.value)}
                     placeholder="Escreva aqui tudo o que chamou sua atenção, anote suas respostas das tarefas ou insights do dia..."
-                    className="w-full h-48 bg-[#0b0e14] border border-white/5 rounded-[32px] p-8 text-white font-medium text-sm md:text-base focus:ring-2 focus:ring-brand/30 outline-none resize-none placeholder:text-gray-800 italic font-serif leading-relaxed"
+                    className="w-full h-48 bg-[#0b0e14] border border-white/5 rounded-[32px] p-8 text-white font-medium text-sm md:text-base focus:ring-2 focus:ring-brand/30 outline-none resize-none placeholder:text-gray-800 italic font-serif leading-relaxed relative z-10"
                   />
                 </div>
               </div>
