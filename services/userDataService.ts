@@ -51,7 +51,15 @@ export const loadSharedData = async (adminEmails: string[]): Promise<Record<stri
     const { data, error } = await supabase
         .from('user_data')
         .select('key, value, updated_at')
-        .in('key', ['crentify_bible_data', 'crentify_bible_progress', 'crentify_academy_content', 'crentify_academy_categories', 'crentify_academy_courses'])
+        .in('key', [
+            'crentify_bible_data', 
+            'crentify_bible_progress', 
+            'crentify_academy_content', 
+            'crentify_academy_categories', 
+            'crentify_academy_courses',
+            'crentify_academy_weeks',
+            'crentify_academy_days'
+        ])
         .order('updated_at', { ascending: false });
 
     if (error) {

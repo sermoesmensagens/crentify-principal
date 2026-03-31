@@ -64,16 +64,17 @@ export const AcademyProvider: React.FC<{ children: React.ReactNode }> = ({ child
         }
     }, [isDataLoaded, cloudData, isAdmin]);
 
-    // Sync from Shared Data (All Users)
+    // Sync from Shared Data (All Users, including Admins to keep them in sync with each other)
     useEffect(() => {
-        if (!isSharedDataLoading && !isAdmin) {
+        if (!isSharedDataLoading) {
+            // Prioritize shared data for content to ensure consistency across admins
             if (sharedData.crentify_academy_courses) setAcademyCourses(sharedData.crentify_academy_courses);
             if (sharedData.crentify_academy_content) setAcademyContent(sharedData.crentify_academy_content);
             if (sharedData.crentify_academy_categories) setAcademyCategories(sharedData.crentify_academy_categories);
             if (sharedData.crentify_academy_weeks) setWeekCategories(sharedData.crentify_academy_weeks);
             if (sharedData.crentify_academy_days) setDayCategories(sharedData.crentify_academy_days);
         }
-    }, [isSharedDataLoading, sharedData, isAdmin]);
+    }, [isSharedDataLoading, sharedData]);
 
     // Sync to Cloud
     const canSync = isDataLoaded && !isInitialLoading;
