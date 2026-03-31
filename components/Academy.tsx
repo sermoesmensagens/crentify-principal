@@ -232,7 +232,7 @@ const Academy: React.FC = () => {
                     
                     {isExpanded && (
                       <div className="p-6 pt-0 space-y-6 animate-in slide-in-from-top-4 fade-in duration-300">
-                        {lessons.map(dayBlock => (
+                        {sortedDayLessons.map(dayBlock => (
                           <div key={dayBlock.id} className="bg-[#0b0e14]/50 border border-white/5 rounded-[32px] overflow-hidden p-6 hover:border-brand/10 transition-colors shadow-inner">
                             <div className="flex items-center gap-3 mb-6">
                               <div className="p-2 bg-brand/10 rounded-xl shadow-inner border border-brand/20">
