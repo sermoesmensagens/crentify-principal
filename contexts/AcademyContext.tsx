@@ -1,6 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { AcademyCourse, AcademyContent, AcademyCategory, AcademyReflection, AcademyProgress } from '../types';
+import { AcademyCourse, AcademyContent, AcademyCategory, AcademyReflection, AcademyProgress, AcademyWeekCategory, AcademyDayCategory } from '../types';
 import { useDataContext } from './DataContext';
 import { useDataSync } from '../hooks/useDataSync';
 import { useAuth } from './AuthContext';
@@ -18,6 +18,10 @@ interface AcademyContextType {
     setReflections: React.Dispatch<React.SetStateAction<AcademyReflection[]>>;
     progress: AcademyProgress;
     setProgress: React.Dispatch<React.SetStateAction<AcademyProgress>>;
+    weekCategories: AcademyWeekCategory[];
+    setWeekCategories: React.Dispatch<React.SetStateAction<AcademyWeekCategory[]>>;
+    dayCategories: AcademyDayCategory[];
+    setDayCategories: React.Dispatch<React.SetStateAction<AcademyDayCategory[]>>;
 }
 
 const AcademyContext = createContext<AcademyContextType | undefined>(undefined);
@@ -35,6 +39,13 @@ export const AcademyProvider: React.FC<{ children: React.ReactNode }> = ({ child
     ]));
     const [reflections, setReflections] = useState<AcademyReflection[]>(() => safeLocalStorageGet('crentify_academy_reflections', []));
     const [progress, setProgress] = useState<AcademyProgress>(() => safeLocalStorageGet('crentify_academy_progress', { completedLessons: [] }));
+    const [weekCategories, setWeekCategories] = useState<AcademyWeekCategory[]>(() => safeLocalStorageGet('crentify_academy_weeks', [
+        { id: "w1", name: "Semana 1" }, { id: "w2", name: "Semana 2" }, { id: "w3", name: "Semana 3" }
+    ]));
+    const [dayCategories, setDayCategories] = useState<AcademyDayCategory[]>(() => safeLocalStorageGet('crentify_academy_days', [
+        { id: "d1", name: "Segunda" }, { id: "d2", name: "Terça" }, { id: "d3", name: "Quarta" },
+        { id: "d4", name: "Quinta" }, { id: "d5", name: "Sexta" }, { id: "d6", name: "Sábado" }, { id: "d7", name: "Domingo" }
+    ]));
 
     // Sync from Cloud (User Data)
     useEffect(() => {
@@ -47,6 +58,8 @@ export const AcademyProvider: React.FC<{ children: React.ReactNode }> = ({ child
                 if (cloudData.crentify_academy_courses) setAcademyCourses(cloudData.crentify_academy_courses.value);
                 if (cloudData.crentify_academy_content) setAcademyContent(cloudData.crentify_academy_content.value);
                 if (cloudData.crentify_academy_categories) setAcademyCategories(cloudData.crentify_academy_categories.value);
+                if (cloudData.crentify_academy_weeks) setWeekCategories(cloudData.crentify_academy_weeks.value);
+                if (cloudData.crentify_academy_days) setDayCategories(cloudData.crentify_academy_days.value);
             }
         }
     }, [isDataLoaded, cloudData, isAdmin]);
@@ -57,6 +70,8 @@ export const AcademyProvider: React.FC<{ children: React.ReactNode }> = ({ child
             if (sharedData.crentify_academy_courses) setAcademyCourses(sharedData.crentify_academy_courses);
             if (sharedData.crentify_academy_content) setAcademyContent(sharedData.crentify_academy_content);
             if (sharedData.crentify_academy_categories) setAcademyCategories(sharedData.crentify_academy_categories);
+            if (sharedData.crentify_academy_weeks) setWeekCategories(sharedData.crentify_academy_weeks);
+            if (sharedData.crentify_academy_days) setDayCategories(sharedData.crentify_academy_days);
         }
     }, [isSharedDataLoading, sharedData, isAdmin]);
 
@@ -69,20 +84,25 @@ export const AcademyProvider: React.FC<{ children: React.ReactNode }> = ({ child
     useDataSync((isAdmin && canSync) ? 'crentify_academy_courses' : '', isAdmin ? courses : null);
     useDataSync((isAdmin && canSync) ? 'crentify_academy_content' : '', isAdmin ? content : null);
     useDataSync((isAdmin && canSync) ? 'crentify_academy_categories' : '', isAdmin ? categories : null);
+    useDataSync((isAdmin && canSync) ? 'crentify_academy_weeks' : '', isAdmin ? weekCategories : null);
+    useDataSync((isAdmin && canSync) ? 'crentify_academy_days' : '', isAdmin ? dayCategories : null);
 
     // Local Storage
     useEffect(() => {
         localStorage.setItem('crentify_academy_courses', JSON.stringify(courses));
         localStorage.setItem('crentify_academy_content', JSON.stringify(content));
         localStorage.setItem('crentify_academy_categories', JSON.stringify(categories));
+        localStorage.setItem('crentify_academy_weeks', JSON.stringify(weekCategories));
+        localStorage.setItem('crentify_academy_days', JSON.stringify(dayCategories));
         localStorage.setItem('crentify_academy_reflections', JSON.stringify(reflections));
         localStorage.setItem('crentify_academy_progress', JSON.stringify(progress));
-    }, [courses, content, categories, reflections, progress]);
+    }, [courses, content, categories, reflections, progress, weekCategories, dayCategories]);
 
     return (
         <AcademyContext.Provider value={{
             courses, setAcademyCourses, content, setAcademyContent, categories, setAcademyCategories,
-            reflections, setReflections, progress, setProgress
+            reflections, setReflections, progress, setProgress,
+            weekCategories, setWeekCategories, dayCategories, setDayCategories
         }}>
             {children}
         </AcademyContext.Provider>
