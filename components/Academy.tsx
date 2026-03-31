@@ -222,7 +222,9 @@ const Academy: React.FC = () => {
                               <div className="p-2 bg-brand/10 rounded-xl shadow-inner border border-brand/20">
                                 <Calendar className="text-brand" size={16} />
                               </div>
-                              <h4 className="text-[14px] font-black text-white uppercase tracking-tighter">{dayBlock.day || dayBlock.title || 'Dia de Estudo'}</h4>
+                              <h4 className="text-[14px] font-black text-white uppercase tracking-tighter">
+                                {dayBlock.day ? `${dayBlock.day}${dayBlock.title ? ` • ${dayBlock.title}` : ''}` : (dayBlock.title || 'Dia de Estudo')}
+                              </h4>
                             </div>
                             <div className="space-y-3">
                               {(dayBlock.resources || []).map(resource => {

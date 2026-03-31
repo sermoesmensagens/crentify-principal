@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { BibleData, AcademyContent, AcademyCategory, AcademyVisibility, AcademyCourse, AcademyResource } from '../types';
+import { BibleData, AcademyContent, AcademyCategory, AcademyVisibility, AcademyCourse, AcademyResource, AcademyWeekCategory, AcademyDayCategory } from '../types';
 import { Upload, Database, GraduationCap, Plus, Trash2, CheckCircle2, AlertTriangle, Settings, Zap, Loader2, Youtube, Edit2, FileText, X, Eye, EyeOff, Lock, Link, Image as ImageIcon, LayoutGrid, List, ImagePlus } from 'lucide-react';
 import { getLogoUrl, uploadLogo, ensureBucketExists } from '../services/logoService';
 import { supabase } from '../services/supabaseClient';
@@ -16,8 +16,15 @@ const AdminPanel: React.FC = () => {
     content: academyContent, 
     setAcademyContent, 
     categories: academyCategories, 
-    setAcademyCategories 
+    setAcademyCategories,
+    weekCategories,
+    setWeekCategories,
+    dayCategories,
+    setDayCategories
   } = useAcademy();
+  
+  const [categoryToManage, setCategoryToManage] = useState<'weeks' | 'days' | null>(null);
+  const [newCatName, setNewCatName] = useState('');
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'bible' | 'courses' | 'lessons' | 'users' | 'config'>('bible');
@@ -445,12 +452,32 @@ const AdminPanel: React.FC = () => {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Semana (Grupo)</label>
-                  <input type="text" placeholder="Ex: Semana 1" value={newModule.week || ''} onChange={e => setNewModule({ ...newModule, week: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Semana (Grupo)</label>
+                    <button onClick={() => setCategoryToManage('weeks')} className="text-[9px] font-black text-brand hover:underline uppercase tracking-tighter transition-all">Gerenciar</button>
+                  </div>
+                  <select 
+                    value={newModule.week || ''} 
+                    onChange={e => setNewModule({ ...newModule, week: e.target.value })} 
+                    className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none cursor-pointer hover:border-brand/30 transition-all appearance-none"
+                  >
+                    <option value="">Selecione a Semana...</option>
+                    {weekCategories.map(w => <option key={w.id} value={w.name}>{w.name}</option>)}
+                  </select>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Dia da Semana</label>
-                  <input type="text" placeholder="Ex: Segunda-feira" value={newModule.day || ''} onChange={e => setNewModule({ ...newModule, day: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Dia da Semana</label>
+                    <button onClick={() => setCategoryToManage('days')} className="text-[9px] font-black text-brand hover:underline uppercase tracking-tighter transition-all">Gerenciar</button>
+                  </div>
+                  <select 
+                    value={newModule.day || ''} 
+                    onChange={e => setNewModule({ ...newModule, day: e.target.value })} 
+                    className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none cursor-pointer hover:border-brand/30 transition-all appearance-none"
+                  >
+                    <option value="">Selecione o Dia...</option>
+                    {dayCategories.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
+                  </select>
                 </div>
               </div>
 
@@ -670,6 +697,68 @@ const AdminPanel: React.FC = () => {
           {error && (
             <div className="p-6 bg-rose-500/10 border border-rose-500/30 rounded-[32px] text-rose-500 text-center font-black uppercase text-[10px] tracking-widest flex items-center justify-center gap-3">
               <AlertTriangle size={18} /> Erro: {error}
+            </div>
+          )}
+
+          {/* Modal de Gerenciamento de Categorias (Semanas/Dias) */}
+          {categoryToManage && (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-300">
+              <div className="bg-[#161b22] border border-white/10 rounded-[48px] w-full max-w-md overflow-hidden shadow-2xl flex flex-col">
+                <div className="p-8 border-b border-white/5 flex items-center justify-between">
+                  <div>
+                    <h3 className="text-xl font-black text-white uppercase tracking-tighter">Gerenciar {categoryToManage === 'weeks' ? 'Semanas' : 'Dias'}</h3>
+                    <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Adicione ou exclua opções</p>
+                  </div>
+                  <button onClick={() => { setCategoryToManage(null); setNewCatName(''); }} className="p-2 bg-white/5 rounded-xl text-gray-400 hover:text-white transition-all"><X size={20}/></button>
+                </div>
+                
+                <div className="p-8 space-y-6">
+                  {/* Novo Input */}
+                  <div className="flex gap-2">
+                    <input 
+                      type="text" 
+                      placeholder={categoryToManage === 'weeks' ? "Ex: Semana 4" : "Ex: Terça-feira"}
+                      value={newCatName}
+                      onChange={e => setNewCatName(e.target.value)}
+                      className="flex-1 bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-white font-bold outline-none focus:ring-2 focus:ring-brand/30"
+                    />
+                    <button 
+                      onClick={() => {
+                        if (!newCatName.trim()) return;
+                        const newCat = { id: Date.now().toString(), name: newCatName.trim() };
+                        if (categoryToManage === 'weeks') setWeekCategories([...weekCategories, newCat]);
+                        else setDayCategories([...dayCategories, newCat]);
+                        setNewCatName('');
+                      }}
+                      className="bg-brand text-white p-4 rounded-2xl hover:scale-105 active:scale-95 transition-all"
+                    >
+                      <Plus size={20} />
+                    </button>
+                  </div>
+
+                  {/* Lista */}
+                  <div className="max-h-60 overflow-y-auto pr-2 custom-scrollbar space-y-2">
+                    {(categoryToManage === 'weeks' ? weekCategories : dayCategories).map(cat => (
+                      <div key={cat.id} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl group">
+                        <span className="text-xs font-black text-white uppercase tracking-tight">{cat.name}</span>
+                        <button 
+                          onClick={() => {
+                            if (categoryToManage === 'weeks') setWeekCategories(weekCategories.filter(w => w.id !== cat.id));
+                            else setDayCategories(dayCategories.filter(d => d.id !== cat.id));
+                          }}
+                          className="text-gray-600 hover:text-rose-500 transition-colors"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="p-8 bg-brand/5 border-t border-white/5">
+                  <button onClick={() => setCategoryToManage(null)} className="w-full py-4 bg-white/5 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest border border-white/10 hover:bg-white/10 transition-all">Fechar</button>
+                </div>
+              </div>
             </div>
           )}
         </div>
