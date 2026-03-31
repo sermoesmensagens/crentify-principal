@@ -12,8 +12,14 @@ export enum Section {
   STUDIES = 'studies'
 }
 
+export interface AcademyProgressRecord {
+  completed: boolean;
+  timeSpent?: number; // Time in seconds
+}
+
 export interface AcademyProgress {
-  completedLessons: string[]; // Array of AcademyContent.id
+  completedLessons: string[]; // Legacy compatibility (list of completed resource IDs)
+  records?: Record<string, AcademyProgressRecord>; // New: resourceId -> record mapping
 }
 
 export interface StudyProgress {

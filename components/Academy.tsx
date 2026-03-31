@@ -20,6 +20,14 @@ const Academy: React.FC = () => {
 
   const [reflectionText, setReflectionText] = useState('');
 
+  // Load existing reflection when opening a resource
+  useEffect(() => {
+    if (activeResourceId) {
+      const existingRef = [...reflections].sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime()).find(r => r.contentId === activeResourceId);
+      setReflectionText(existingRef ? existingRef.text : '');
+    }
+  }, [activeResourceId]); // Only when opening the modal
+
   // Estados Acordeão e Timer
   const [expandedWeeks, setExpandedWeeks] = useState<string[]>([]);
   const [timerSeconds, setTimerSeconds] = useState(0);
@@ -81,16 +89,24 @@ const Academy: React.FC = () => {
     const activeResource = selectedLesson?.resources?.find(r => r.id === activeResourceId);
     if (!selectedLesson || !activeResource || !reflectionText.trim()) return;
     
+    const existingIndex = reflections.findIndex(r => r.contentId === activeResource.id);
     const newRef: AcademyReflection = {
-      id: Date.now().toString(),
-      contentId: activeResource.id, // now points to the resource ID
+      id: existingIndex !== -1 ? reflections[existingIndex].id : Date.now().toString(),
+      contentId: activeResource.id,
       title: activeResource.title,
       text: reflectionText,
       date: new Date().toISOString()
     };
     
-    setReflections([newRef, ...reflections]);
-    setReflectionText('');
+    let updated;
+    if (existingIndex !== -1) {
+      updated = [...reflections];
+      updated[existingIndex] = newRef;
+    } else {
+      updated = [newRef, ...reflections];
+    }
+    
+    setReflections(updated);
   };
 
   const getCourseThumbnail = (course: AcademyCourse) => {
@@ -117,15 +133,25 @@ const Academy: React.FC = () => {
     return themes[categoryId] || defaultTheme;
   };
 
-  const toggleResourceCompletion = (resourceId: string) => {
+  const toggleResourceCompletion = (resourceId: string, seconds?: number) => {
     const isCompleted = progress.completedLessons.includes(resourceId);
-    let updated;
+    let updatedList;
     if (isCompleted) {
-      updated = progress.completedLessons.filter(id => id !== resourceId);
+      updatedList = progress.completedLessons.filter(id => id !== resourceId);
     } else {
-      updated = [...progress.completedLessons, resourceId];
+      updatedList = [...progress.completedLessons, resourceId];
     }
-    setProgress({ ...progress, completedLessons: updated });
+    
+    // Update detailed records
+    const updatedRecords = { ...(progress.records || {}) };
+    const currentRecord = updatedRecords[resourceId] || { completed: false, timeSpent: 0 };
+    
+    updatedRecords[resourceId] = {
+      completed: !isCompleted,
+      timeSpent: (currentRecord.timeSpent || 0) + (seconds || 0)
+    };
+    
+    setProgress({ ...progress, completedLessons: updatedList, records: updatedRecords });
   };
 
   const courseLessons = selectedCourse ? content.filter(l => l.courseId === selectedCourse.id) : [];
@@ -246,15 +272,22 @@ const Academy: React.FC = () => {
                               {(dayBlock.resources || []).map(resource => {
                                 const isResComplete = progress.completedLessons.includes(resource.id);
                                 return (
-                                <div key={resource.id} className={`flex items-center justify-between p-4 rounded-[20px] transition-all group cursor-pointer ${isResComplete ? 'bg-white/5 border border-white/5' : 'bg-[#161b22] border border-white/10 hover:border-brand/50 hover:shadow-[0_0_15px_rgba(var(--brand-rgb),0.1)]'}`} onClick={() => toggleResourceCompletion(resource.id)}>
-                                  <div className="flex items-center gap-4 flex-1 pr-4">
-                                    <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all flex-shrink-0 ${isResComplete ? 'bg-emerald-500 border-emerald-500 text-white shadow-[0_0_10px_rgba(16,185,129,0.3)]' : 'border-gray-600 group-hover:border-brand'}`}>
-                                      {isResComplete && <CheckCircle2 size={14} strokeWidth={4} />}
+                                  <div key={resource.id} className={`flex items-center justify-between p-4 rounded-[20px] transition-all group cursor-pointer ${isResComplete ? 'bg-white/5 border border-white/5' : 'bg-[#161b22] border border-white/10 hover:border-brand/50 hover:shadow-[0_0_15px_rgba(var(--brand-rgb),0.1)]'}`} onClick={() => toggleResourceCompletion(resource.id)}>
+                                    <div className="flex items-center gap-4 flex-1 pr-4">
+                                      <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all flex-shrink-0 ${isResComplete ? 'bg-emerald-500 border-emerald-500 text-white shadow-[0_0_10px_rgba(16,185,129,0.3)]' : 'border-gray-600 group-hover:border-brand'}`}>
+                                        {isResComplete && <CheckCircle2 size={14} strokeWidth={4} />}
+                                      </div>
+                                      <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-3">
+                                        <span className={`text-[12px] md:text-[14px] font-black uppercase tracking-tight line-clamp-2 transition-colors ${isResComplete ? 'text-gray-600 line-through' : 'text-gray-200 group-hover:text-white'}`}>
+                                          {resource.title}
+                                        </span>
+                                        {isResComplete && progress.records?.[resource.id]?.timeSpent && (
+                                          <span className="text-[9px] font-black text-rose-500 uppercase tracking-widest bg-rose-500/10 px-2 py-0.5 rounded-md border border-rose-500/20 shadow-inner">
+                                            {formatTime(progress.records[resource.id].timeSpent || 0)}
+                                          </span>
+                                        )}
+                                      </div>
                                     </div>
-                                    <span className={`text-[12px] md:text-[14px] font-black uppercase tracking-tight line-clamp-2 transition-colors ${isResComplete ? 'text-gray-600 line-through' : 'text-gray-200 group-hover:text-white'}`}>
-                                      {resource.title}
-                                    </span>
-                                  </div>
                                   <div className="flex items-center gap-3 flex-shrink-0">
                                     {resource.duration && (
                                       <span className="hidden md:flex text-[9px] font-black text-brand uppercase px-4 py-2 rounded-full border border-brand/20 bg-brand/5 whitespace-nowrap shadow-inner">
@@ -491,7 +524,7 @@ const Academy: React.FC = () => {
                 onClick={() => {
                   if (reflectionText.trim()) handleSaveReflection();
                   if (!progress.completedLessons.includes(activeResource.id)) {
-                    toggleResourceCompletion(activeResource.id);
+                    toggleResourceCompletion(activeResource.id, timerSeconds);
                   }
                   setActiveResourceId(null);
                   setSelectedLesson(null);
