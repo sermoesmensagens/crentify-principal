@@ -25,6 +25,16 @@ export interface AcademyCategory {
   name: string;
 }
 
+export interface AcademyWeekCategory {
+  id: string;
+  name: string;
+}
+
+export interface AcademyDayCategory {
+  id: string;
+  name: string;
+}
+
 export type AcademyVisibility = 'público' | 'não listado' | 'privado';
 
 export interface AcademyResource {
