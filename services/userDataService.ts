@@ -56,11 +56,15 @@ export const loadSharedData = async (adminEmails: string[]): Promise<Record<stri
         .in('email', adminEmails);
 
     if (profileError) {
-        console.error("❌ Erro ao buscar perfis de administradores:", profileError);
+        console.error("❌ Erro ao buscar perfis de administradores. Verifique se a tabela 'profiles' existe:", profileError);
     }
 
     const adminIds = adminProfiles?.map(p => p.id) || [];
     
+    if (adminIds.length === 0) {
+        console.warn("⚠️ Nenhum ID de administrador encontrado na tabela 'profiles'. Certifique-se de executar o script SQL de correção.");
+    }
+
     // Se não encontramos o sermoes.mensagens@gmail.com na lista por algum motivo, 
     // mas o usuário atual é admin, tentamos carregar de qualquer admin que tenha dados
     const { data, error } = await supabase
@@ -98,7 +102,7 @@ export const loadSharedData = async (adminEmails: string[]): Promise<Record<stri
                     const betterRecord = data.find(d => d.key === item.key && !isEmpty(d.value));
                     if (betterRecord) {
                         sharedData[item.key] = betterRecord.value;
-                        console.log(`✅ Chave [${item.key}] carregada (Recuperada de versão anterior devido a erro de sobrescrita vazia)`);
+                        console.log(`✅ Chave [${item.key}] carregada (Recuperada de versão anterior)`);
                     } else {
                         sharedData[item.key] = item.value;
                     }
@@ -111,11 +115,12 @@ export const loadSharedData = async (adminEmails: string[]): Promise<Record<stri
     }
 
     if (Object.keys(sharedData).length === 0) {
-        console.warn("⚠️ Nenhum dado compartilhado foi retornado. Provavelmente bloqueado por RLS.");
+        console.warn("⚠️ Nenhum dado compartilhado foi retornado. Provavelmente bloqueado por RLS. Execute o SQL de correção.");
     }
 
     return sharedData;
 };
+
 
 /**
  * Saves a specific key-value pair to Supabase.
