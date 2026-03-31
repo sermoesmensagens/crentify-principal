@@ -47,10 +47,25 @@ export const loadSharedData = async (adminEmails: string[]): Promise<Record<stri
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.user) return {};
 
-    console.log("🔍 Buscando dados compartilhados...");
+    console.log("🔍 Buscando IDs dos administradores para carregar dados compartilhados...");
+    
+    // Primeiro, encontramos os IDs de todos os admins
+    const { data: adminProfiles, error: profileError } = await supabase
+        .from('profiles')
+        .select('id, email')
+        .in('email', adminEmails);
+
+    if (profileError) {
+        console.error("❌ Erro ao buscar perfis de administradores:", profileError);
+    }
+
+    const adminIds = adminProfiles?.map(p => p.id) || [];
+    
+    // Se não encontramos o sermoes.mensagens@gmail.com na lista por algum motivo, 
+    // mas o usuário atual é admin, tentamos carregar de qualquer admin que tenha dados
     const { data, error } = await supabase
         .from('user_data')
-        .select('key, value, updated_at')
+        .select('key, value, updated_at, user_id')
         .in('key', [
             'crentify_bible_data', 
             'crentify_bible_progress', 
@@ -60,11 +75,12 @@ export const loadSharedData = async (adminEmails: string[]): Promise<Record<stri
             'crentify_academy_weeks',
             'crentify_academy_days'
         ])
+        .in('user_id', adminIds) // Filtramos pelos IDs dos administradores descobertos
         .order('updated_at', { ascending: false });
 
     if (error) {
         console.error(`❌ Erro ao buscar dados compartilhados:`, error);
-        throw error; // Lançar o erro para que o chamador saiba que falhou
+        throw error;
     }
 
     const sharedData: Record<string, any> = {};
