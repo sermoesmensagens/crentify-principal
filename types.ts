@@ -388,3 +388,35 @@ export interface Project {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface ReadingPlanCategory {
+  id: string;
+  name: string;
+  color?: string;
+}
+
+export interface ReadingPlan {
+  id: string;
+  title: string;
+  description: string;
+  thumbnailUrl?: string;
+  durationDays: number;
+  categoryId: string;
+  isAiGenerated: boolean;
+  visibility: AcademyVisibility;
+  createdAt: string;
+}
+
+export interface ReadingPlanContent {
+  id: string;
+  planId: string;
+  week: string;
+  day: string;
+  title: string;
+  resources: AcademyResource[];
+}
+
+export interface ReadingPlanProgress {
+  completedResources: string[];
+}
+}
