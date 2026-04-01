@@ -1324,11 +1324,31 @@ const AdminPanel: React.FC = () => {
             <div className="p-10 overflow-y-auto custom-scrollbar flex-1 space-y-8">
               {smartImportResult.length === 0 ? (
                 <div className="space-y-6">
-                  <div className="bg-brand/5 border border-brand/20 p-6 rounded-3xl">
+                  <div className="bg-brand/5 border border-brand/20 p-6 rounded-3xl space-y-4">
                     <p className="text-xs font-bold text-gray-400 leading-relaxed uppercase tracking-wide">
-                      💡 <span className="text-brand">COMO USAR:</span> Selecione o texto do seu PDF de leitura, copie e cole abaixo. A IA irá identificar as semanas, dias e versículos para você. Certifique-se de ter selecionado um plano no formulário principal.
+                      💡 <span className="text-brand">COMO USAR:</span> Selecione o texto do seu PDF de leitura, copie e cole abaixo. A IA irá identificar as semanas, dias e versículos para você.
                     </p>
+                    
+                    {/* Seletor de Plano de Backup dentro do Modal */}
+                    <div className="space-y-2 border-t border-brand/10 pt-4">
+                      <label className="text-[9px] font-black text-gray-500 uppercase tracking-[0.3em] ml-1">Vincular ao Plano:</label>
+                      <select 
+                        value={newPlanContent.planId} 
+                        onChange={e => setNewPlanContent({ ...newPlanContent, planId: e.target.value })} 
+                        className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-2xl px-6 py-4 text-xs font-black outline-none hover:border-brand/30 transition-all shadow-inner"
+                      >
+                        <option value="">Selecione um plano...</option>
+                        {readingPlans.map(p => <option key={p.id} value={p.id}>{p.title}</option>)}
+                      </select>
+                    </div>
                   </div>
+
+                  {/* Alerta de Erro dentro do Modal */}
+                  {error && (
+                    <div className="p-5 bg-rose-500/10 border border-rose-500/30 rounded-3xl text-rose-500 text-center font-black uppercase text-[9px] tracking-widest flex items-center justify-center gap-3 animate-in shake">
+                      <AlertTriangle size={14} /> {error}
+                    </div>
+                  )}
                   
                   <div className="relative">
                     <textarea 
