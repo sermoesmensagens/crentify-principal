@@ -97,9 +97,14 @@ export const parseReadingPlanWithAi = async (text: string) => {
     });
     
     const responseText = result.text;
-    
-    // Limpeza básica caso o modelo coloque markdown ```json
-    const cleanedJson = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
+    // Extrator robusto de JSON: procura o primeiro [ e o último ]
+    const jsonMatch = responseText.match(/\[[\s\S]*\]/);
+    if (!jsonMatch) {
+      console.error("JSON não encontrado na resposta da IA:", responseText);
+      throw new Error("IA não retornou um formato de plano válido. Tente copiar menos texto por vez.");
+    }
+
+    const cleanedJson = jsonMatch[0];
     return JSON.parse(cleanedJson) as Array<{
       week: string;
       day: string;
@@ -108,6 +113,9 @@ export const parseReadingPlanWithAi = async (text: string) => {
     }>;
   } catch (error) {
     console.error("Erro ao processar plano com IA:", error);
-    throw new Error("Não foi possível processar este trecho. Verifique o texto e tente novamente.");
+    if (error instanceof SyntaxError) {
+       throw new Error("O Mentor IA enviou um formato corrompido. Tente clicar em extrair novamente.");
+    }
+    throw error;
   }
 };
