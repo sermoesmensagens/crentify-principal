@@ -419,9 +419,21 @@ const AdminPanel: React.FC = () => {
           setIsWaitingForQuota(false);
         }
 
-        const result = await parseReadingPlanWithAi(chunks[i]);
-        if (Array.isArray(result)) {
-          allExtractedData.push(...result);
+        try {
+          const result = await parseReadingPlanWithAi(chunks[i]);
+          if (Array.isArray(result)) {
+            allExtractedData.push(...result);
+          }
+        } catch (aiErr) {
+          console.warn("IA falhou por cota. Ativando Processador Local...", aiErr);
+          // Se a IA falhou, tentamos o parser local para não perder o texto do usuário
+          const localResult = parseReadingPlanLocally(chunks[i]);
+          if (localResult.length > 0) {
+            allExtractedData.push(...localResult);
+          } else {
+             // Se nem o local achou nada, aí repassamos o erro
+             throw aiErr;
+          }
         }
       }
 
@@ -430,7 +442,12 @@ const AdminPanel: React.FC = () => {
       setTimeout(() => setSuccess(false), 3000);
     } catch (err: any) {
       console.error("Erro na importação IA:", err);
-      setError(err.message || "Erro ao processar com IA.");
+      // Personalizar mensagem para o usuário
+      if (err.message?.includes('429')) {
+        setError("Limite diário do Google atingido. Ativamos o 'Processador Local' para tentar extrair o que foi possível sem a IA.");
+      } else {
+        setError(err.message || "Erro ao processar.");
+      }
     } finally {
       setIsProcessingSmartImport(false);
     }
