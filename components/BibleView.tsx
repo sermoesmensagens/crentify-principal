@@ -367,35 +367,7 @@ const BibleView: React.FC = () => {
                     </div>
                   ))}
 
-                  <div className="mt-8 flex flex-col items-center gap-4 py-8 border-t border-white/5 animate-in fade-in slide-in-from-bottom duration-1000">
-                    <button
-                      onClick={() => toggleChapter(selectedBook.name, selectedChapterIndex + 1)}
-                      className={`group relative overflow-hidden px-6 py-3 rounded-xl font-black uppercase text-[9px] tracking-widest transition-all duration-500 active:scale-95 shadow-lg ${
-                        (progress.completedChapters[selectedBook.name] || []).includes(selectedChapterIndex + 1)
-                          ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 shadow-emerald-500/10'
-                          : 'bg-brand text-white shadow-lg shadow-brand/30 hover:scale-105'
-                      }`}
-                    >
-                      <div className="relative z-10 flex items-center gap-2">
-                        {(progress.completedChapters[selectedBook.name] || []).includes(selectedChapterIndex + 1) ? (
-                          <>
-                            <CheckCircle2 size={16} />
-                            <span>CONCLUÍDO</span>
-                          </>
-                        ) : (
-                          <>
-                            <CheckCircle2 size={16} className="group-hover:animate-bounce" />
-                            <span>MARCAR COMO LIDO</span>
-                          </>
-                        )}
-                      </div>
-                      <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:animate-shimmer" />
-                    </button>
-                    
-                    <p className="text-gray-600 font-bold text-[10px] uppercase tracking-widest opacity-50">
-                      Você concluiu este capítulo? Clique acima para registrar.
-                    </p>
-                  </div>
+
                 </div>
 
                 {/* Floating Side Nav Arrows (Desktop) */}
@@ -420,11 +392,36 @@ const BibleView: React.FC = () => {
                   </button>
                 </div>
 
-                <div className="p-6 border-t border-white/5 flex justify-center gap-4 bg-black/20">
-                  <button disabled={selectedChapterIndex === 0} onClick={() => setSelectedChapterIndex(prev => prev - 1)} className="flex items-center justify-center gap-2 px-8 py-3 rounded-xl bg-white/5 text-[9px] font-black uppercase tracking-widest text-gray-500 hover:text-brand disabled:opacity-10 transition-all border border-transparent hover:border-brand/20">
+                <div className="p-6 border-t border-white/5 flex items-center justify-between bg-black/20">
+                  <button disabled={selectedChapterIndex === 0} onClick={() => setSelectedChapterIndex(prev => prev - 1)} className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white/5 text-[9px] font-black uppercase tracking-widest text-gray-500 hover:text-brand disabled:opacity-10 transition-all border border-transparent hover:border-brand/20">
                     <ArrowLeft size={14} /> Anterior
                   </button>
-                  <button disabled={selectedChapterIndex === (selectedBook.chapters?.length || 1) - 1} onClick={() => setSelectedChapterIndex(prev => prev + 1)} className="flex items-center justify-center gap-2 px-8 py-3 rounded-xl bg-white/5 text-[9px] font-black uppercase tracking-widest text-gray-500 hover:text-brand disabled:opacity-10 transition-all border border-transparent hover:border-brand/20">
+
+                  <button
+                    onClick={() => toggleChapter(selectedBook.name, selectedChapterIndex + 1)}
+                    className={`group relative overflow-hidden px-6 py-3 rounded-xl font-black uppercase text-[9px] tracking-widest transition-all duration-500 active:scale-95 shadow-lg ${
+                      (progress.completedChapters[selectedBook.name] || []).includes(selectedChapterIndex + 1)
+                        ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 shadow-emerald-500/10'
+                        : 'bg-brand text-white shadow-lg shadow-brand/30 hover:scale-105'
+                    }`}
+                  >
+                    <div className="relative z-10 flex items-center gap-2">
+                      {(progress.completedChapters[selectedBook.name] || []).includes(selectedChapterIndex + 1) ? (
+                        <>
+                          <CheckCircle2 size={16} />
+                          <span>CONCLUÍDO</span>
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle2 size={16} className="group-hover:animate-bounce" />
+                          <span>MARCAR COMO LIDO</span>
+                        </>
+                      )}
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:animate-shimmer" />
+                  </button>
+
+                  <button disabled={selectedChapterIndex === (selectedBook.chapters?.length || 1) - 1} onClick={() => setSelectedChapterIndex(prev => prev + 1)} className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white/5 text-[9px] font-black uppercase tracking-widest text-gray-500 hover:text-brand disabled:opacity-10 transition-all border border-transparent hover:border-brand/20">
                     Próximo <ArrowRight size={14} />
                   </button>
                 </div>
