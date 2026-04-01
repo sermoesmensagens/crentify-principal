@@ -3,12 +3,13 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export const getMentorResponse = async (query: string) => {
   const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({ 
-    model: "gemini-1.5-flash",
-    systemInstruction: "Você é o 'Mentor IA CRENTIFY', um assistente teológico protestante. Suas respostas devem ser baseadas exclusivamente na teologia cristã protestante, citando versículos bíblicos (NVI ou Almeida) e mantendo um tom de encorajamento, sabedoria e instrução espiritual. Seja conciso mas profundo."
-  }, { apiVersion: 'v1' });
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }, { apiVersion: 'v1' });
 
-  const result = await model.generateContent(query);
+  const systemInstruction = "Você é o 'Mentor IA CRENTIFY', um assistente teológico protestante. Suas respostas devem ser baseadas exclusivamente na teologia cristã protestante, citando versículos bíblicos (NVI ou Almeida) e mantendo um tom de encorajamento, sabedoria e instrução espiritual. Seja conciso mas profundo.";
+  
+  const fullPrompt = `${systemInstruction}\n\nUsuário: ${query}`;
+
+  const result = await model.generateContent(fullPrompt);
   const response = await result.response;
   return response.text();
 };
@@ -45,11 +46,12 @@ export const generateContentScript = async (
 
   const model = genAI.getGenerativeModel({ 
     model: "gemini-1.5-flash",
-    generationConfig: { temperature: 0.7 },
-    systemInstruction
+    generationConfig: { temperature: 0.7 }
   }, { apiVersion: 'v1' });
 
-  const result = await model.generateContent(prompt);
+  const fullPrompt = `${systemInstruction}\n\nTarefa: ${prompt}`;
+
+  const result = await model.generateContent(fullPrompt);
   const response = await result.response;
   return response.text();
 };
@@ -81,20 +83,15 @@ export const parseReadingPlanWithAi = async (text: string) => {
   4. Se não houver um título claro para o dia, gere um pequeno resumo baseado nos versículos (Ex: "A Queda do Homem").
   5. Retorne APENAS o JSON, sem explicações ou markdown.`;
 
-  const prompt = `Extraia o plano de leitura deste texto:
-  
-  """
-  ${text}
-  """`;
+  const fullPrompt = `${systemInstruction}\n\nExtraia o plano de leitura deste texto:\n\n"""\n${text}\n"""`;
 
   try {
     const model = genAI.getGenerativeModel({ 
       model: "gemini-1.5-flash",
-      generationConfig: { temperature: 0.1 },
-      systemInstruction
+      generationConfig: { temperature: 0.1 }
     }, { apiVersion: 'v1' });
 
-    const result = await model.generateContent(prompt);
+    const result = await model.generateContent(fullPrompt);
     const response = await result.response;
     const responseText = response.text();
 
