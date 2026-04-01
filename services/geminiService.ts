@@ -1,18 +1,17 @@
 
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export const getMentorResponse = async (query: string) => {
-  const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
-  const response = await ai.models.generateContent({
-    model: 'gemini-1.5-flash',
-    contents: query,
-    config: {
-      systemInstruction: "Você é o 'Mentor IA CRENTIFY', um assistente teológico protestante. Suas respostas devem ser baseadas exclusivamente na teologia cristã protestante, citando versículos bíblicos (NVI ou Almeida) e mantendo um tom de encorajamento, sabedoria e instrução espiritual. Seja conciso mas profundo.",
-    },
+  const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
+  const model = genAI.getGenerativeModel({ 
+    model: "gemini-1.5-flash",
+    systemInstruction: "Você é o 'Mentor IA CRENTIFY', um assistente teológico protestante. Suas respostas devem ser baseadas exclusivamente na teologia cristã protestante, citando versículos bíblicos (NVI ou Almeida) e mantendo um tom de encorajamento, sabedoria e instrução espiritual. Seja conciso mas profundo."
   });
-  return response.text;
-};
 
+  const result = await model.generateContent(query);
+  const response = await result.response;
+  return response.text();
+};
 
 export const generateContentScript = async (
   topic: string,
@@ -22,7 +21,7 @@ export const generateContentScript = async (
   transcript: string,
   transcriptSpeaker: string
 ) => {
-  const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
+  const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 
   let prompt = "";
   let systemInstruction = "";
@@ -44,13 +43,15 @@ export const generateContentScript = async (
     prompt = `Crie um roteiro de vídeo para ${platform}. Tópico: ${topic}. Ângulo: ${editorialAngle}.`;
   }
 
-  const response = await ai.models.generateContent({
-    model: 'gemini-1.5-flash',
-    contents: prompt,
-    config: { systemInstruction, temperature: 0.7 }
+  const model = genAI.getGenerativeModel({ 
+    model: "gemini-1.5-flash",
+    generationConfig: { temperature: 0.7 },
+    systemInstruction
   });
 
-  return response.text;
+  const result = await model.generateContent(prompt);
+  const response = await result.response;
+  return response.text();
 };
 
 /**
@@ -58,7 +59,7 @@ export const generateContentScript = async (
  * Returns an array of partial ReadingPlanContent.
  */
 export const parseReadingPlanWithAi = async (text: string) => {
-  const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
+  const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
   
   const systemInstruction = `Você é um Assistente de Processamento de Dados Bíblicos.
   Sua tarefa é extrair um plano de leitura de um texto bruto e retornar APENAS um JSON válido.
@@ -87,16 +88,16 @@ export const parseReadingPlanWithAi = async (text: string) => {
   """`;
 
   try {
-    const result = await ai.models.generateContent({
-      model: 'gemini-pro',
-      contents: prompt,
-      config: { 
-        systemInstruction,
-        temperature: 0.1 
-      }
+    const model = genAI.getGenerativeModel({ 
+      model: "gemini-1.5-flash",
+      generationConfig: { temperature: 0.1 },
+      systemInstruction
     });
-    
-    const responseText = result.text;
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const responseText = response.text();
+
     // Extrator robusto de JSON: procura o primeiro [ e o último ]
     const jsonMatch = responseText.match(/\[[\s\S]*\]/);
     if (!jsonMatch) {

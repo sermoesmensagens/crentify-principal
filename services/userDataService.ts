@@ -77,7 +77,10 @@ export const loadSharedData = async (adminEmails: string[]): Promise<Record<stri
             'crentify_academy_categories', 
             'crentify_academy_courses',
             'crentify_academy_weeks',
-            'crentify_academy_days'
+            'crentify_academy_days',
+            'crentify_reading_plans',
+            'crentify_reading_plan_content',
+            'crentify_reading_plan_categories'
         ])
         .in('user_id', adminIds) // Filtramos pelos IDs dos administradores descobertos
         .order('updated_at', { ascending: false });

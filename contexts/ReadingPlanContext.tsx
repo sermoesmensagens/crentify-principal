@@ -73,13 +73,25 @@ export const ReadingPlanProvider: React.FC<{ children: React.ReactNode }> = ({ c
     const { cloudData, sharedData, isDataLoaded, isInitialLoading, isSharedDataLoading } = useDataContext();
     const isAdmin = session?.user?.email && ADMIN_EMAILS.includes(session.user.email);
 
-    const [plans, setPlans] = useState<ReadingPlan[]>(() => safeLocalStorageGet('crentify_reading_plans', INITIAL_MOCK_PLANS));
-    const [planContent, setPlanContent] = useState<ReadingPlanContent[]>(() => safeLocalStorageGet('crentify_reading_plan_content', INITIAL_MOCK_CONTENT));
-    const [categories, setCategories] = useState<ReadingPlanCategory[]>(() => safeLocalStorageGet('crentify_reading_plan_categories', [
-        { id: "1", name: "Bíblia Anual", color: "#ff5c5c" },
-        { id: "2", name: "Temático", color: "#5cff8a" },
-        { id: "3", name: "IA Personalizado", color: "#9d5cff" }
-    ]));
+    const [plans, setPlans] = useState<ReadingPlan[]>(() => {
+        const local = safeLocalStorageGet('crentify_reading_plans', null);
+        if (local) return local;
+        return isAdmin ? [] : INITIAL_MOCK_PLANS;
+    });
+    const [planContent, setPlanContent] = useState<ReadingPlanContent[]>(() => {
+        const local = safeLocalStorageGet('crentify_reading_plan_content', null);
+        if (local) return local;
+        return isAdmin ? [] : INITIAL_MOCK_CONTENT;
+    });
+    const [categories, setCategories] = useState<ReadingPlanCategory[]>(() => {
+        const local = safeLocalStorageGet('crentify_reading_plan_categories', null);
+        if (local) return local;
+        return [
+            { id: "1", name: "Bíblia Anual", color: "#ff5c5c" },
+            { id: "2", name: "Temático", color: "#5cff8a" },
+            { id: "3", name: "IA Personalizado", color: "#9d5cff" }
+        ];
+    });
     const [progress, setProgress] = useState<Record<string, ReadingPlanProgress>>(() => safeLocalStorageGet('crentify_reading_plan_progress', {}));
 
     // Sync from Cloud (User Progress)
