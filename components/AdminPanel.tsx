@@ -398,7 +398,7 @@ const AdminPanel: React.FC = () => {
 
     try {
       const lines = smartImportText.split('\n');
-      const chunkSize = 100;
+      const chunkSize = 300;
       const chunks: string[] = [];
       
       for (let i = 0; i < lines.length; i += chunkSize) {
@@ -415,7 +415,7 @@ const AdminPanel: React.FC = () => {
         // Adicionar delay gradual entre chunks para evitar erro 429 (Quota Exceeded) do Gemini
         if (i > 0) {
           setIsWaitingForQuota(true);
-          await new Promise(resolve => setTimeout(resolve, 3500));
+          await new Promise(resolve => setTimeout(resolve, 6000));
           setIsWaitingForQuota(false);
         }
 
@@ -1377,8 +1377,8 @@ const AdminPanel: React.FC = () => {
                       <>
                         <Loader2 size={24} className={isWaitingForQuota ? "text-brand/30" : "animate-spin text-brand"} />
                         {isWaitingForQuota 
-                          ? `RESPEITANDO LIMITE... (3s)` 
-                          : (importProgress.total > 1 ? `IA PROCESSANDO (${importProgress.current}/${importProgress.total})` : 'PROCESSANDO COM IA...')
+                          ? `RESPEITANDO LIMITE... (6s)` 
+                          : (importProgress.total > 1 ? `IA PROCESSANDO (${importProgress.current}/${importProgress.total})` : 'IA ANALISANDO TEXTO...')
                         }
                       </>
                     ) : (

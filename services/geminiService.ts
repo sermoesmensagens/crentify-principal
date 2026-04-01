@@ -10,18 +10,18 @@ const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 async function callGemini(prompt: string, temperature: number = 0.7) {
   const genAI = new GoogleGenerativeAI(API_KEY);
   
-  // Lista de modelos em ordem de preferência
-  // 1.5 Flash é o melhor custo-benefício e maior quota
-  // 1.5 Pro é mais inteligente mas menor quota
-  // 1.0 Pro é o fallback universal
-  // 2.0 Flash é experimental (menor quota ainda)
-  const models = ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-1.0-pro", "gemini-2.0-flash"];
+  // Lista de modelos em ordem de preferência (Estratégia V2)
+  // Flash 1.5 é o cavalo de batalha (15 RPM)
+  // Flash 8b é ultra rápido e muitas vezes tem cota separada
+  // Pro 1.5 é mais inteligente mas cota menor
+  // 1.0 Pro fallback legado
+  const models = ["gemini-1.5-flash", "gemini-1.5-flash-8b", "gemini-1.5-pro", "gemini-1.0-pro"];
   
   let lastError: any = null;
 
   for (const modelName of models) {
     let retryCount = 0;
-    const maxRetries = 2; // Total de 3 tentativas por modelo
+    const maxRetries = 2; // Tentativas dentro do mesmo modelo
 
     while (retryCount <= maxRetries) {
       try {
@@ -36,23 +36,28 @@ async function callGemini(prompt: string, temperature: number = 0.7) {
       } catch (err: any) {
         const status = err.status || (err.message?.includes('404') ? 404 : err.message?.includes('429') ? 429 : 500);
         
-        // Se for erro de quota (429), tentamos um retry rápido após 2 segundos
+        // Se for erro de quota (429), tentamos um retry rápido após 4 segundos
         if (status === 429 && retryCount < maxRetries) {
           retryCount++;
-          console.warn(`[GEMINI] Quota atingida em ${modelName}. Retry ${retryCount}/${maxRetries} em 2s...`);
-          await new Promise(resolve => setTimeout(resolve, 2000));
+          console.warn(`[GEMINI V2] Quota atingida em ${modelName}. Retry ${retryCount}/${maxRetries} em 4s...`);
+          await new Promise(resolve => setTimeout(resolve, 4000));
           continue;
         }
 
         lastError = err;
-        console.warn(`[GEMINI] Tentativa com ${modelName} falhou (Status: ${status}). Tentando próximo modelo...`);
+        console.warn(`[GEMINI V2] Tentativa com ${modelName} falhou (Status: ${status}).`);
         
-        // Se for erro de quota (exauriu retries) ou modelo não encontrado (404), pulamos para o próximo modelo da lista
-        if (status === 404 || status === 429) {
-          break; // Sai do while para ir ao próximo modelName no for loop
+        // Se for erro de quota (exauriu retries), esperamos 5s antes de tentar OUTRO modelo
+        if (status === 429) {
+          console.warn(`[GEMINI V2] Limite de Projeto/PPM provavelmente atingido. Pausando 5s antes de troca de modelo...`);
+          await new Promise(resolve => setTimeout(resolve, 5000));
+          break; // Sai do while para tentar o próximo modelo
+        }
+
+        if (status === 404) {
+          break; 
         }
         
-        // Se for outro erro grave, paramos imediatamente
         throw err;
       }
     }
