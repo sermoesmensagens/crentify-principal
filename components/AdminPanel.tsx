@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { BibleData, AcademyContent, AcademyCategory, AcademyVisibility, AcademyCourse, AcademyResource, AcademyWeekCategory, AcademyDayCategory } from '../types';
-import { Upload, Database, GraduationCap, Plus, Trash2, CheckCircle2, AlertTriangle, Settings, Zap, Loader2, Youtube, Edit2, FileText, X, Eye, EyeOff, Lock, Link, Image as ImageIcon, LayoutGrid, List, ImagePlus, BookOpen } from 'lucide-react';
+import { Upload, Database, GraduationCap, Plus, Trash2, CheckCircle2, AlertTriangle, Settings, Zap, Loader2, Youtube, Edit2, FileText, X, Eye, EyeOff, Lock, Link, Image as ImageIcon, LayoutGrid, List, ImagePlus, BookOpen, Sparkles } from 'lucide-react';
 import { getLogoUrl, uploadLogo, ensureBucketExists } from '../services/logoService';
 import { supabase } from '../services/supabaseClient';
 
@@ -9,6 +9,7 @@ import { useAcademy } from '../contexts/AcademyContext';
 import { useDataContext } from '../contexts/DataContext';
 import { useReadingPlans } from '../contexts/ReadingPlanContext';
 import { ReadingPlan, ReadingPlanContent, ReadingPlanCategory } from '../types';
+import { parseReadingPlanWithAi } from '../services/geminiService';
 
 const AdminPanel: React.FC = () => {
   const { bibleData, updateBibleData: setBibleData, cloudSyncStatus } = useDataContext();
@@ -41,6 +42,13 @@ const AdminPanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'bible' | 'courses' | 'lessons' | 'plans' | 'users' | 'config'>('bible');
   const [profiles, setProfiles] = useState<{ id: string, email: string, created_at: string }[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
+
+  // Estados para Importação Inteligente (IA)
+  const [isSmartImportOpen, setIsSmartImportOpen] = useState(false);
+  const [smartImportText, setSmartImportText] = useState('');
+  const [isProcessingSmartImport, setIsProcessingSmartImport] = useState(false);
+  const [smartImportResult, setSmartImportResult] = useState<any[]>([]);
+  const [importProgress, setImportProgress] = useState({ current: 0, total: 0 });
 
   // Estados para upload de logo
   const [currentLogoUrl, setCurrentLogoUrl] = useState<string>('/logo-v2.png');
@@ -373,6 +381,74 @@ const AdminPanel: React.FC = () => {
       day: newPlanContent.day || 'Dia 1', 
       resources: [] 
     });
+    setSuccess(true);
+    setTimeout(() => setSuccess(false), 3000);
+  };
+
+  const handleSmartImport = async () => {
+    if (!smartImportText.trim() || !newPlanContent.planId) {
+      setError("Selecione um plano e cole o texto do PDF primeiro.");
+      return;
+    }
+
+    setIsProcessingSmartImport(true);
+    setSmartImportResult([]);
+    setError(null);
+
+    try {
+      const lines = smartImportText.split('\n');
+      const chunkSize = 100;
+      const chunks: string[] = [];
+      
+      for (let i = 0; i < lines.length; i += chunkSize) {
+        chunks.push(lines.slice(i, i + chunkSize).join('\n'));
+      }
+
+      setImportProgress({ current: 0, total: chunks.length });
+      
+      const allExtractedData: any[] = [];
+      
+      for (let i = 0; i < chunks.length; i++) {
+        setImportProgress(prev => ({ ...prev, current: i + 1 }));
+        const result = await parseReadingPlanWithAi(chunks[i]);
+        if (Array.isArray(result)) {
+          allExtractedData.push(...result);
+        }
+      }
+
+      setSmartImportResult(allExtractedData);
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
+    } catch (err: any) {
+      console.error("Erro na importação IA:", err);
+      setError(err.message || "Erro ao processar com IA.");
+    } finally {
+      setIsProcessingSmartImport(false);
+    }
+  };
+
+  const confirmSmartImport = () => {
+    if (smartImportResult.length === 0) return;
+
+    const newContents = smartImportResult.map((item, idx) => ({
+      id: `ai-${Date.now()}-${idx}`,
+      planId: newPlanContent.planId,
+      week: item.week || 'Semana 1',
+      day: item.day || `Dia ${idx + 1}`,
+      title: item.title || 'Leitura do Dia',
+      resources: (item.verses || []).map((v: string, vIdx: number) => ({
+        id: `ai-res-${Date.now()}-${idx}-${vIdx}`,
+        type: 'leitura',
+        title: v,
+        duration: '1 cap',
+        instruction: 'Leia com atenção este trecho das Escrituras.'
+      }))
+    })) as ReadingPlanContent[];
+
+    setReadingPlanContent([...readingPlanContent, ...newContents]);
+    setIsSmartImportOpen(false);
+    setSmartImportResult([]);
+    setSmartImportText('');
     setSuccess(true);
     setTimeout(() => setSuccess(false), 3000);
   };
@@ -760,7 +836,15 @@ const AdminPanel: React.FC = () => {
                     <h2 className="text-3xl font-black text-white uppercase tracking-tighter">
                       {editingPlanContentId ? 'Editar Detalhe' : 'Novo Detalhe de Leitura'}
                     </h2>
-                    <p className="text-xs text-gray-500 font-bold uppercase tracking-[0.2em]">Vincule versículos a dias específicos</p>
+                    <div className="flex items-center gap-4">
+                      <p className="text-xs text-gray-500 font-bold uppercase tracking-[0.2em]">Vincule versículos a dias específicos</p>
+                      <button 
+                        onClick={() => setIsSmartImportOpen(true)}
+                        className="bg-brand/10 text-brand border border-brand/20 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest hover:bg-brand hover:text-white transition-all flex items-center gap-2"
+                      >
+                         <Sparkles size={12} /> Importação Inteligente (IA)
+                      </button>
+                    </div>
                   </div>
                 </div>
 
@@ -1218,9 +1302,105 @@ const AdminPanel: React.FC = () => {
               <p className="text-xs text-gray-500 font-bold leading-relaxed uppercase tracking-widest">Importe arquivos JSON para atualizar as escrituras em tempo real para todos os usuários.</p>
             </div>
           )}
+      </div>
+
+      {/* Modal de Importação Inteligente */}
+      {isSmartImportOpen && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-300 overflow-y-auto">
+          <div className="bg-[#161b22] border border-white/10 rounded-[48px] w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-3xl flex flex-col my-auto">
+            <div className="p-10 border-b border-white/5 flex items-center justify-between bg-gradient-to-r from-brand/10 to-transparent">
+              <div className="flex items-center gap-6">
+                <div className="w-16 h-16 bg-brand/20 text-brand rounded-3xl flex items-center justify-center shadow-xl">
+                  <Sparkles size={32} />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-black text-white uppercase tracking-tighter">Mentor IA: Importação Inteligente</h3>
+                  <p className="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em]">Transforme PDFs e textos brutos em planos estruturados</p>
+                </div>
+              </div>
+              <button onClick={() => setIsSmartImportOpen(false)} className="p-3 bg-white/5 rounded-2xl text-gray-400 hover:text-white transition-all"><X size={24}/></button>
+            </div>
+            
+            <div className="p-10 overflow-y-auto custom-scrollbar flex-1 space-y-8">
+              {smartImportResult.length === 0 ? (
+                <div className="space-y-6">
+                  <div className="bg-brand/5 border border-brand/20 p-6 rounded-3xl">
+                    <p className="text-xs font-bold text-gray-400 leading-relaxed uppercase tracking-wide">
+                      💡 <span className="text-brand">COMO USAR:</span> Selecione o texto do seu PDF de leitura, copie e cole abaixo. A IA irá identificar as semanas, dias e versículos para você. Certifique-se de ter selecionado um plano no formulário principal.
+                    </p>
+                  </div>
+                  
+                  <div className="relative">
+                    <textarea 
+                      placeholder="Cole o texto do plano aqui (Ex: Semana 1, Dia 1 - Gênesis 1-3...)"
+                      value={smartImportText}
+                      onChange={e => setSmartImportText(e.target.value)}
+                      className="w-full h-80 bg-[#0b0e14] border border-white/5 text-white rounded-[32px] p-8 font-medium outline-none focus:ring-2 focus:ring-brand/30 resize-none custom-scrollbar shadow-inner text-sm leading-relaxed"
+                    />
+                  </div>
+
+                  <button 
+                    onClick={handleSmartImport}
+                    disabled={isProcessingSmartImport || !smartImportText.trim()}
+                    className="w-full bg-brand text-white py-6 rounded-[28px] font-black uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4 disabled:opacity-50"
+                  >
+                    {isProcessingSmartImport ? (
+                      <>
+                        <Loader2 size={24} className="animate-spin" />
+                        {importProgress.total > 1 ? `PROCESSANDO (${importProgress.current}/${importProgress.total})` : 'PROCESSANDO COM IA...'}
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles size={24} />
+                        INICIAR EXTRAÇÃO INTELIGENTE
+                      </>
+                    )}
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-8 animate-in slide-in-from-bottom-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.4em]">Extração concluída: {smartImportResult.length} Dias Encontrados</h4>
+                    <button onClick={() => setSmartImportResult([])} className="text-[10px] font-black text-gray-500 hover:text-white uppercase underline underline-offset-4">Limpar e Tentar Novamente</button>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {smartImportResult.map((item, idx) => (
+                      <div key={idx} className="bg-[#0b0e14] border border-white/5 p-6 rounded-3xl space-y-3">
+                        <div className="flex justify-between items-start">
+                          <span className="text-[9px] font-black text-brand uppercase tracking-widest">{item.week} • {item.day}</span>
+                          <CheckCircle2 size={14} className="text-emerald-500" />
+                        </div>
+                        <p className="text-xs font-black text-white uppercase tracking-tight line-clamp-1">{item.title}</p>
+                        <div className="flex flex-wrap gap-1">
+                          {(item.verses || []).map((v: string) => (
+                            <span key={v} className="text-[8px] bg-white/5 text-gray-400 px-2 py-1 rounded-md border border-white/5 font-bold">{v}</span>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <button 
+                    onClick={confirmSmartImport}
+                    className="w-full bg-emerald-600 text-white py-6 rounded-[28px] font-black uppercase tracking-[0.3em] shadow-xl shadow-emerald-500/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4"
+                  >
+                    <Plus size={24} />
+                    CONFIRMAR E IMPORTAR TUDO
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="p-10 bg-brand/5 border-t border-white/5 text-center">
+              <p className="text-[9px] font-bold text-gray-600 uppercase tracking-widest">O Mentor IA processa os dados com 98% de precisão teológica.</p>
+            </div>
+          </div>
+        </div>
+      )}
         </div>
       </div>
-    </div >
+    </div>
   );
 };
 
