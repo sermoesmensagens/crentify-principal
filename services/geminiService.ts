@@ -1,17 +1,37 @@
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-export const getMentorResponse = async (query: string) => {
-  const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" }, { apiVersion: 'v1' });
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
+/**
+ * Utility to try models in order of preference to avoid 404 errors.
+ */
+const getStableModel = (genAI: GoogleGenerativeAI, systemInstruction?: string, temperature: number = 0.7) => {
+  // Use a fallback strategy: gemini-1.5-flash is preferred, gemini-pro is the generic fallback
+  const modelsToTry = ["gemini-1.5-flash", "gemini-pro"];
+  
+  return genAI.getGenerativeModel({ 
+    model: modelsToTry[0],
+    generationConfig: { temperature }
+  });
+};
+
+export const getMentorResponse = async (query: string) => {
+  const genAI = new GoogleGenerativeAI(API_KEY);
   const systemInstruction = "Você é o 'Mentor IA CRENTIFY', um assistente teológico protestante. Suas respostas devem ser baseadas exclusivamente na teologia cristã protestante, citando versículos bíblicos (NVI ou Almeida) e mantendo um tom de encorajamento, sabedoria e instrução espiritual. Seja conciso mas profundo.";
   
-  const fullPrompt = `${systemInstruction}\n\nUsuário: ${query}`;
-
-  const result = await model.generateContent(fullPrompt);
-  const response = await result.response;
-  return response.text();
+  try {
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const result = await model.generateContent(`${systemInstruction}\n\nUsuário: ${query}`);
+    const response = await result.response;
+    return response.text();
+  } catch (err: any) {
+    console.warn("Retrying with fallback model due to error:", err.message);
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const result = await model.generateContent(`${systemInstruction}\n\nUsuário: ${query}`);
+    const response = await result.response;
+    return response.text();
+  }
 };
 
 export const generateContentScript = async (
@@ -22,7 +42,7 @@ export const generateContentScript = async (
   transcript: string,
   transcriptSpeaker: string
 ) => {
-  const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
+  const genAI = new GoogleGenerativeAI(API_KEY);
 
   let prompt = "";
   let systemInstruction = "";
@@ -44,28 +64,23 @@ export const generateContentScript = async (
     prompt = `Crie um roteiro de vídeo para ${platform}. Tópico: ${topic}. Ângulo: ${editorialAngle}.`;
   }
 
-  const model = genAI.getGenerativeModel({ 
-    model: "gemini-1.5-flash-latest",
-    generationConfig: { temperature: 0.7 }
-  }, { apiVersion: 'v1' });
-
   const fullPrompt = `${systemInstruction}\n\nTarefa: ${prompt}`;
 
-  const result = await model.generateContent(fullPrompt);
-  const response = await result.response;
-  return response.text();
+  try {
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash", generationConfig: { temperature: 0.7 } });
+    const result = await model.generateContent(fullPrompt);
+    const response = await result.response;
+    return response.text();
+  } catch (err: any) {
+    const model = genAI.getGenerativeModel({ model: "gemini-pro", generationConfig: { temperature: 0.7 } });
+    const result = await model.generateContent(fullPrompt);
+    const response = await result.response;
+    return response.text();
+  }
 };
 
-/**
- * Generates a short, engaging title/theme for a day of reading based on verses.
- */
 export const generateReadingTitle = async (verses: string[]) => {
-  const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({ 
-    model: "gemini-1.5-flash-latest", 
-    generationConfig: { temperature: 0.7 }
-  }, { apiVersion: 'v1' });
-
+  const genAI = new GoogleGenerativeAI(API_KEY);
   const systemInstruction = `Você é um curador de conteúdo bíblico. Dada uma lista de versículos, crie um título curto, inspirador e direto para um dia de estudo bíblico.
   Exemplo: Gênesis 1-2 -> O Começo de Tudo
   Exemplo: Mateus 5-7 -> O Sermão do Monte`;
@@ -73,22 +88,20 @@ export const generateReadingTitle = async (verses: string[]) => {
   const fullPrompt = `${systemInstruction}\n\nVersículos: ${verses.join(', ')}\n\nCrie um título curto (máx 5 palavras):`;
 
   try {
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const result = await model.generateContent(fullPrompt);
     const response = await result.response;
     return response.text().trim().replace(/^"/, '').replace(/"$/, '');
-  } catch (error) {
-    console.error("Erro ao gerar título do plano:", error);
-    return "Temas do Dia";
+  } catch (err) {
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const result = await model.generateContent(fullPrompt);
+    const response = await result.response;
+    return response.text().trim().replace(/^"/, '').replace(/"$/, '');
   }
 };
 
-/**
- * Parses a block of text into a structured reading plan format using Gemini AI.
- * Returns an array of partial ReadingPlanContent.
- */
 export const parseReadingPlanWithAi = async (text: string) => {
-  const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
-  
+  const genAI = new GoogleGenerativeAI(API_KEY);
   const systemInstruction = `Você é um Assistente de Processamento de Dados Bíblicos.
   Sua tarefa é extrair um plano de leitura de um texto bruto e retornar APENAS um JSON válido.
   
@@ -112,34 +125,21 @@ export const parseReadingPlanWithAi = async (text: string) => {
   const fullPrompt = `${systemInstruction}\n\nExtraia o plano de leitura deste texto:\n\n"""\n${text}\n"""`;
 
   try {
-    const model = genAI.getGenerativeModel({ 
-      model: "gemini-1.5-flash-latest",
-      generationConfig: { temperature: 0.1 }
-    }, { apiVersion: 'v1' });
-
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash", generationConfig: { temperature: 0.1 } });
     const result = await model.generateContent(fullPrompt);
     const response = await result.response;
     const responseText = response.text();
 
-    // Extrator robusto de JSON: procura o primeiro [ e o último ]
     const jsonMatch = responseText.match(/\[[\s\S]*\]/);
-    if (!jsonMatch) {
-      console.error("JSON não encontrado na resposta da IA:", responseText);
-      throw new Error("IA não retornou um formato de plano válido. Tente copiar menos texto por vez.");
-    }
-
-    const cleanedJson = jsonMatch[0];
-    return JSON.parse(cleanedJson) as Array<{
-      week: string;
-      day: string;
-      title: string;
-      verses: string[];
-    }>;
-  } catch (error) {
-    console.error("Erro ao processar plano com IA:", error);
-    if (error instanceof SyntaxError) {
-       throw new Error("O Mentor IA enviou um formato corrompido. Tente clicar em extrair novamente.");
-    }
-    throw error;
+    if (!jsonMatch) throw new Error("JSON not found");
+    return JSON.parse(jsonMatch[0]);
+  } catch (err) {
+    const model = genAI.getGenerativeModel({ model: "gemini-pro", generationConfig: { temperature: 0.1 } });
+    const result = await model.generateContent(fullPrompt);
+    const response = await result.response;
+    const responseText = response.text();
+    const jsonMatch = responseText.match(/\[[\s\S]*\]/);
+    if (!jsonMatch) throw new Error("JSON not found in fallback");
+    return JSON.parse(jsonMatch[0]);
   }
 };
