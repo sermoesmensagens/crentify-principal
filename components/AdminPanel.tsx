@@ -672,6 +672,125 @@ const AdminPanel: React.FC = () => {
             </div>
           )}
 
+          {activeTab === 'plans' && (
+            <div className="space-y-12 animate-in slide-in-from-right duration-500">
+              {/* --- GESTÃO DE PLANOS (HEADER) --- */}
+              <section className="space-y-10">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-6">
+                    <div className="w-20 h-20 bg-brand/10 text-brand rounded-[28px] flex items-center justify-center border border-brand/20 shadow-xl">
+                      <ImageIcon size={36} />
+                    </div>
+                    <div>
+                      <h2 className="text-3xl font-black text-white uppercase tracking-tighter">
+                        {editingPlanId ? 'Editar Plano' : 'Novo Plano de Leitura'}
+                      </h2>
+                      <p className="text-xs text-gray-500 font-bold uppercase tracking-[0.2em]">Crie trilhas de leitura bíblica</p>
+                    </div>
+                  </div>
+                  {editingPlanId && (
+                    <button onClick={() => { setEditingPlanId(null); setNewPlan({ title: '', description: '', durationDays: 7 }); }} className="text-rose-500 hover:scale-110 transition-all"><X size={24} /></button>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Título do Plano</label>
+                    <input type="text" placeholder="Ex: Vida de José" value={newPlan.title} onChange={e => setNewPlan({ ...newPlan, title: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Capa (URL)</label>
+                    <input type="text" placeholder="https://..." value={newPlan.thumbnailUrl} onChange={e => setNewPlan({ ...newPlan, thumbnailUrl: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Duração (Dias)</label>
+                    <input type="number" value={newPlan.durationDays} onChange={e => setNewPlan({ ...newPlan, durationDays: Number(e.target.value) })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Categoria</label>
+                    <select value={newPlan.categoryId} onChange={e => setNewPlan({ ...newPlan, categoryId: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none hover:border-brand/30 transition-all">
+                      {readingPlanCategories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                    </select>
+                  </div>
+                  <div className="md:col-span-2 space-y-2">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Descrição</label>
+                    <textarea placeholder="O que o usuário aprenderá..." value={newPlan.description} onChange={e => setNewPlan({ ...newPlan, description: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[32px] px-8 py-5 font-medium outline-none h-24 resize-none" />
+                  </div>
+                </div>
+
+                <button onClick={handleAddOrUpdatePlan} className="w-full bg-brand text-white py-6 rounded-[28px] font-black uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
+                  {editingPlanId ? <CheckCircle2 size={24} /> : <Plus size={24} strokeWidth={3} />}
+                  {editingPlanId ? 'SALVAR PLANO' : 'CRIAR PLANO'}
+                </button>
+              </section>
+
+              {/* --- GESTÃO DE CONTEÚDO (DIAS/LEITURAS) --- */}
+              <section className="space-y-10 pt-12 border-t border-white/5">
+                <div className="flex items-center gap-6">
+                  <div className="w-20 h-20 bg-blue-500/10 text-blue-500 rounded-[28px] flex items-center justify-center border border-blue-500/20 shadow-xl">
+                    <List size={36} />
+                  </div>
+                  <div>
+                    <h2 className="text-3xl font-black text-white uppercase tracking-tighter">
+                      {editingPlanContentId ? 'Editar Detalhe' : 'Novo Detalhe de Leitura'}
+                    </h2>
+                    <p className="text-xs text-gray-500 font-bold uppercase tracking-[0.2em]">Vincule versículos a dias específicos</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="md:col-span-2 space-y-2">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Pertence ao Plano</label>
+                    <select value={newPlanContent.planId} onChange={e => setNewPlanContent({ ...newPlanContent, planId: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none hover:border-brand/30 transition-all">
+                      <option value="">Selecione um plano...</option>
+                      {readingPlans.map(p => <option key={p.id} value={p.id}>{p.title}</option>)}
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Semana</label>
+                    <input type="text" placeholder="Semana 1" value={newPlanContent.week} onChange={e => setNewPlanContent({ ...newPlanContent, week: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] px-8 py-5 text-white font-black outline-none" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Dia</label>
+                    <input type="text" placeholder="Dia 1" value={newPlanContent.day} onChange={e => setNewPlanContent({ ...newPlanContent, day: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] px-8 py-5 text-white font-black outline-none" />
+                  </div>
+                </div>
+
+                {/* Recursos de Leitura */}
+                <div className="bg-black/20 p-8 rounded-[40px] border border-white/5 space-y-6">
+                  <h3 className="text-[10px] font-black text-white uppercase tracking-widest">Adicionar Versículos/Leitura</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <div className="md:col-span-8">
+                      <input type="text" placeholder="Referência (Ex: Mateus 5:1-12)" value={readingResourceForm.title} onChange={e => setReadingResourceForm({ ...readingResourceForm, title: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-xl px-6 py-4 text-white text-[10px] font-black outline-none" />
+                    </div>
+                    <div className="md:col-span-4">
+                      <input type="text" placeholder="Duração (10 min)" value={readingResourceForm.duration} onChange={e => setReadingResourceForm({ ...readingResourceForm, duration: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-xl px-6 py-4 text-white text-[10px] font-black outline-none" />
+                    </div>
+                    <div className="md:col-span-12">
+                      <button onClick={addReadingResource} className="w-full bg-white/5 border border-white/10 text-white py-4 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-blue-500 hover:border-blue-500 transition-all flex items-center justify-center gap-2">
+                        <Plus size={16} /> ADICIONAR LEITURA
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    {newPlanContent.resources?.map(r => (
+                      <div key={r.id} className="flex items-center justify-between p-4 bg-[#0b0e14] rounded-xl border border-white/5">
+                        <span className="text-[10px] font-black text-white uppercase tracking-tight">{r.title} ({r.duration})</span>
+                        <button onClick={() => setNewPlanContent({ ...newPlanContent, resources: newPlanContent.resources?.filter(res => res.id !== r.id) })} className="text-rose-500 hover:scale-110 transition-all"><Trash2 size={16}/></button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <button onClick={handleAddOrUpdatePlanContent} className="w-full bg-blue-600 text-white py-6 rounded-[28px] font-black uppercase tracking-[0.3em] shadow-xl shadow-blue-500/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
+                  {editingPlanContentId ? <CheckCircle2 size={24} /> : <Zap size={24} strokeWidth={3} />}
+                  {editingPlanContentId ? 'SALVAR DETALHE' : 'PUBLICAR DETALHE'}
+                </button>
+              </section>
+            </div>
+          )}
+
           {activeTab === 'config' && (
             <div className="space-y-10 animate-in slide-in-from-right duration-500">
               <div className="flex items-center gap-6">
@@ -938,6 +1057,49 @@ const AdminPanel: React.FC = () => {
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          ) : activeTab === 'plans' ? (
+            <div className="space-y-8">
+              {/* Lista de Planos */}
+              <div className="bg-[#161b22] p-10 rounded-[48px] border border-white/5 shadow-2xl">
+                <h3 className="text-[10px] font-black text-brand uppercase tracking-[0.3em] mb-8">Planos Existentes ({readingPlans.length})</h3>
+                <div className="space-y-4 max-h-[300px] overflow-y-auto custom-scrollbar">
+                  {readingPlans.map(item => (
+                    <div key={item.id} className={`flex items-center justify-between p-5 rounded-[28px] border transition-all group ${editingPlanId === item.id ? 'bg-brand/10 border-brand' : 'bg-[#0b0e14]/50 border-white/5 hover:border-brand/30'}`}>
+                      <div className="flex items-center gap-4 truncate">
+                         {item.thumbnailUrl && <img src={item.thumbnailUrl} className="w-10 h-10 rounded-xl object-cover" />}
+                         <div className="truncate">
+                           <p className="text-sm font-black text-white uppercase truncate tracking-tight">{item.title}</p>
+                           <p className="text-[8px] text-gray-500 font-bold uppercase">{item.durationDays} Dias</p>
+                         </div>
+                      </div>
+                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                        <button onClick={() => { setEditingPlanId(item.id); setNewPlan(item); }} className="p-2 text-gray-500 hover:text-brand transition-colors"><Edit2 size={16}/></button>
+                        <button onClick={() => setReadingPlans(readingPlans.filter(p => p.id !== item.id))} className="p-2 text-gray-500 hover:text-rose-500 transition-colors"><Trash2 size={16}/></button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Lista de Conteúdos do Plano Selecionado */}
+              <div className="bg-[#161b22] p-10 rounded-[48px] border border-white/5 shadow-2xl">
+                <h3 className="text-[10px] font-black text-blue-500 uppercase tracking-[0.3em] mb-8">Detalhes de Leitura ({readingPlanContent.length})</h3>
+                <div className="space-y-4 max-h-[300px] overflow-y-auto custom-scrollbar">
+                  {readingPlanContent.map(item => (
+                    <div key={item.id} className={`flex items-center justify-between p-5 rounded-[28px] border transition-all group ${editingPlanContentId === item.id ? 'bg-blue-500/10 border-blue-500' : 'bg-[#0b0e14]/50 border-white/5 hover:border-blue-500/30'}`}>
+                      <div className="min-w-0">
+                        <p className="text-xs font-black text-white uppercase truncate tracking-tight">{item.week} - {item.day}</p>
+                        <p className="text-[8px] text-gray-500 font-bold uppercase truncate">{readingPlans.find(p => p.id === item.planId)?.title || 'Plano não selecionado'}</p>
+                      </div>
+                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                        <button onClick={() => { setEditingPlanContentId(item.id); setNewPlanContent(item); }} className="p-2 text-gray-500 hover:text-blue-500 transition-colors"><Edit2 size={16}/></button>
+                        <button onClick={() => setReadingPlanContent(readingPlanContent.filter(c => c.id !== item.id))} className="p-2 text-gray-500 hover:text-rose-500 transition-colors"><Trash2 size={16}/></button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           ) : (

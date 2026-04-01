@@ -27,7 +27,7 @@ interface ReadingPlansProps {
 }
 
 const ReadingPlans: React.FC<ReadingPlansProps> = ({ setActiveSection }) => {
-  const { plans, planContent, categories, progress, setProgress } = useReadingPlans();
+  const { plans, setPlans, planContent, setPlanContent, categories, progress, setProgress } = useReadingPlans();
   const { setSelectedBookName, setSelectedChapterIndex } = useBible();
   
   const [searchTerm, setSearchTerm] = useState('');
@@ -185,14 +185,53 @@ const ReadingPlans: React.FC<ReadingPlansProps> = ({ setActiveSection }) => {
                         <button 
                             onClick={async () => {
                                 setIsGenerating(true);
-                                // Mock AI delay
+                                // Simulação de delay da IA
                                 await new Promise(r => setTimeout(r, 3000));
-                                // Em uma implementação real, chamaria uma Edge Function aqui
-                                // setPlans([...plans, newAiPlan]);
-                                // setPlanContent([...planContent, ...newAiPlanContent]);
+                                
+                                const newId = `ai-plan-${Date.now()}`;
+                                const focus = quizAnswers.focus || 'Conhecendo a Deus';
+                                
+                                // Criar o Plano
+                                const newAiPlan: ReadingPlan = {
+                                    id: newId,
+                                    title: `Jornada: ${focus}`,
+                                    description: `Um plano personalizado gerado pelo Mentor IA para ajudar você em seu momento de "${focus}".`,
+                                    durationDays: 7,
+                                    categoryId: "3", // IA Personalizado
+                                    isAiGenerated: true,
+                                    visibility: 'público',
+                                    thumbnailUrl: 'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?q=80&w=2070&auto=format&fit=crop',
+                                    createdAt: new Date().toISOString()
+                                };
+
+                                // Criar o Conteúdo do Plano (7 dias baseados no tema)
+                                const topics: Record<string, string[]> = {
+                                    'Superando Ansiedade': ['Filipenses 4', 'Mateus 6', 'Salmos 23', 'João 14', 'Salmos 34', '1 Pedro 5', 'Salmos 121'],
+                                    'Vencendo Vícios': ['Romanos 6', 'Gálatas 5', '1 Coríntios 6', 'Tiago 4', 'Salmos 51', 'Romanos 12', 'Colossenses 3'],
+                                    'Disciplina e Oração': ['Mateus 26', 'Lucas 11', '1 Tessalonicenses 5', 'Daniel 6', 'Efésios 6', 'Mateus 7', 'Marcos 1'],
+                                    'default': ['Gênesis 1', 'João 1', 'Salmos 1', 'Provérbios 1', 'Mateus 5', 'Romanos 8', 'Apocalipse 21']
+                                };
+
+                                const selectedVerses = topics[focus] || topics['default'];
+                                
+                                const newAiPlanContent: ReadingPlanContent[] = selectedVerses.map((verse, idx) => ({
+                                    id: `content-${newId}-${idx}`,
+                                    planId: newId,
+                                    week: 'Semana 1',
+                                    day: `Dia ${idx + 1}`,
+                                    title: `Meditando em ${verse}`,
+                                    resources: [
+                                        { id: `res-${newId}-${idx}-1`, type: 'leitura', title: `${verse}:1`, duration: '10 min', instruction: 'Leia com calma e ore sobre este capítulo.' }
+                                    ]
+                                }));
+
+                                setPlans([newAiPlan, ...plans]);
+                                setPlanContent([...planContent, ...newAiPlanContent]);
+                                
                                 setIsGenerating(false);
                                 setShowQuiz(false);
                                 setQuizStep(0);
+                                setSelectedPlan(newAiPlan); // Abre o plano gerado imediatamente
                             }}
                             className="w-full bg-brand text-white py-6 rounded-[32px] font-black uppercase tracking-[0.3em] shadow-[0_20px_40px_rgba(var(--brand-rgb),0.3)] hover:scale-[1.02] active:scale-95 transition-all text-sm"
                         >
