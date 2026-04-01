@@ -34,11 +34,17 @@ const BibleView: React.FC = () => {
 
   // Reset scroll when book or chapter changes
   useEffect(() => {
+    // Scroll the reader container itself
     if (readerRef.current) {
       readerRef.current.scrollTo({ top: 0, behavior: 'instant' });
     }
-    // Also scroll the main window to top
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // CRITICAL: Scroll the main app container to the top
+    // Since our layout uses a scrollable <main> element, window.scrollTo(0,0) often doesn't work.
+    const mainContainer = document.querySelector('main');
+    if (mainContainer) {
+      mainContainer.scrollTo({ top: 0, behavior: 'instant' });
+    }
   }, [selectedBookName, selectedChapterIndex]);
 
   // Sincronizar seleção inicial caso a bíblia demore a carregar
