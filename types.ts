@@ -419,4 +419,3 @@ export interface ReadingPlanContent {
 export interface ReadingPlanProgress {
   completedResources: string[];
 }
-}
