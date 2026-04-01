@@ -386,6 +386,42 @@ const AdminPanel: React.FC = () => {
     setTimeout(() => setSuccess(false), 3000);
   };
 
+  const parseReadingPlanLocally = (text: string) => {
+    console.log("🛠️ Iniciando processamento local (Fallback)...");
+    const lines = text.split('\n');
+    const result: any[] = [];
+    let currentWeek = 'Semana 1';
+    let currentDay = '';
+    
+    const bibleBooks = [
+      'Gênesis', 'Êxodo', 'Levítico', 'Números', 'Deuteronômio', 'Josué', 'Juízes', 'Rute', '1 Samuel', '2 Samuel', '1 Reis', '2 Reis', '1 Crônicas', '2 Crônicas', 'Esdras', 'Neemias', 'Ester', 'Jó', 'Salmos', 'Provérbios', 'Eclesiastes', 'Cantares', 'Isaías', 'Jeremias', 'Lamentações', 'Ezequiel', 'Daniel', 'Oseias', 'Joel', 'Amós', 'Obadias', 'Jonas', 'Miqueias', 'Naum', 'Habacuque', 'Sofonias', 'Ageu', 'Zacarias', 'Malaquias',
+      'Mateus', 'Marcos', 'Lucas', 'João', 'Atos', 'Romanos', '1 Coríntios', '2 Coríntios', 'Gálatas', 'Efésios', 'Filipenses', 'Colossenses', '1 Tessalonicenses', '2 Tessalonicenses', '1 Timóteo', '2 Timóteo', 'Tito', 'Filemom', 'Hebreus', 'Tiago', '1 Pedro', '2 Pedro', '1 João', '2 João', '3 João', 'Judas', 'Apocalipse'
+    ];
+
+    lines.forEach(line => {
+      if (!line.trim()) return;
+      const weekMatch = line.match(/Semana\s*(\d+)/i);
+      if (weekMatch) currentWeek = `Semana ${weekMatch[1]}`;
+      const dayMatch = line.match(/(Dia\s*\d+|Segunda|Terça|Quarta|Quinta|Sexta|Sábado|Domingo)/i);
+      if (dayMatch) currentDay = dayMatch[0];
+      const foundVerses: string[] = [];
+      bibleBooks.forEach(book => {
+        const regex = new RegExp(`\\b${book}\\s+\\d+([\\:\\-]\\d+)?([\\,\\s]+\\d+([\\:\\-]\\d+)?)*`, 'gi');
+        const matches = line.match(regex);
+        if (matches) foundVerses.push(...matches);
+      });
+      if (foundVerses.length > 0) {
+        result.push({
+          week: currentWeek,
+          day: currentDay || `Dia ${result.length + 1}`,
+          title: `Leitura: ${foundVerses.join(', ')}`,
+          verses: foundVerses
+        });
+      }
+    });
+    return result;
+  };
+
   const handleSmartImport = async () => {
     if (!smartImportText.trim() || !newPlanContent.planId) {
       setError("Selecione um plano e cole o texto do PDF primeiro.");
