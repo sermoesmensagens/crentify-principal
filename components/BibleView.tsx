@@ -7,11 +7,14 @@ import { useBible } from '../contexts/BibleContext';
 
 const BibleView: React.FC = () => {
   const { bibleData, isBibleLoading, isSharedDataLoading } = useDataContext();
-  const { progress, setProgress, notes, setNotes } = useBible();
+  const { 
+    progress, setProgress, 
+    notes, setNotes, 
+    selectedBookName, setSelectedBookName, 
+    selectedChapterIndex, setSelectedChapterIndex 
+  } = useBible();
 
   const isLoading = isBibleLoading || isSharedDataLoading;
-  const [selectedBookIndex, setSelectedBookIndex] = useState<number | null>(0);
-  const [selectedChapterIndex, setSelectedChapterIndex] = useState<number>(0);
   const [testamentFilter, setTestamentFilter] = useState<'old' | 'new' | null>(null);
   const [showJournal, setShowJournal] = useState(false);
   const [showBookSelector, setShowBookSelector] = useState(false);
@@ -34,14 +37,21 @@ const BibleView: React.FC = () => {
     if (readerRef.current) {
       readerRef.current.scrollTo({ top: 0, behavior: 'instant' });
     }
-  }, [selectedBookIndex, selectedChapterIndex]);
+  }, [selectedBookName, selectedChapterIndex]);
 
   // Sincronizar seleção inicial caso a bíblia demore a carregar
   useEffect(() => {
-    if (bibleData && bibleData.books.length > 0 && selectedBookIndex === null) {
-      setSelectedBookIndex(0);
+    if (bibleData && bibleData.books.length > 0 && selectedBookName === null) {
+      setSelectedBookName(bibleData.books[0].name);
     }
-  }, [bibleData, selectedBookIndex]);
+  }, [bibleData, selectedBookName]);
+
+  const selectedBookIndex = selectedBookName && bibleData ? bibleData.books.findIndex(b => b.name === selectedBookName) : 0;
+  const setSelectedBookIndex = (idx: number) => {
+    if (bibleData && bibleData.books[idx]) {
+      setSelectedBookName(bibleData.books[idx].name);
+    }
+  };
 
   if (isLoading) {
     return (

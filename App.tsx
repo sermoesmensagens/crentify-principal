@@ -12,6 +12,7 @@ import Academy from './components/Academy';
 import Studies from './components/Studies';
 import Projects from './components/Projects';
 import ProfileModal from './components/ProfileModal';
+import ReadingPlans from './components/ReadingPlans';
 import Auth from './components/Auth';
 import Layout from './components/Layout';
 import NotificationManager from './components/NotificationManager';
@@ -78,6 +79,7 @@ const App: React.FC = () => {
       {activeSection === Section.DASHBOARD && <Dashboard />}
       {activeSection === Section.BIBLE && <BibleView />}
       {activeSection === Section.ACADEMY && <Academy />}
+      {activeSection === Section.PLANOS && <ReadingPlans setActiveSection={setActiveSection} />}
       {activeSection === Section.STUDIES && <Studies />}
       {activeSection === Section.HABITS && <Habits />}
       {activeSection === Section.MENTOR && <MentorAI />}

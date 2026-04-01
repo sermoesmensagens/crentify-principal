@@ -10,6 +10,10 @@ interface BibleContextType {
     setProgress: React.Dispatch<React.SetStateAction<BibleProgress>>;
     notes: BibleNote[];
     setNotes: React.Dispatch<React.SetStateAction<BibleNote[]>>;
+    selectedBookName: string | null;
+    setSelectedBookName: (name: string | null) => void;
+    selectedChapterIndex: number;
+    setSelectedChapterIndex: (index: number) => void;
 }
 
 const BibleContext = createContext<BibleContextType | undefined>(undefined);
@@ -23,6 +27,10 @@ export const BibleProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const [notes, setNotes] = useState<BibleNote[]>(() =>
         safeLocalStorageGet('crentify_bible_notes', [])
     );
+
+    // Navigation state
+    const [selectedBookName, setSelectedBookName] = useState<string | null>(null);
+    const [selectedChapterIndex, setSelectedChapterIndex] = useState<number>(0);
 
     // Sync from Cloud
     useEffect(() => {
@@ -64,7 +72,12 @@ export const BibleProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }, [progress, notes]);
 
     return (
-        <BibleContext.Provider value={{ progress, setProgress, notes, setNotes }}>
+        <BibleContext.Provider value={{ 
+            progress, setProgress, 
+            notes, setNotes,
+            selectedBookName, setSelectedBookName,
+            selectedChapterIndex, setSelectedChapterIndex
+        }}>
             {children}
         </BibleContext.Provider>
     );
