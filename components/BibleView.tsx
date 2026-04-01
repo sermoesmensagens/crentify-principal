@@ -37,6 +37,8 @@ const BibleView: React.FC = () => {
     if (readerRef.current) {
       readerRef.current.scrollTo({ top: 0, behavior: 'instant' });
     }
+    // Also scroll the main window to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [selectedBookName, selectedChapterIndex]);
 
   // Sincronizar seleção inicial caso a bíblia demore a carregar
@@ -302,7 +304,7 @@ const BibleView: React.FC = () => {
           <section className="flex flex-col bg-[#161b22] rounded-[40px] shadow-2xl border border-white/5 overflow-hidden relative min-h-[500px]">
             {selectedBook ? (
               <>
-                <div className="p-6 border-b border-white/5 flex flex-col md:flex-row items-start md:items-center justify-between bg-black/20 backdrop-blur-xl z-10 gap-4">
+                <div className="p-6 border-b border-white/5 flex flex-col md:flex-row items-start md:items-center justify-between bg-black/20 backdrop-blur-xl z-20 gap-4">
                   <div className="flex items-center gap-6 w-full md:w-auto">
                     <h2 className="text-xl md:text-2xl font-black text-white uppercase tracking-tighter truncate">{selectedBook.name}</h2>
                     <div className="relative flex-1 md:flex-none">
@@ -364,13 +366,65 @@ const BibleView: React.FC = () => {
                       </div>
                     </div>
                   ))}
+
+                  <div className="mt-12 flex flex-col items-center gap-8 py-12 border-t border-white/5 animate-in fade-in slide-in-from-bottom duration-1000">
+                    <button
+                      onClick={() => toggleChapter(selectedBook.name, selectedChapterIndex + 1)}
+                      className={`group relative overflow-hidden px-16 py-8 rounded-[32px] font-black uppercase text-sm tracking-[0.3em] transition-all duration-500 active:scale-95 shadow-2xl ${
+                        (progress.completedChapters[selectedBook.name] || []).includes(selectedChapterIndex + 1)
+                          ? 'bg-emerald-500 text-white shadow-emerald-500/20'
+                          : 'bg-brand text-white shadow-brand/40 hover:scale-105'
+                      }`}
+                    >
+                      <div className="relative z-10 flex items-center gap-4">
+                        {(progress.completedChapters[selectedBook.name] || []).includes(selectedChapterIndex + 1) ? (
+                          <>
+                            <CheckCircle2 size={24} />
+                            <span>CONCLUÍDO</span>
+                          </>
+                        ) : (
+                          <>
+                            <CheckCircle2 size={24} className="group-hover:animate-bounce" />
+                            <span>MARCAR COMO LIDO</span>
+                          </>
+                        )}
+                      </div>
+                      <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:animate-shimmer" />
+                    </button>
+                    
+                    <p className="text-gray-600 font-bold text-[10px] uppercase tracking-widest opacity-50">
+                      Você concluiu este capítulo? Clique acima para registrar.
+                    </p>
+                  </div>
                 </div>
 
-                <div className="p-8 border-t border-white/5 flex justify-between bg-black/20">
-                  <button disabled={selectedChapterIndex === 0} onClick={() => setSelectedChapterIndex(prev => prev - 1)} className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 hover:text-brand disabled:opacity-10 transition-all">
+                {/* Floating Side Nav Arrows (Desktop) */}
+                <div className="absolute inset-y-0 left-0 flex items-center p-4 z-10 pointer-events-none hidden xl:flex">
+                  <button 
+                    disabled={selectedChapterIndex === 0}
+                    onClick={() => setSelectedChapterIndex(prev => prev - 1)}
+                    className="p-6 rounded-[24px] bg-[#161b22]/40 backdrop-blur-md text-gray-500 hover:text-brand border border-white/10 hover:border-brand/40 transition-all pointer-events-auto disabled:opacity-0"
+                    title="Capítulo Anterior"
+                  >
+                    <ArrowLeft size={32} />
+                  </button>
+                </div>
+                <div className="absolute inset-y-0 right-0 flex items-center p-4 z-10 pointer-events-none hidden xl:flex">
+                  <button 
+                    disabled={selectedChapterIndex === (selectedBook.chapters?.length || 1) - 1}
+                    onClick={() => setSelectedChapterIndex(prev => prev + 1)}
+                    className="p-6 rounded-[24px] bg-[#161b22]/40 backdrop-blur-md text-gray-500 hover:text-brand border border-white/10 hover:border-brand/40 transition-all pointer-events-auto disabled:opacity-0"
+                    title="Próximo Capítulo"
+                  >
+                    <ArrowRight size={32} />
+                  </button>
+                </div>
+
+                <div className="p-8 border-t border-white/5 flex gap-4 bg-black/20">
+                  <button disabled={selectedChapterIndex === 0} onClick={() => setSelectedChapterIndex(prev => prev - 1)} className="flex-1 flex justify-center items-center gap-3 py-6 rounded-2xl bg-white/5 text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 hover:text-brand disabled:opacity-10 transition-all">
                     <ArrowLeft size={18} /> Anterior
                   </button>
-                  <button disabled={selectedChapterIndex === (selectedBook.chapters?.length || 1) - 1} onClick={() => setSelectedChapterIndex(prev => prev + 1)} className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 hover:text-brand disabled:opacity-10 transition-all">
+                  <button disabled={selectedChapterIndex === (selectedBook.chapters?.length || 1) - 1} onClick={() => setSelectedChapterIndex(prev => prev + 1)} className="flex-1 flex justify-center items-center gap-3 py-6 rounded-2xl bg-white/5 text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 hover:text-brand disabled:opacity-10 transition-all">
                     Próximo <ArrowRight size={18} />
                   </button>
                 </div>
