@@ -3,30 +3,18 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
-/**
- * Utility to get a model with explicit API version to avoid V1BETA issues.
- */
-const getModel = (genAI: GoogleGenerativeAI, modelName: string) => {
-  return genAI.getGenerativeModel({ model: modelName }, { apiVersion: 'v1' });
-};
-
 export const getMentorResponse = async (query: string) => {
   const genAI = new GoogleGenerativeAI(API_KEY);
+  // Voltando para o v1beta e para o modelo 'latest' que não dava 404
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+
   const systemInstruction = "Você é o 'Mentor IA CRENTIFY', um assistente teológico protestante. Suas respostas devem ser baseadas exclusivamente na teologia cristã protestante, citando versículos bíblicos (NVI ou Almeida) e mantendo um tom de encorajamento, sabedoria e instrução espiritual. Seja conciso mas profundo.";
   
   const fullPrompt = `${systemInstruction}\n\nUsuário: ${query}`;
 
-  try {
-    const model = getModel(genAI, "gemini-1.5-pro");
-    const result = await model.generateContent(fullPrompt);
-    const response = await result.response;
-    return response.text();
-  } catch (err) {
-    const model = getModel(genAI, "gemini-1.5-flash");
-    const result = await model.generateContent(fullPrompt);
-    const response = await result.response;
-    return response.text();
-  }
+  const result = await model.generateContent(fullPrompt);
+  const response = await result.response;
+  return response.text();
 };
 
 export const generateContentScript = async (
@@ -38,6 +26,7 @@ export const generateContentScript = async (
   transcriptSpeaker: string
 ) => {
   const genAI = new GoogleGenerativeAI(API_KEY);
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest", generationConfig: { temperature: 0.7 } });
 
   let prompt = "";
   let systemInstruction = "";
@@ -60,42 +49,34 @@ export const generateContentScript = async (
   }
 
   const fullPrompt = `${systemInstruction}\n\nTarefa: ${prompt}`;
-
-  try {
-    const model = getModel(genAI, "gemini-1.5-pro");
-    const result = await model.generateContent(fullPrompt);
-    const response = await result.response;
-    return response.text();
-  } catch (err) {
-    const model = getModel(genAI, "gemini-1.5-flash");
-    const result = await model.generateContent(fullPrompt);
-    const response = await result.response;
-    return response.text();
-  }
+  const result = await model.generateContent(fullPrompt);
+  const response = await result.response;
+  return response.text();
 };
 
 export const generateReadingTitle = async (verses: string[]) => {
   const genAI = new GoogleGenerativeAI(API_KEY);
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+
   const systemInstruction = `Você é um curador de conteúdo bíblico. Dada uma lista de versículos, crie um título curto, inspirador e direto para um dia de estudo bíblico.
   Exemplo: Gênesis 1-2 -> O Começo de Tudo`;
 
   const fullPrompt = `${systemInstruction}\n\nVersículos: ${verses.join(', ')}\n\nCrie um título curto (máx 5 palavras):`;
 
   try {
-    const model = getModel(genAI, "gemini-1.5-pro");
     const result = await model.generateContent(fullPrompt);
     const response = await result.response;
     return response.text().trim().replace(/^"/, '').replace(/"$/, '');
   } catch (err) {
-    const model = getModel(genAI, "gemini-1.5-flash");
-    const result = await model.generateContent(fullPrompt);
-    const response = await result.response;
-    return response.text().trim().replace(/^"/, '').replace(/"$/, '');
+    console.error("Erro ao gerar título:", err);
+    return "Temas do Dia";
   }
 };
 
 export const parseReadingPlanWithAi = async (text: string) => {
   const genAI = new GoogleGenerativeAI(API_KEY);
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest", generationConfig: { temperature: 0.1 } });
+
   const systemInstruction = `Você é um Assistente de Processamento de Dados Bíblicos.
   Sua tarefa é extrair um plano de leitura de um texto bruto e retornar APENAS um JSON válido.
   Formato: [{"week": "Semana 1", "day": "Dia 1", "title": "...", "verses": ["..."]}]`;
@@ -103,7 +84,6 @@ export const parseReadingPlanWithAi = async (text: string) => {
   const fullPrompt = `${systemInstruction}\n\nExtraia o plano de leitura deste texto:\n\n"""\n${text}\n"""`;
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro", generationConfig: { temperature: 0.1 } }, { apiVersion: 'v1' });
     const result = await model.generateContent(fullPrompt);
     const response = await result.response;
     const responseText = response.text();
@@ -111,14 +91,8 @@ export const parseReadingPlanWithAi = async (text: string) => {
     const jsonMatch = responseText.match(/\[[\s\S]*\]/);
     if (!jsonMatch) throw new Error("JSON not found");
     return JSON.parse(jsonMatch[0]);
-  } catch (err) {
-    console.warn("Retrying with gemini-pro on v1...");
-    const model = genAI.getGenerativeModel({ model: "gemini-pro", generationConfig: { temperature: 0.1 } }, { apiVersion: 'v1' });
-    const result = await model.generateContent(fullPrompt);
-    const response = await result.response;
-    const responseText = response.text();
-    const jsonMatch = responseText.match(/\[[\s\S]*\]/);
-    if (!jsonMatch) throw new Error("JSON not found in fallback");
-    return JSON.parse(jsonMatch[0]);
+  } catch (err: any) {
+    console.error("Erro no processamento IA:", err);
+    throw new Error(`Erro na IA: ${err.message || 'Falha ao processar dados'}`);
   }
 };
