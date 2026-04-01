@@ -19,6 +19,7 @@ const BibleView: React.FC = () => {
   const [tempSelectedChapters, setTempSelectedChapters] = useState<number[]>([]);
   const [activeNoteVerse, setActiveNoteVerse] = useState<{ number: number, text: string } | null>(null);
   const [noteInput, setNoteInput] = useState('');
+  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
   const journalRef = useRef<HTMLDivElement>(null);
   const readerRef = useRef<HTMLDivElement>(null);
 
@@ -136,19 +137,43 @@ const BibleView: React.FC = () => {
 
   const handleSaveNote = () => {
     if (!selectedBook || !activeNoteVerse || !noteInput.trim()) return;
-    const newNote: BibleNote = {
-      id: Date.now().toString(),
-      bookName: selectedBook.name,
-      chapter: selectedChapterIndex + 1,
-      verse: activeNoteVerse.number,
-      verseText: activeNoteVerse.text,
-      content: noteInput,
-      date: new Date().toISOString()
-    };
-    setNotes([newNote, ...notes]);
+    
+    if (editingNoteId) {
+      setNotes(notes.map(n => n.id === editingNoteId ? {
+        ...n,
+        content: noteInput,
+        date: new Date().toISOString()
+      } : n));
+    } else {
+      const newNote: BibleNote = {
+        id: Date.now().toString(),
+        bookName: selectedBook.name,
+        chapter: selectedChapterIndex + 1,
+        verse: activeNoteVerse.number,
+        verseText: activeNoteVerse.text,
+        content: noteInput,
+        date: new Date().toISOString()
+      };
+      setNotes([newNote, ...notes]);
+    }
+    
     setNoteInput('');
     setActiveNoteVerse(null);
+    setEditingNoteId(null);
     setShowJournal(true);
+  };
+
+  const startEditExistingNote = (note: BibleNote) => {
+    setEditingNoteId(note.id);
+    setNoteInput(note.content);
+    setActiveNoteVerse({ number: note.verse, text: note.verseText });
+  };
+
+  const deleteNote = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    if (confirm('Deseja apagar este insight permanentemente?')) {
+      setNotes(notes.filter(n => n.id !== id));
+    }
   };
 
   const currentNotes = selectedBook ? notes.filter(n => n.bookName === selectedBook.name && n.chapter === selectedChapterIndex + 1) : [];
@@ -394,7 +419,23 @@ const BibleView: React.FC = () => {
                 ) : (
                   currentNotes.map(note => (
                     <div key={note.id} className="bg-[#0b0e14]/50 p-6 rounded-3xl border border-white/5 hover:border-brand/40 transition-all relative group">
-                      <p className="text-[9px] font-black text-brand uppercase mb-3">Versículo {note.verse}</p>
+                      <div className="flex items-center justify-between mb-3">
+                        <p className="text-[9px] font-black text-brand uppercase">Versículo {note.verse}</p>
+                        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                          <button 
+                            onClick={() => startEditExistingNote(note)}
+                            className="p-1.5 bg-brand/10 text-brand rounded-lg hover:bg-brand hover:text-white transition-all shadow-lg"
+                          >
+                            <Edit3 size={12} />
+                          </button>
+                          <button 
+                            onClick={(e) => deleteNote(e, note.id)}
+                            className="p-1.5 bg-rose-500/10 text-rose-500 rounded-lg hover:bg-rose-500 hover:text-white transition-all shadow-lg"
+                          >
+                            <Trash2 size={12} />
+                          </button>
+                        </div>
+                      </div>
                       <p className="text-gray-300 text-sm font-medium leading-relaxed italic font-serif">"{note.content}"</p>
                     </div>
                   ))
@@ -446,9 +487,9 @@ const BibleView: React.FC = () => {
                 </button>
                 <button
                   onClick={handleSaveNote}
-                  className="flex-3 bg-brand text-white py-5 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-brand/30 hover:scale-[1.02] active:scale-95 transition-all"
+                  className="flex-[2] bg-brand text-white py-5 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-brand/30 hover:scale-[1.02] active:scale-95 transition-all"
                 >
-                  SALVAR NO DIÁRIO
+                  {editingNoteId ? 'ATUALIZAR INSIGHT' : 'SALVAR INSIGHT'}
                 </button>
               </div>
             </div>

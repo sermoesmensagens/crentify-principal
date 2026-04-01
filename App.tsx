@@ -21,6 +21,7 @@ import { Loader2 } from 'lucide-react';
 
 import { ADMIN_EMAILS } from './constants';
 import { useDataContext } from './contexts/DataContext';
+import { useBible } from './contexts/BibleContext';
 
 const App: React.FC = () => {
   const { session, loading } = useAuth();
@@ -28,6 +29,7 @@ const App: React.FC = () => {
   const [showProfileModal, setShowProfileModal] = useState(false);
 
   const { isInitialLoading } = useDataContext();
+  const { notes } = useBible();
 
   // Security Check
   useEffect(() => {
@@ -84,7 +86,7 @@ const App: React.FC = () => {
       {activeSection === Section.PROJECTS && <Projects />}
       {activeSection === Section.ADMIN && isAdmin && <AdminPanel />}
 
-      {showProfileModal && <ProfileModal onClose={() => setShowProfileModal(false)} />}
+      {showProfileModal && <ProfileModal onClose={() => setShowProfileModal(false)} bibleNotes={notes} />}
 
     </Layout>
     <NotificationManager />
