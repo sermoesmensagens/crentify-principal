@@ -29,7 +29,7 @@ const AcademyContext = createContext<AcademyContextType | undefined>(undefined);
 export const AcademyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const { session } = useAuth();
     const { cloudData, sharedData, isDataLoaded, isInitialLoading, isSharedDataLoading } = useDataContext();
-    const isAdmin = session?.user?.email && ADMIN_EMAILS.includes(session.user.email);
+    const isAdmin = session?.user?.email && ADMIN_EMAILS.includes(session.user.email.toLowerCase());
 
     const [courses, setAcademyCourses] = useState<AcademyCourse[]>(() => safeLocalStorageGet('crentify_academy_courses', []));
     const [content, setAcademyContent] = useState<AcademyContent[]>(() => safeLocalStorageGet('crentify_academy_content', []));

@@ -17,7 +17,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection, onProfileClick, userEmail }) => {
   const { signOut } = useAuth();
   const visibleNavItems = NAV_ITEMS.filter(item =>
-    item.id !== Section.ADMIN || (userEmail && ADMIN_EMAILS.includes(userEmail))
+    item.id !== Section.ADMIN || (userEmail && ADMIN_EMAILS.includes(userEmail.toLowerCase()))
   );
 
   const { canInstall, promptInstall, isInstalled } = useInstallPrompt();

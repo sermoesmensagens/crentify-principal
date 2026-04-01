@@ -71,7 +71,7 @@ const INITIAL_MOCK_CONTENT: ReadingPlanContent[] = [
 export const ReadingPlanProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const { session } = useAuth();
     const { cloudData, sharedData, isDataLoaded, isInitialLoading, isSharedDataLoading } = useDataContext();
-    const isAdmin = session?.user?.email && ADMIN_EMAILS.includes(session.user.email);
+    const isAdmin = session?.user?.email && ADMIN_EMAILS.includes(session.user.email.toLowerCase());
 
     const [plans, setPlans] = useState<ReadingPlan[]>(() => {
         const local = safeLocalStorageGet('crentify_reading_plans', null);

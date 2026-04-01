@@ -36,7 +36,7 @@ const App: React.FC = () => {
   useEffect(() => {
     if (activeSection === Section.ADMIN) {
       const userEmail = session?.user?.email;
-      if (!userEmail || !ADMIN_EMAILS.includes(userEmail)) {
+      if (!userEmail || !ADMIN_EMAILS.includes(userEmail.toLowerCase())) {
         setActiveSection(Section.DASHBOARD);
       }
     }
@@ -46,7 +46,7 @@ const App: React.FC = () => {
 
   // Estados de Dados da Bíblia
   const userEmail = session?.user?.email;
-  const isAdmin = userEmail && ADMIN_EMAILS.includes(userEmail);
+  const isAdmin = userEmail && ADMIN_EMAILS.includes(userEmail.toLowerCase());
 
   if (loading || (session && isInitialLoading)) {
     return (
