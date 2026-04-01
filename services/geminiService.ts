@@ -88,11 +88,11 @@ export const parseReadingPlanWithAi = async (text: string) => {
 
   try {
     const result = await ai.models.generateContent({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-pro',
       contents: prompt,
       config: { 
         systemInstruction,
-        temperature: 0.1 // Baixa temperatura para maior consistência no JSON
+        temperature: 0.1 
       }
     });
     
