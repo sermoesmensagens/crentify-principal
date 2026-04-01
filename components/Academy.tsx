@@ -505,7 +505,7 @@ const Academy: React.FC = () => {
               )}
 
               {/* Renderização de Mídia / Texto Dinâmico */}
-              {(activeResource.type === 'video' || activeResource.type === 'youtube' || activeResource.type === 'link') && activeResource.url && (
+              {(activeResource.type === 'video' || activeResource.type === 'link') && activeResource.url && (
                 <div className="w-full rounded-[32px] overflow-hidden shadow-2xl border border-white/10 bg-black aspect-video relative group">
                   <div className="absolute inset-0 bg-brand/20 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
                   {activeResource.url.includes('youtube.com') || activeResource.url.includes('youtu.be') ? (
