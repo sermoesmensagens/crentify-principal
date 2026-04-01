@@ -1398,10 +1398,10 @@ const AdminPanel: React.FC = () => {
           </div>
         </div>
       )}
-        </div>
-      </div>
+      )}
     </div>
-  );
+  </div>
+);
 };
 
 export default AdminPanel;
