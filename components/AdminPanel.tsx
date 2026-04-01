@@ -358,7 +358,13 @@ const AdminPanel: React.FC = () => {
       setReadingPlanContent([content, ...readingPlanContent]);
     }
 
-    setNewPlanContent({ title: '', planId: '', week: 'Semana 1', day: 'Dia 1', resources: [] });
+    setNewPlanContent({ 
+      title: '', 
+      planId: editingPlanId || '', 
+      week: newPlanContent.week || 'Semana 1', 
+      day: newPlanContent.day || 'Dia 1', 
+      resources: [] 
+    });
     setSuccess(true);
     setTimeout(() => setSuccess(false), 3000);
   };
@@ -761,6 +767,25 @@ const AdminPanel: React.FC = () => {
                 {/* Recursos de Leitura */}
                 <div className="bg-black/20 p-8 rounded-[40px] border border-white/5 space-y-6">
                   <h3 className="text-[10px] font-black text-white uppercase tracking-widest">Adicionar Versículos/Leitura</h3>
+                  {/* Lista de Versículos sendo adicionados */}
+                  {newPlanContent.resources && newPlanContent.resources.length > 0 && (
+                    <div className="space-y-2 max-h-[200px] overflow-y-auto custom-scrollbar pr-2 mt-4">
+                      {newPlanContent.resources.map(res => (
+                        <div key={res.id} className="bg-[#0b0e14] border border-white/5 rounded-xl p-4 flex justify-between items-center group">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center">
+                              <BookOpen size={14} />
+                            </div>
+                            <span className="text-[10px] font-black text-white uppercase">{res.title}</span>
+                          </div>
+                          <button onClick={() => removeReadingResource(res.id)} className="text-gray-600 hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100">
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
                   <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
                     <div className="md:col-span-8">
                       <input type="text" placeholder="Referência (Ex: Mateus 5 (1 cap))" value={readingResourceForm.title} onChange={e => setReadingResourceForm({ ...readingResourceForm, title: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-xl px-6 py-4 text-white text-[10px] font-black outline-none" />
@@ -1105,14 +1130,29 @@ const AdminPanel: React.FC = () => {
                     ? readingPlanContent.filter(c => c.planId === editingPlanId)
                     : readingPlanContent
                   ).map(item => (
-                    <div key={item.id} className={`flex items-center justify-between p-5 rounded-[28px] border transition-all group ${editingPlanContentId === item.id ? 'bg-blue-500/10 border-blue-500' : 'bg-[#0b0e14]/50 border-white/5 hover:border-blue-500/30'}`}>
-                      <div className="min-w-0">
-                        <p className="text-xs font-black text-white uppercase truncate tracking-tight">{item.week} - {item.day}</p>
-                        <p className="text-[8px] text-gray-500 font-bold uppercase truncate">{readingPlans.find(p => p.id === item.planId)?.title || 'Plano não selecionado'}</p>
+                    <div key={item.id} className={`flex flex-col p-5 rounded-[28px] border transition-all group ${editingPlanContentId === item.id ? 'bg-blue-500/10 border-blue-500' : 'bg-[#0b0e14]/50 border-white/5 hover:border-blue-500/30'}`}>
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="min-w-0">
+                          <p className="text-xs font-black text-white uppercase truncate tracking-tight">{item.week} - {item.day}</p>
+                          <p className="text-[8px] text-gray-500 font-bold uppercase truncate">{readingPlans.find(p => p.id === item.planId)?.title || 'Plano não selecionado'}</p>
+                        </div>
+                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                          <button onClick={() => { setEditingPlanContentId(item.id); setNewPlanContent(item); }} className="p-2 text-gray-500 hover:text-blue-500 transition-colors"><Edit2 size={16}/></button>
+                          <button onClick={() => setReadingPlanContent(readingPlanContent.filter(c => c.id !== item.id))} className="p-2 text-gray-500 hover:text-rose-500 transition-colors"><Trash2 size={16}/></button>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-                        <button onClick={() => { setEditingPlanContentId(item.id); setNewPlanContent(item); }} className="p-2 text-gray-500 hover:text-blue-500 transition-colors"><Edit2 size={16}/></button>
-                        <button onClick={() => setReadingPlanContent(readingPlanContent.filter(c => c.id !== item.id))} className="p-2 text-gray-500 hover:text-rose-500 transition-colors"><Trash2 size={16}/></button>
+                      
+                      {/* Resumo dos Versículos */}
+                      <div className="flex flex-wrap gap-2">
+                        {item.resources.slice(0, 3).map(res => (
+                          <span key={res.id} className="text-[7px] bg-white/5 text-gray-400 px-2 py-1 rounded-md border border-white/5 font-bold uppercase">{res.title}</span>
+                        ))}
+                        {item.resources.length > 3 && (
+                          <span className="text-[7px] text-gray-600 font-bold">+{item.resources.length - 3}</span>
+                        )}
+                        {item.resources.length === 0 && (
+                          <span className="text-[7px] text-gray-600 font-black italic">Sem versículos</span>
+                        )}
                       </div>
                     </div>
                   ))}
