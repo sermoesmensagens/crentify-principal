@@ -20,13 +20,61 @@ interface ReadingPlanContextType {
 
 const ReadingPlanContext = createContext<ReadingPlanContextType | undefined>(undefined);
 
+const INITIAL_MOCK_PLANS: ReadingPlan[] = [
+    {
+        id: "plan-bible-year",
+        title: "Bíblia em 365 Dias",
+        description: "Uma jornada completa por toda a Escritura em um ano, do Gênesis ao Apocalipse.",
+        durationDays: 365,
+        categoryId: "1",
+        isAiGenerated: false,
+        visibility: "público",
+        createdAt: new Date().toISOString()
+    },
+    {
+        id: "plan-vencendo-ansiedade",
+        title: "Vencendo a Ansiedade",
+        description: "Plano temático focado no descanso em Deus e no controle da mente através da Palavra.",
+        durationDays: 7,
+        categoryId: "2",
+        isAiGenerated: true,
+        visibility: "público",
+        createdAt: new Date().toISOString()
+    }
+];
+
+const INITIAL_MOCK_CONTENT: ReadingPlanContent[] = [
+    {
+        id: "c1",
+        planId: "plan-vencendo-ansiedade",
+        week: "Semana 1",
+        day: "Dia 1",
+        title: "O Cuidado de Deus",
+        resources: [
+            { id: "r1", type: "leitura", title: "Mateus 6", duration: "1 cap" },
+            { id: "r2", type: "leitura", title: "Filipenses 4", duration: "1 cap" }
+        ]
+    },
+    {
+        id: "c2",
+        planId: "plan-vencendo-ansiedade",
+        week: "Semana 1",
+        day: "Dia 2",
+        title: "Paz que Excede Entendimento",
+        resources: [
+            { id: "r3", type: "leitura", title: "João 14", duration: "1 cap" },
+            { id: "r4", type: "leitura", title: "Salmos 23", duration: "1 cap" }
+        ]
+    }
+];
+
 export const ReadingPlanProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const { session } = useAuth();
     const { cloudData, sharedData, isDataLoaded, isInitialLoading, isSharedDataLoading } = useDataContext();
     const isAdmin = session?.user?.email && ADMIN_EMAILS.includes(session.user.email);
 
-    const [plans, setPlans] = useState<ReadingPlan[]>(() => safeLocalStorageGet('crentify_reading_plans', []));
-    const [planContent, setPlanContent] = useState<ReadingPlanContent[]>(() => safeLocalStorageGet('crentify_reading_plan_content', []));
+    const [plans, setPlans] = useState<ReadingPlan[]>(() => safeLocalStorageGet('crentify_reading_plans', INITIAL_MOCK_PLANS));
+    const [planContent, setPlanContent] = useState<ReadingPlanContent[]>(() => safeLocalStorageGet('crentify_reading_plan_content', INITIAL_MOCK_CONTENT));
     const [categories, setCategories] = useState<ReadingPlanCategory[]>(() => safeLocalStorageGet('crentify_reading_plan_categories', [
         { id: "1", name: "Bíblia Anual", color: "#ff5c5c" },
         { id: "2", name: "Temático", color: "#5cff8a" },
@@ -41,8 +89,8 @@ export const ReadingPlanProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
             // Admin specific User Data
             if (isAdmin) {
-                if (cloudData.crentify_reading_plans) setPlans(cloudData.crentify_reading_plans.value);
-                if (cloudData.crentify_reading_plan_content) setPlanContent(cloudData.crentify_reading_plan_content.value);
+                if (cloudData.crentify_reading_plans?.value?.length > 0) setPlans(cloudData.crentify_reading_plans.value);
+                if (cloudData.crentify_reading_plan_content?.value?.length > 0) setPlanContent(cloudData.crentify_reading_plan_content.value);
                 if (cloudData.crentify_reading_plan_categories) setCategories(cloudData.crentify_reading_plan_categories.value);
             }
         }
@@ -51,8 +99,8 @@ export const ReadingPlanProvider: React.FC<{ children: React.ReactNode }> = ({ c
     // Sync from Shared Data
     useEffect(() => {
         if (!isSharedDataLoading) {
-            if (sharedData.crentify_reading_plans) setPlans(sharedData.crentify_reading_plans);
-            if (sharedData.crentify_reading_plan_content) setPlanContent(sharedData.crentify_reading_plan_content);
+            if (sharedData.crentify_reading_plans?.length > 0) setPlans(sharedData.crentify_reading_plans);
+            if (sharedData.crentify_reading_plan_content?.length > 0) setPlanContent(sharedData.crentify_reading_plan_content);
             if (sharedData.crentify_reading_plan_categories) setCategories(sharedData.crentify_reading_plan_categories);
         }
     }, [isSharedDataLoading, sharedData]);
