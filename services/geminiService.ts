@@ -5,8 +5,8 @@ const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
 export const getMentorResponse = async (query: string) => {
   const genAI = new GoogleGenerativeAI(API_KEY);
-  // Voltando para o v1beta e para o modelo 'latest' que não dava 404
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+  // Usando Gemini 2.0 Flash que está disponível na sua chave
+  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
   const systemInstruction = "Você é o 'Mentor IA CRENTIFY', um assistente teológico protestante. Suas respostas devem ser baseadas exclusivamente na teologia cristã protestante, citando versículos bíblicos (NVI ou Almeida) e mantendo um tom de encorajamento, sabedoria e instrução espiritual. Seja conciso mas profundo.";
   
@@ -26,7 +26,7 @@ export const generateContentScript = async (
   transcriptSpeaker: string
 ) => {
   const genAI = new GoogleGenerativeAI(API_KEY);
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest", generationConfig: { temperature: 0.7 } });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash", generationConfig: { temperature: 0.7 } });
 
   let prompt = "";
   let systemInstruction = "";
@@ -56,7 +56,7 @@ export const generateContentScript = async (
 
 export const generateReadingTitle = async (verses: string[]) => {
   const genAI = new GoogleGenerativeAI(API_KEY);
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
   const systemInstruction = `Você é um curador de conteúdo bíblico. Dada uma lista de versículos, crie um título curto, inspirador e direto para um dia de estudo bíblico.
   Exemplo: Gênesis 1-2 -> O Começo de Tudo`;
@@ -67,15 +67,15 @@ export const generateReadingTitle = async (verses: string[]) => {
     const result = await model.generateContent(fullPrompt);
     const response = await result.response;
     return response.text().trim().replace(/^"/, '').replace(/"$/, '');
-  } catch (err) {
-    console.error("Erro ao gerar título:", err);
+  } catch (error) {
+    console.error("Erro ao gerar título:", error);
     return "Temas do Dia";
   }
 };
 
 export const parseReadingPlanWithAi = async (text: string) => {
   const genAI = new GoogleGenerativeAI(API_KEY);
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest", generationConfig: { temperature: 0.1 } });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash", generationConfig: { temperature: 0.1 } });
 
   const systemInstruction = `Você é um Assistente de Processamento de Dados Bíblicos.
   Sua tarefa é extrair um plano de leitura de um texto bruto e retornar APENAS um JSON válido.
