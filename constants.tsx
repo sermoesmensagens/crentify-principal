@@ -8,7 +8,8 @@ import {
   Briefcase,
   Settings,
   CalendarCheck,
-  GraduationCap
+  GraduationCap,
+  Compass
 } from 'lucide-react';
 import { Section } from './types';
 
@@ -22,6 +23,7 @@ export const NAV_ITEMS = [
   { id: Section.DASHBOARD, label: 'Início', icon: <LayoutDashboard size={20} /> },
   { id: Section.BIBLE, label: 'Bíblia', icon: <BookOpen size={20} /> },
   { id: Section.ACADEMY, label: 'Academia', icon: <GraduationCap size={20} /> },
+  { id: Section.PLANOS, label: 'Planos', icon: <Compass size={20} /> },
   { id: Section.STUDIES, label: 'Meus Estudos', icon: <BookMarked size={20} /> },
   { id: Section.HABITS, label: 'Hábitos', icon: <CalendarCheck size={20} /> },
   { id: Section.MENTOR, label: 'Mentor IA', icon: <MessageSquare size={20} /> },

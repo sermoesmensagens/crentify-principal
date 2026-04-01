@@ -10,6 +10,7 @@ import { AcademyProvider } from './contexts/AcademyContext';
 import { HabitsProvider } from './contexts/HabitsContext';
 import { DiaryProvider } from './contexts/DiaryContext';
 import { StudyProvider } from './contexts/StudyContext';
+import { ReadingPlanProvider } from './contexts/ReadingPlanContext';
 
 import ErrorBoundary from './components/ErrorBoundary';
 
@@ -29,9 +30,11 @@ root.render(
                 <AcademyProvider>
                   <StudyProvider>
                     <HabitsProvider>
-                      <DiaryProvider>
+                    <DiaryProvider>
+                      <ReadingPlanProvider>
                         <App />
-                      </DiaryProvider>
+                      </ReadingPlanProvider>
+                    </DiaryProvider>
                     </HabitsProvider>
                   </StudyProvider>
                 </AcademyProvider>
