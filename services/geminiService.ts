@@ -15,7 +15,7 @@ async function callGemini(prompt: string, temperature: number = 0.7) {
   // Flash 8b é ultra rápido e muitas vezes tem cota separada
   // Pro 1.5 é mais inteligente mas cota menor
   // 1.0 Pro fallback legado
-  const models = ["gemini-1.5-flash", "gemini-1.5-flash-8b", "gemini-1.5-pro", "gemini-1.0-pro"];
+  const models = ["gemini-1.5-flash", "gemini-1.5-flash-8b", "gemini-1.5-pro", "gemini-pro"];
   
   let lastError: any = null;
 
