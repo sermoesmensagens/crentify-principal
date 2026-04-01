@@ -49,15 +49,14 @@ const ReadingPlans: React.FC<ReadingPlansProps> = ({ setActiveSection }) => {
   });
 
   const handleBibleNavigation = (resource: AcademyResource) => {
-    // Try to parse book and chapter from title or content
-    // Format expected: "João 1" or "João 1:1-10"
     const text = resource.title;
-    const parts = text.split(' ');
-    if (parts.length >= 2) {
-      const bookName = parts[0];
-      const chapterRaw = parts[1];
-      const chapterStr = chapterRaw.replace(/[^\d]/g, '');
-      const chapter = parseInt(chapterStr);
+    // Regex para pegar o livro (pode ter número no início) e o capítulo
+    // Ex: "1 João 5 (1 cap)" -> Livro: "1 João", Capítulo: "5"
+    const match = text.match(/^((?:\d\s)?[^\d:]+)\s(\d+)/i);
+    
+    if (match) {
+      const bookName = match[1].trim();
+      const chapter = parseInt(match[2]);
       
       if (!isNaN(chapter)) {
         setSelectedBookName(bookName);

@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { BibleData, AcademyContent, AcademyCategory, AcademyVisibility, AcademyCourse, AcademyResource, AcademyWeekCategory, AcademyDayCategory } from '../types';
-import { Upload, Database, GraduationCap, Plus, Trash2, CheckCircle2, AlertTriangle, Settings, Zap, Loader2, Youtube, Edit2, FileText, X, Eye, EyeOff, Lock, Link, Image as ImageIcon, LayoutGrid, List, ImagePlus } from 'lucide-react';
+import { Upload, Database, GraduationCap, Plus, Trash2, CheckCircle2, AlertTriangle, Settings, Zap, Loader2, Youtube, Edit2, FileText, X, Eye, EyeOff, Lock, Link, Image as ImageIcon, LayoutGrid, List, ImagePlus, BookOpen } from 'lucide-react';
 import { getLogoUrl, uploadLogo, ensureBucketExists } from '../services/logoService';
 import { supabase } from '../services/supabaseClient';
 
