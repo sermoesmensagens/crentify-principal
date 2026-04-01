@@ -64,12 +64,17 @@ export const AcademyProvider: React.FC<{ children: React.ReactNode }> = ({ child
         }
     }, [isDataLoaded, cloudData, isAdmin]);
 
-    // Sync from Shared Data (All Users, including Admins to keep them in sync with each other)
+    // Sync from Shared Data (All Users, including Admins)
     useEffect(() => {
-        if (!isSharedDataLoading) {
-            // Prioritize shared data for content to ensure consistency across admins
-            if (sharedData.crentify_academy_courses) setAcademyCourses(sharedData.crentify_academy_courses);
-            if (sharedData.crentify_academy_content) setAcademyContent(sharedData.crentify_academy_content);
+        if (!isSharedDataLoading && sharedData) {
+            // Prioritize shared data for content to ensure consistency across accounts
+            if (sharedData.crentify_academy_courses?.length > 0) {
+                console.log("🎓 AcademyContext: Carregando cursos compartilhados...");
+                setAcademyCourses(sharedData.crentify_academy_courses);
+            }
+            if (sharedData.crentify_academy_content?.length > 0) {
+                setAcademyContent(sharedData.crentify_academy_content);
+            }
             if (sharedData.crentify_academy_categories) setAcademyCategories(sharedData.crentify_academy_categories);
             if (sharedData.crentify_academy_weeks) setWeekCategories(sharedData.crentify_academy_weeks);
             if (sharedData.crentify_academy_days) setDayCategories(sharedData.crentify_academy_days);

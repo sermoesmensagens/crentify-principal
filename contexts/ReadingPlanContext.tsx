@@ -108,12 +108,20 @@ export const ReadingPlanProvider: React.FC<{ children: React.ReactNode }> = ({ c
         }
     }, [isDataLoaded, cloudData, isAdmin]);
 
-    // Sync from Shared Data
+    // Sync from Shared Data (Admins and Users)
     useEffect(() => {
-        if (!isSharedDataLoading) {
-            if (sharedData.crentify_reading_plans?.length > 0) setPlans(sharedData.crentify_reading_plans);
-            if (sharedData.crentify_reading_plan_content?.length > 0) setPlanContent(sharedData.crentify_reading_plan_content);
-            if (sharedData.crentify_reading_plan_categories) setCategories(sharedData.crentify_reading_plan_categories);
+        if (!isSharedDataLoading && sharedData) {
+            // Prioritize shared data for content to ensure consistency across accounts
+            if (sharedData.crentify_reading_plans?.length > 0) {
+                console.log("☁️ ReadingPlanContext: Carregando planos compartilhados...");
+                setPlans(sharedData.crentify_reading_plans);
+            }
+            if (sharedData.crentify_reading_plan_content?.length > 0) {
+                setPlanContent(sharedData.crentify_reading_plan_content);
+            }
+            if (sharedData.crentify_reading_plan_categories) {
+                setCategories(sharedData.crentify_reading_plan_categories);
+            }
         }
     }, [isSharedDataLoading, sharedData]);
 

@@ -38,6 +38,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return () => subscription.unsubscribe();
     }, []);
 
+    // Automatic Profile Sync (Ensures email <-> UUID link exists for Shared Data)
+    useEffect(() => {
+        if (session?.user?.id && session?.user?.email) {
+            supabase.from('profiles').upsert({
+                id: session.user.id,
+                email: session.user.email,
+                updated_at: new Date().toISOString()
+            }, { onConflict: 'id' }).then(({ error }) => {
+                if (error) console.error("🛡️ Erro ao sincronizar perfil (Pode ser falta da tabela 'profiles'):", error);
+            });
+        }
+    }, [session]);
+
     const signOut = async () => {
         await supabase.auth.signOut();
     };
