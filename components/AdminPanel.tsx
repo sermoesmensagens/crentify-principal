@@ -1398,7 +1398,6 @@ const AdminPanel: React.FC = () => {
           </div>
         </div>
       )}
-      )}
     </div>
   </div>
   );
