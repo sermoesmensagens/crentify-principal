@@ -367,24 +367,24 @@ const BibleView: React.FC = () => {
                     </div>
                   ))}
 
-                  <div className="mt-12 flex flex-col items-center gap-8 py-12 border-t border-white/5 animate-in fade-in slide-in-from-bottom duration-1000">
+                  <div className="mt-12 flex flex-col items-center gap-6 py-10 border-t border-white/5 animate-in fade-in slide-in-from-bottom duration-1000">
                     <button
                       onClick={() => toggleChapter(selectedBook.name, selectedChapterIndex + 1)}
-                      className={`group relative overflow-hidden px-16 py-8 rounded-[32px] font-black uppercase text-sm tracking-[0.3em] transition-all duration-500 active:scale-95 shadow-2xl ${
+                      className={`group relative overflow-hidden px-10 py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all duration-500 active:scale-95 shadow-xl ${
                         (progress.completedChapters[selectedBook.name] || []).includes(selectedChapterIndex + 1)
-                          ? 'bg-emerald-500 text-white shadow-emerald-500/20'
-                          : 'bg-brand text-white shadow-brand/40 hover:scale-105'
+                          ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 shadow-emerald-500/10'
+                          : 'bg-brand text-white shadow-lg shadow-brand/30 hover:scale-105'
                       }`}
                     >
-                      <div className="relative z-10 flex items-center gap-4">
+                      <div className="relative z-10 flex items-center gap-3">
                         {(progress.completedChapters[selectedBook.name] || []).includes(selectedChapterIndex + 1) ? (
                           <>
-                            <CheckCircle2 size={24} />
+                            <CheckCircle2 size={20} />
                             <span>CONCLUÍDO</span>
                           </>
                         ) : (
                           <>
-                            <CheckCircle2 size={24} className="group-hover:animate-bounce" />
+                            <CheckCircle2 size={20} className="group-hover:animate-bounce" />
                             <span>MARCAR COMO LIDO</span>
                           </>
                         )}
@@ -421,11 +421,11 @@ const BibleView: React.FC = () => {
                 </div>
 
                 <div className="p-8 border-t border-white/5 flex gap-4 bg-black/20">
-                  <button disabled={selectedChapterIndex === 0} onClick={() => setSelectedChapterIndex(prev => prev - 1)} className="flex-1 flex justify-center items-center gap-3 py-6 rounded-2xl bg-white/5 text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 hover:text-brand disabled:opacity-10 transition-all">
-                    <ArrowLeft size={18} /> Anterior
+                  <button disabled={selectedChapterIndex === 0} onClick={() => setSelectedChapterIndex(prev => prev - 1)} className="flex-1 flex justify-center items-center gap-3 py-4 rounded-xl bg-white/5 text-[9px] font-black uppercase tracking-widest text-gray-500 hover:text-brand disabled:opacity-10 transition-all border border-transparent hover:border-brand/20">
+                    <ArrowLeft size={16} /> Anterior
                   </button>
-                  <button disabled={selectedChapterIndex === (selectedBook.chapters?.length || 1) - 1} onClick={() => setSelectedChapterIndex(prev => prev + 1)} className="flex-1 flex justify-center items-center gap-3 py-6 rounded-2xl bg-white/5 text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 hover:text-brand disabled:opacity-10 transition-all">
-                    Próximo <ArrowRight size={18} />
+                  <button disabled={selectedChapterIndex === (selectedBook.chapters?.length || 1) - 1} onClick={() => setSelectedChapterIndex(prev => prev + 1)} className="flex-1 flex justify-center items-center gap-3 py-4 rounded-xl bg-white/5 text-[9px] font-black uppercase tracking-widest text-gray-500 hover:text-brand disabled:opacity-10 transition-all border border-transparent hover:border-brand/20">
+                    Próximo <ArrowRight size={16} />
                   </button>
                 </div>
 
