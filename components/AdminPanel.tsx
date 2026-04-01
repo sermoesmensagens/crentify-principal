@@ -271,7 +271,7 @@ const AdminPanel: React.FC = () => {
   };
 
   return (
-    <div className="h-full flex flex-col space-y-10 animate-in fade-in duration-700 pb-24">
+    <div className="flex flex-col space-y-10 animate-in fade-in duration-700 pb-24">
       <header className="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-white/5 pb-8">
         <div>
           <h1 className="text-5xl font-black text-white tracking-tighter uppercase neon-text flex items-center gap-4">
