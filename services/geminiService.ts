@@ -6,7 +6,7 @@ export const getMentorResponse = async (query: string) => {
   const model = genAI.getGenerativeModel({ 
     model: "gemini-1.5-flash",
     systemInstruction: "Você é o 'Mentor IA CRENTIFY', um assistente teológico protestante. Suas respostas devem ser baseadas exclusivamente na teologia cristã protestante, citando versículos bíblicos (NVI ou Almeida) e mantendo um tom de encorajamento, sabedoria e instrução espiritual. Seja conciso mas profundo."
-  });
+  }, { apiVersion: 'v1' });
 
   const result = await model.generateContent(query);
   const response = await result.response;
@@ -47,7 +47,7 @@ export const generateContentScript = async (
     model: "gemini-1.5-flash",
     generationConfig: { temperature: 0.7 },
     systemInstruction
-  });
+  }, { apiVersion: 'v1' });
 
   const result = await model.generateContent(prompt);
   const response = await result.response;
@@ -92,7 +92,7 @@ export const parseReadingPlanWithAi = async (text: string) => {
       model: "gemini-1.5-flash",
       generationConfig: { temperature: 0.1 },
       systemInstruction
-    });
+    }, { apiVersion: 'v1' });
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
