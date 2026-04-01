@@ -49,6 +49,7 @@ const AdminPanel: React.FC = () => {
   const [isProcessingSmartImport, setIsProcessingSmartImport] = useState(false);
   const [smartImportResult, setSmartImportResult] = useState<any[]>([]);
   const [importProgress, setImportProgress] = useState({ current: 0, total: 0 });
+  const [isWaitingForQuota, setIsWaitingForQuota] = useState(false);
 
   // Estados para upload de logo
   const [currentLogoUrl, setCurrentLogoUrl] = useState<string>('/logo-v2.png');
@@ -410,6 +411,14 @@ const AdminPanel: React.FC = () => {
       
       for (let i = 0; i < chunks.length; i++) {
         setImportProgress(prev => ({ ...prev, current: i + 1 }));
+        
+        // Adicionar delay gradual entre chunks para evitar erro 429 (Quota Exceeded) do Gemini
+        if (i > 0) {
+          setIsWaitingForQuota(true);
+          await new Promise(resolve => setTimeout(resolve, 3500));
+          setIsWaitingForQuota(false);
+        }
+
         const result = await parseReadingPlanWithAi(chunks[i]);
         if (Array.isArray(result)) {
           allExtractedData.push(...result);
@@ -1366,8 +1375,11 @@ const AdminPanel: React.FC = () => {
                   >
                     {isProcessingSmartImport ? (
                       <>
-                        <Loader2 size={24} className="animate-spin" />
-                        {importProgress.total > 1 ? `PROCESSANDO (${importProgress.current}/${importProgress.total})` : 'PROCESSANDO COM IA...'}
+                        <Loader2 size={24} className={isWaitingForQuota ? "text-brand/30" : "animate-spin text-brand"} />
+                        {isWaitingForQuota 
+                          ? `RESPEITANDO LIMITE... (3s)` 
+                          : (importProgress.total > 1 ? `IA PROCESSANDO (${importProgress.current}/${importProgress.total})` : 'PROCESSANDO COM IA...')
+                        }
                       </>
                     ) : (
                       <>
