@@ -420,11 +420,11 @@ const BibleView: React.FC = () => {
                   </button>
                 </div>
 
-                <div className="p-6 border-t border-white/5 flex gap-4 bg-black/20">
-                  <button disabled={selectedChapterIndex === 0} onClick={() => setSelectedChapterIndex(prev => prev - 1)} className="flex-1 flex justify-center items-center gap-2 py-3 rounded-xl bg-white/5 text-[9px] font-black uppercase tracking-widest text-gray-500 hover:text-brand disabled:opacity-10 transition-all border border-transparent hover:border-brand/20">
+                <div className="p-6 border-t border-white/5 flex justify-center gap-4 bg-black/20">
+                  <button disabled={selectedChapterIndex === 0} onClick={() => setSelectedChapterIndex(prev => prev - 1)} className="flex items-center justify-center gap-2 px-8 py-3 rounded-xl bg-white/5 text-[9px] font-black uppercase tracking-widest text-gray-500 hover:text-brand disabled:opacity-10 transition-all border border-transparent hover:border-brand/20">
                     <ArrowLeft size={14} /> Anterior
                   </button>
-                  <button disabled={selectedChapterIndex === (selectedBook.chapters?.length || 1) - 1} onClick={() => setSelectedChapterIndex(prev => prev + 1)} className="flex-1 flex justify-center items-center gap-2 py-3 rounded-xl bg-white/5 text-[9px] font-black uppercase tracking-widest text-gray-500 hover:text-brand disabled:opacity-10 transition-all border border-transparent hover:border-brand/20">
+                  <button disabled={selectedChapterIndex === (selectedBook.chapters?.length || 1) - 1} onClick={() => setSelectedChapterIndex(prev => prev + 1)} className="flex items-center justify-center gap-2 px-8 py-3 rounded-xl bg-white/5 text-[9px] font-black uppercase tracking-widest text-gray-500 hover:text-brand disabled:opacity-10 transition-all border border-transparent hover:border-brand/20">
                     Próximo <ArrowRight size={14} />
                   </button>
                 </div>
