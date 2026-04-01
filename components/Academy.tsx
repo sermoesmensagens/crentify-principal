@@ -165,12 +165,12 @@ const Academy: React.FC = () => {
   const activeResource = selectedLesson?.resources?.find(r => r.id === activeResourceId);
 
   return (
-    <div className="h-full flex flex-col pt-24 md:pt-0">
-      <div className="flex-1 flex overflow-hidden">
+    <div className="flex flex-col pt-24 md:pt-0 pb-20">
+      <div className="flex">
         
         {/* Course View (Active Course) */}
         {selectedCourse ? (
-          <div className="flex-1 flex flex-col min-h-0 overflow-hidden animate-in fade-in zoom-in-95 duration-300">
+          <div className="flex-1 flex flex-col animate-in fade-in zoom-in-95 duration-300">
             {/* Header da Visão de Curso */}
             <div className="bg-brand/5 p-6 rounded-[40px] border border-brand/10 mb-4 flex flex-col md:flex-row gap-6 items-center shrink-0">
               <button 
@@ -204,7 +204,7 @@ const Academy: React.FC = () => {
             </div>
 
             {/* Lista Acordeão de Semanas e Dias */}
-            <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar pb-10 space-y-6">
+            <div className="pr-2 space-y-6 pb-20">
               {(() => {
                 // Group by Week
                 const groupedByWeek = courseLessons.reduce((acc, lesson) => {
@@ -325,7 +325,7 @@ const Academy: React.FC = () => {
             </div>
           </div>
         ) : (
-          <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+          <div className="flex-1 flex flex-col">
             {/* Cabecalho de Boas-vindas (Listagem de Cursos) */}
             <div className="bg-brand/5 p-8 rounded-[40px] border border-brand/10 mb-8 flex flex-col md:flex-row justify-between items-center gap-6 shrink-0 relative overflow-hidden">
               <div className="absolute -top-20 -right-20 w-64 h-64 bg-brand/20 rounded-full blur-3xl mix-blend-screen opacity-50 blur-anim" />
@@ -346,7 +346,7 @@ const Academy: React.FC = () => {
             </div>
 
             {/* Listagem Global de Categorias/Cursos */}
-            <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-12 pb-10">
+            <div className="pr-2 space-y-12 pb-20">
               {(categories || [{ id: '1', title: 'Fundamentos', color: '#ff5c5c' }, { id: '2', title: 'Liderança', color: '#5cff8a' }]).map(cat => {
                 const catCourses = filteredCourses.filter(c => c.categoryId === cat.id);
                 if (catCourses.length === 0) return null;

@@ -189,7 +189,7 @@ const BibleView: React.FC = () => {
   const currentNotes = selectedBook ? notes.filter(n => n.bookName === selectedBook.name && n.chapter === selectedChapterIndex + 1) : [];
 
   return (
-    <div className="flex flex-col space-y-8 animate-in fade-in duration-700 pb-10">
+    <div className="flex flex-col space-y-8 animate-in fade-in duration-700 pb-20">
       <header className="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-white/5 pb-8">
         <div>
           <h1 className="text-5xl font-black text-white tracking-tighter uppercase neon-text flex items-center gap-4">
@@ -208,7 +208,7 @@ const BibleView: React.FC = () => {
       </header>
 
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0">
-        <aside className="hidden lg:flex lg:col-span-3 bg-[#161b22] rounded-[32px] border border-white/5 flex-col overflow-hidden shadow-2xl">
+        <aside className="hidden lg:flex lg:col-span-3 bg-[#161b22] rounded-[32px] border border-white/5 flex-col shadow-2xl">
           <div className="p-5 border-b border-white/5 bg-black/20 flex items-center justify-between">
             <h3 className="font-black text-brand text-[9px] uppercase tracking-[0.3em]">
               {testamentFilter ? (testamentFilter === 'old' ? 'Antigo Testamento' : 'Novo Testamento') : 'Cânon'}
@@ -299,7 +299,7 @@ const BibleView: React.FC = () => {
             </div>
           </div>
           {/* Leitor */}
-          <section className="flex flex-col bg-[#161b22] rounded-[40px] shadow-2xl border border-white/5 overflow-hidden relative min-h-[500px] max-h-[75vh]">
+          <section className="flex flex-col bg-[#161b22] rounded-[40px] shadow-2xl border border-white/5 overflow-hidden relative min-h-[500px]">
             {selectedBook ? (
               <>
                 <div className="p-6 border-b border-white/5 flex flex-col md:flex-row items-start md:items-center justify-between bg-black/20 backdrop-blur-xl z-10 gap-4">
@@ -342,7 +342,7 @@ const BibleView: React.FC = () => {
 
                 <div 
                   ref={readerRef}
-                  className="flex-1 overflow-y-auto p-8 md:p-12 space-y-6 custom-scrollbar bg-[#0b0e14]/50 reader-container"
+                  className="p-8 md:p-12 space-y-6 bg-[#0b0e14]/50 reader-container"
                 >
                   {selectedChapter?.verses?.map((v) => (
                     <div key={v.number} className="group relative">
