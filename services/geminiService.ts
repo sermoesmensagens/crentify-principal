@@ -3,7 +3,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export const getMentorResponse = async (query: string) => {
   const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }, { apiVersion: 'v1' });
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" }, { apiVersion: 'v1' });
 
   const systemInstruction = "Você é o 'Mentor IA CRENTIFY', um assistente teológico protestante. Suas respostas devem ser baseadas exclusivamente na teologia cristã protestante, citando versículos bíblicos (NVI ou Almeida) e mantendo um tom de encorajamento, sabedoria e instrução espiritual. Seja conciso mas profundo.";
   
@@ -45,7 +45,7 @@ export const generateContentScript = async (
   }
 
   const model = genAI.getGenerativeModel({ 
-    model: "gemini-1.5-flash",
+    model: "gemini-1.5-flash-latest",
     generationConfig: { temperature: 0.7 }
   }, { apiVersion: 'v1' });
 
@@ -54,6 +54,32 @@ export const generateContentScript = async (
   const result = await model.generateContent(fullPrompt);
   const response = await result.response;
   return response.text();
+};
+
+/**
+ * Generates a short, engaging title/theme for a day of reading based on verses.
+ */
+export const generateReadingTitle = async (verses: string[]) => {
+  const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
+  const model = genAI.getGenerativeModel({ 
+    model: "gemini-1.5-flash-latest", 
+    generationConfig: { temperature: 0.7 }
+  }, { apiVersion: 'v1' });
+
+  const systemInstruction = `Você é um curador de conteúdo bíblico. Dada uma lista de versículos, crie um título curto, inspirador e direto para um dia de estudo bíblico.
+  Exemplo: Gênesis 1-2 -> O Começo de Tudo
+  Exemplo: Mateus 5-7 -> O Sermão do Monte`;
+
+  const fullPrompt = `${systemInstruction}\n\nVersículos: ${verses.join(', ')}\n\nCrie um título curto (máx 5 palavras):`;
+
+  try {
+    const result = await model.generateContent(fullPrompt);
+    const response = await result.response;
+    return response.text().trim().replace(/^"/, '').replace(/"$/, '');
+  } catch (error) {
+    console.error("Erro ao gerar título do plano:", error);
+    return "Temas do Dia";
+  }
 };
 
 /**
@@ -87,7 +113,7 @@ export const parseReadingPlanWithAi = async (text: string) => {
 
   try {
     const model = genAI.getGenerativeModel({ 
-      model: "gemini-1.5-flash",
+      model: "gemini-1.5-flash-latest",
       generationConfig: { temperature: 0.1 }
     }, { apiVersion: 'v1' });
 
