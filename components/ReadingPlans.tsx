@@ -55,7 +55,8 @@ const ReadingPlans: React.FC<ReadingPlansProps> = ({ setActiveSection }) => {
     const parts = text.split(' ');
     if (parts.length >= 2) {
       const bookName = parts[0];
-      const chapterStr = parts[1].split(':')[0];
+      const chapterRaw = parts[1];
+      const chapterStr = chapterRaw.replace(/[^\d]/g, '');
       const chapter = parseInt(chapterStr);
       
       if (!isNaN(chapter)) {
@@ -221,7 +222,7 @@ const ReadingPlans: React.FC<ReadingPlansProps> = ({ setActiveSection }) => {
                                     day: `Dia ${idx + 1}`,
                                     title: `Meditando em ${verse}`,
                                     resources: [
-                                        { id: `res-${newId}-${idx}-1`, type: 'leitura', title: `${verse}:1`, duration: '10 min', instruction: 'Leia com calma e ore sobre este capítulo.' }
+                                        { id: `res-${newId}-${idx}-1`, type: 'leitura', title: `${verse} (${idx === 0 ? '5-10 min' : '1 cap'})`, duration: '1 cap', instruction: 'Leia com calma e ore sobre este capítulo.' }
                                     ]
                                 }));
 
@@ -344,8 +345,9 @@ const ReadingPlans: React.FC<ReadingPlansProps> = ({ setActiveSection }) => {
                                                                 {isDone && <CheckCircle2 size={14} strokeWidth={4}/>}
                                                             </button>
                                                             <div>
-                                                                <span className={`text-sm font-black uppercase tracking-tight ${isDone ? 'text-gray-600 line-through' : 'text-gray-200'}`}>{res.title}</span>
-                                                                {res.duration && <span className="ml-3 text-[9px] font-bold text-brand uppercase tracking-widest">{res.duration}</span>}
+                                                                <span className={`text-sm font-black uppercase tracking-tight ${isDone ? 'text-gray-600 line-through' : 'text-gray-200'}`}>
+                                                                    {res.title}
+                                                                </span>
                                                             </div>
                                                         </div>
                                                         <div className="flex items-center gap-3 mt-4 md:mt-0">
