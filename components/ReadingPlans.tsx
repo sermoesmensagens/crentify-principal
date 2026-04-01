@@ -255,6 +255,15 @@ const ReadingPlans: React.FC<ReadingPlansProps> = ({ setActiveSection }) => {
         return acc;
     }, {} as Record<string, ReadingPlanContent[]>);
 
+    // Sort days within each week
+    Object.keys(groupedByWeek).forEach(week => {
+        groupedByWeek[week].sort((a, b) => {
+            const numA = parseInt(a.day.replace(/\D/g, '')) || 0;
+            const numB = parseInt(b.day.replace(/\D/g, '')) || 0;
+            return numA - numB;
+        });
+    });
+
     const sortedWeeks = Object.keys(groupedByWeek).sort((a,b) => {
         const numA = parseInt(a.replace(/\D/g, '')) || 0;
         const numB = parseInt(b.replace(/\D/g, '')) || 0;

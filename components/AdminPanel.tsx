@@ -30,10 +30,11 @@ const AdminPanel: React.FC = () => {
     setPlans: setReadingPlans, 
     planContent: readingPlanContent, 
     setPlanContent: setReadingPlanContent, 
-    categories: readingPlanCategories 
+    categories: readingPlanCategories,
+    setCategories: setReadingPlanCategories
   } = useReadingPlans();
 
-  const [categoryToManage, setCategoryToManage] = useState<'weeks' | 'days' | 'readingWeeks' | 'readingDays' | null>(null);
+  const [categoryToManage, setCategoryToManage] = useState<'weeks' | 'days' | 'readingWeeks' | 'readingDays' | 'plans' | null>(null);
   const [newCatName, setNewCatName] = useState('');
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -341,15 +342,22 @@ const AdminPanel: React.FC = () => {
   const handleAddOrUpdatePlanContent = () => {
     if (!newPlanContent.planId || !newPlanContent.day) return;
 
+    // Auto-generate title if blank
+    let finalTitle = newPlanContent.title;
+    if (!finalTitle) {
+      const verses = newPlanContent.resources?.filter(r => r.type === 'leitura').map(r => r.title).join(', ');
+      finalTitle = verses ? `Leitura: ${verses}` : 'Leitura do Dia';
+    }
+
     if (editingPlanContentId) {
       setReadingPlanContent(readingPlanContent.map(item =>
-        item.id === editingPlanContentId ? { ...item, ...newPlanContent as ReadingPlanContent } : item
+        item.id === editingPlanContentId ? { ...item, ...newPlanContent as ReadingPlanContent, title: finalTitle } : item
       ));
       setEditingPlanContentId(null);
     } else {
       const content: ReadingPlanContent = {
         id: Date.now().toString(),
-        title: newPlanContent.title || 'Leitura do Dia',
+        title: finalTitle,
         planId: newPlanContent.planId,
         week: newPlanContent.week || 'Semana 1',
         day: newPlanContent.day,
@@ -722,7 +730,10 @@ const AdminPanel: React.FC = () => {
                     <input type="number" value={newPlan.durationDays} onChange={e => setNewPlan({ ...newPlan, durationDays: Number(e.target.value) })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none" />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Categoria</label>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Categoria</label>
+                      <button onClick={() => setCategoryToManage('plans')} className="text-[9px] font-black text-brand hover:underline uppercase tracking-tighter transition-all">Gerenciar</button>
+                    </div>
                     <select value={newPlan.categoryId} onChange={e => setNewPlan({ ...newPlan, categoryId: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none hover:border-brand/30 transition-all">
                       {readingPlanCategories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                     </select>
@@ -768,6 +779,31 @@ const AdminPanel: React.FC = () => {
                   <div className="space-y-2">
                     <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Dia</label>
                     <input type="text" placeholder="Dia 1" value={newPlanContent.day} onChange={e => setNewPlanContent({ ...newPlanContent, day: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] px-8 py-5 text-white font-black outline-none" />
+                  </div>
+                  <div className="md:col-span-2 space-y-2">
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Título/Reflexão do Bloco (Tema do Dia)</label>
+                      <button 
+                        onClick={() => {
+                          const verses = newPlanContent.resources?.filter(r => r.type === 'leitura').map(r => r.title).join(', ') || '';
+                          if (verses) {
+                            setNewPlanContent({ ...newPlanContent, title: `Reflexão: ${verses}` });
+                          } else {
+                            alert('Adicione primeiro os versículos para gerar uma reflexão.');
+                          }
+                        }}
+                        className="text-[9px] font-black text-brand hover:underline uppercase tracking-tighter transition-all flex items-center gap-1"
+                      >
+                         <Zap size={10} /> Auto-Completar
+                      </button>
+                    </div>
+                    <input 
+                      type="text" 
+                      placeholder="Ex: Paz que excede entendimento" 
+                      value={newPlanContent.title} 
+                      onChange={e => setNewPlanContent({ ...newPlanContent, title: e.target.value })} 
+                      className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all shadow-inner" 
+                    />
                   </div>
                 </div>
 
@@ -966,7 +1002,7 @@ const AdminPanel: React.FC = () => {
               <div className="bg-[#161b22] border border-white/10 rounded-[48px] w-full max-w-md overflow-hidden shadow-2xl flex flex-col">
                 <div className="p-8 border-b border-white/5 flex items-center justify-between">
                   <div>
-                    <h3 className="text-xl font-black text-white uppercase tracking-tighter">Gerenciar {categoryToManage === 'weeks' ? 'Semanas' : 'Dias'}</h3>
+                    <h3 className="text-xl font-black text-white uppercase tracking-tighter">Gerenciar {categoryToManage === 'weeks' ? 'Semanas' : categoryToManage === 'plans' ? 'Categorias de Plano' : 'Dias'}</h3>
                     <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Adicione ou exclua opções</p>
                   </div>
                   <button onClick={() => { setCategoryToManage(null); setNewCatName(''); }} className="p-2 bg-white/5 rounded-xl text-gray-400 hover:text-white transition-all"><X size={20}/></button>
@@ -977,7 +1013,7 @@ const AdminPanel: React.FC = () => {
                   <div className="flex gap-2">
                     <input 
                       type="text" 
-                      placeholder={categoryToManage === 'weeks' ? "Ex: Semana 4" : "Ex: Terça-feira"}
+                      placeholder={categoryToManage === 'weeks' ? "Ex: Semana 4" : categoryToManage === 'plans' ? "Ex: Bíblia em 180 Dias" : "Ex: Terça-feira"}
                       value={newCatName}
                       onChange={e => setNewCatName(e.target.value)}
                       className="flex-1 bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-white font-bold outline-none focus:ring-2 focus:ring-brand/30"
@@ -985,8 +1021,9 @@ const AdminPanel: React.FC = () => {
                     <button 
                       onClick={() => {
                         if (!newCatName.trim()) return;
-                        const newCat = { id: Date.now().toString(), name: newCatName.trim() };
+                        const newCat = { id: Date.now().toString(), name: newCatName.trim(), color: '#9d5cff' };
                         if (categoryToManage === 'weeks') setWeekCategories([...weekCategories, newCat]);
+                        else if (categoryToManage === 'plans') setReadingPlanCategories([...readingPlanCategories, newCat]);
                         else setDayCategories([...dayCategories, newCat]);
                         setNewCatName('');
                       }}
@@ -998,12 +1035,13 @@ const AdminPanel: React.FC = () => {
 
                   {/* Lista */}
                   <div className="max-h-60 overflow-y-auto pr-2 custom-scrollbar space-y-2">
-                    {(categoryToManage === 'weeks' ? weekCategories : dayCategories).map(cat => (
+                    {(categoryToManage === 'weeks' ? weekCategories : categoryToManage === 'plans' ? readingPlanCategories : dayCategories).map(cat => (
                       <div key={cat.id} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl group">
                         <span className="text-xs font-black text-white uppercase tracking-tight">{cat.name}</span>
                         <button 
                           onClick={() => {
                             if (categoryToManage === 'weeks') setWeekCategories(weekCategories.filter(w => w.id !== cat.id));
+                            else if (categoryToManage === 'plans') setReadingPlanCategories((readingPlanCategories || []).filter(p => p.id !== cat.id));
                             else setDayCategories(dayCategories.filter(d => d.id !== cat.id));
                           }}
                           className="text-gray-600 hover:text-rose-500 transition-colors"
