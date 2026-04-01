@@ -11,9 +11,9 @@ interface BibleContextType {
     notes: BibleNote[];
     setNotes: React.Dispatch<React.SetStateAction<BibleNote[]>>;
     selectedBookName: string | null;
-    setSelectedBookName: (name: string | null) => void;
+    setSelectedBookName: React.Dispatch<React.SetStateAction<string | null>>;
     selectedChapterIndex: number;
-    setSelectedChapterIndex: (index: number) => void;
+    setSelectedChapterIndex: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const BibleContext = createContext<BibleContextType | undefined>(undefined);

@@ -28,7 +28,7 @@ interface ReadingPlansProps {
 
 const ReadingPlans: React.FC<ReadingPlansProps> = ({ setActiveSection }) => {
   const { plans, planContent, categories, progress, setProgress } = useReadingPlans();
-  const { setSelectedBook, setSelectedChapterIndex } = useBible();
+  const { setSelectedBookName, setSelectedChapterIndex } = useBible();
   
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState<string>('all');
@@ -59,7 +59,7 @@ const ReadingPlans: React.FC<ReadingPlansProps> = ({ setActiveSection }) => {
       const chapter = parseInt(chapterStr);
       
       if (!isNaN(chapter)) {
-        setSelectedBook(bookName);
+        setSelectedBookName(bookName);
         setSelectedChapterIndex(chapter - 1);
         setActiveSection(Section.BIBLE);
       }
