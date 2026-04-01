@@ -1401,7 +1401,7 @@ const AdminPanel: React.FC = () => {
       )}
     </div>
   </div>
-);
+  );
 };
 
 export default AdminPanel;
