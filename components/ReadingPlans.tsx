@@ -225,7 +225,7 @@ const ReadingPlans: React.FC<ReadingPlansProps> = ({ setActiveSection }) => {
     const progressPct = getPlanProgress(selectedPlan.id);
 
     return (
-      <div className="h-full flex flex-col pt-24 md:pt-0 animate-in fade-in duration-500">
+      <div className="flex flex-col pt-24 md:pt-0 animate-in fade-in duration-500 pb-20">
         {/* Header do Plano */}
         <div className="bg-brand/5 p-6 rounded-[40px] border border-brand/10 mb-8 flex flex-col md:flex-row gap-6 items-center shrink-0">
           <button 
@@ -264,7 +264,7 @@ const ReadingPlans: React.FC<ReadingPlansProps> = ({ setActiveSection }) => {
         </div>
 
         {/* Lista Acordeão */}
-        <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar pb-10 space-y-4">
+        <div className="space-y-4 pb-20">
             {sortedWeeks.map(weekName => {
                 const isExpanded = expandedWeeks.includes(weekName);
                 const weekContent = groupedByWeek[weekName];
@@ -337,7 +337,7 @@ const ReadingPlans: React.FC<ReadingPlansProps> = ({ setActiveSection }) => {
   }
 
   return (
-    <div className="h-full flex flex-col pt-24 md:pt-0 animate-in fade-in duration-500">
+    <div className="flex flex-col pt-24 md:pt-0 animate-in fade-in duration-500 pb-20">
       {/* Header com IA */}
       <div className="bg-gradient-to-br from-brand/20 via-brand/5 to-transparent p-10 md:p-14 rounded-[48px] border border-brand/10 mb-10 relative overflow-hidden group">
         <div className="absolute top-0 right-0 p-12 opacity-10 blur-xl group-hover:scale-110 transition-transform duration-1000">
@@ -360,7 +360,7 @@ const ReadingPlans: React.FC<ReadingPlansProps> = ({ setActiveSection }) => {
       </div>
 
       {/* Listagem de Planos */}
-      <div className="flex-1 flex flex-col min-h-0">
+      <div className="flex flex-col">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
             <h2 className="text-2xl font-black text-white uppercase tracking-tighter flex items-center gap-3">
                 <Layout size={24} className="text-brand" /> Planos de Leitura
@@ -396,7 +396,7 @@ const ReadingPlans: React.FC<ReadingPlansProps> = ({ setActiveSection }) => {
             ))}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-y-auto pr-2 custom-scrollbar pb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20">
             {filteredPlans.map(plan => {
                 const progressPct = getPlanProgress(plan.id);
                 const isCompleted = progressPct === 100;
