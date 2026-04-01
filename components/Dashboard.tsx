@@ -208,7 +208,7 @@ const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
         {/* Bloco 1: Disciplinas (Espiritual) */}
-        <section className="bg-[#161b22] p-10 rounded-[56px] border border-white/5 shadow-2xl relative overflow-hidden flex flex-col h-[500px]">
+        <section className="bg-[#161b22] p-10 rounded-[56px] border border-white/5 shadow-2xl relative overflow-hidden flex flex-col">
           <div className="absolute top-0 right-0 p-8 opacity-[0.03]">
             <Zap size={150} className="text-brand" />
           </div>
@@ -230,7 +230,7 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
 
-          <div className="space-y-4 relative z-10 flex-1 overflow-y-auto custom-scrollbar pr-2">
+          <div className="space-y-4 relative z-10">
             {filteredHabits.length === 0 ? (
               <div className="py-20 text-center opacity-30 italic font-bold">Nenhuma disciplina na lista.</div>
             ) : (
@@ -258,7 +258,7 @@ const Dashboard: React.FC = () => {
         </section>
 
         {/* Bloco 2: Tarefas (Produção) */}
-        <section className="bg-[#161b22] p-10 rounded-[56px] border border-white/5 shadow-2xl relative overflow-hidden flex flex-col h-[500px]">
+        <section className="bg-[#161b22] p-10 rounded-[56px] border border-white/5 shadow-2xl relative overflow-hidden flex flex-col">
           <div className="absolute top-0 right-0 p-8 opacity-[0.03]">
             <Briefcase size={150} className="text-blue-500" />
           </div>
@@ -280,7 +280,7 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
 
-          <div className="space-y-4 relative z-10 flex-1 overflow-y-auto custom-scrollbar pr-2">
+          <div className="space-y-4 relative z-10">
             {filteredTasks.length === 0 ? (
               <div className="py-20 text-center opacity-30 italic font-bold">Nenhuma tarefa na lista.</div>
             ) : (
@@ -308,7 +308,7 @@ const Dashboard: React.FC = () => {
         </section>
 
         {/* Bloco 3: Estudos (Crescimento) */}
-        <section className="bg-[#161b22] p-10 rounded-[56px] border border-white/5 shadow-2xl relative overflow-hidden flex flex-col h-[500px]">
+        <section className="bg-[#161b22] p-10 rounded-[56px] border border-white/5 shadow-2xl relative overflow-hidden flex flex-col">
           <div className="absolute top-0 right-0 p-8 opacity-[0.03]">
             <Target size={150} className="text-emerald-500" />
           </div>
@@ -330,7 +330,7 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
 
-          <div className="space-y-4 relative z-10 flex-1 overflow-y-auto custom-scrollbar pr-2">
+          <div className="space-y-4 relative z-10">
             {filteredStudies.length === 0 ? (
               <div className="py-20 text-center opacity-30 italic font-bold">Nenhum estudo na lista.</div>
             ) : (
@@ -360,7 +360,7 @@ const Dashboard: React.FC = () => {
 
 
         {/* Bloco 6: Lembretes de Projetos */}
-        <section className="bg-[#161b22] p-10 rounded-[56px] border border-white/5 shadow-2xl relative overflow-hidden flex flex-col h-[500px]">
+        <section className="bg-[#161b22] p-10 rounded-[56px] border border-white/5 shadow-2xl relative overflow-hidden flex flex-col">
           <div className="absolute top-0 right-0 p-8 opacity-[0.03]">
             <Briefcase size={150} className="text-brand" />
           </div>
@@ -382,7 +382,7 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
 
-          <div className="space-y-4 relative z-10 flex-1 overflow-y-auto custom-scrollbar pr-2">
+          <div className="space-y-4 relative z-10">
             {filteredProjectReminders.length === 0 ? (
               <div className="py-20 text-center opacity-30 italic font-bold">Nenhum lembrete na lista.</div>
             ) : (
