@@ -7,6 +7,8 @@ import { supabase } from '../services/supabaseClient';
 
 import { useAcademy } from '../contexts/AcademyContext';
 import { useDataContext } from '../contexts/DataContext';
+import { useReadingPlans } from '../contexts/ReadingPlanContext';
+import { ReadingPlan, ReadingPlanContent, ReadingPlanCategory } from '../types';
 
 const AdminPanel: React.FC = () => {
   const { bibleData, updateBibleData: setBibleData, cloudSyncStatus } = useDataContext();
@@ -23,11 +25,19 @@ const AdminPanel: React.FC = () => {
     setDayCategories
   } = useAcademy();
   
-  const [categoryToManage, setCategoryToManage] = useState<'weeks' | 'days' | null>(null);
+  const { 
+    plans: readingPlans, 
+    setPlans: setReadingPlans, 
+    planContent: readingPlanContent, 
+    setPlanContent: setReadingPlanContent, 
+    categories: readingPlanCategories 
+  } = useReadingPlans();
+
+  const [categoryToManage, setCategoryToManage] = useState<'weeks' | 'days' | 'readingWeeks' | 'readingDays' | null>(null);
   const [newCatName, setNewCatName] = useState('');
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'bible' | 'courses' | 'lessons' | 'users' | 'config'>('bible');
+  const [activeTab, setActiveTab] = useState<'bible' | 'courses' | 'lessons' | 'plans' | 'users' | 'config'>('bible');
   const [profiles, setProfiles] = useState<{ id: string, email: string, created_at: string }[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -89,6 +99,34 @@ const AdminPanel: React.FC = () => {
     instruction: ''
   });
   const [editingResourceId, setEditingResourceId] = useState<string | null>(null);
+
+  // Estados de Planos de Leitura
+  const [editingPlanId, setEditingPlanId] = useState<string | null>(null);
+  const [newPlan, setNewPlan] = useState<Partial<ReadingPlan>>({
+    title: '',
+    description: '',
+    durationDays: 7,
+    categoryId: readingPlanCategories?.[0]?.id || '1',
+    thumbnailUrl: '',
+    visibility: 'público',
+    isAiGenerated: false
+  });
+
+  const [editingPlanContentId, setEditingPlanContentId] = useState<string | null>(null);
+  const [newPlanContent, setNewPlanContent] = useState<Partial<ReadingPlanContent>>({
+    title: '',
+    planId: '',
+    week: 'Semana 1',
+    day: 'Dia 1',
+    resources: []
+  });
+
+  const [readingResourceForm, setReadingResourceForm] = useState<Partial<AcademyResource>>({
+    type: 'leitura',
+    title: '',
+    duration: '1 cap',
+    instruction: ''
+  });
 
   // Normalizador Ultra-Tolerante (Lida com múltiplos formatos de JSON bíblico)
   const normalizeBibleData = (raw: any): BibleData => {
@@ -270,6 +308,75 @@ const AdminPanel: React.FC = () => {
     });
   };
 
+  const handleAddOrUpdatePlan = () => {
+    if (!newPlan.title) return;
+
+    if (editingPlanId) {
+      setReadingPlans(readingPlans.map(p =>
+        p.id === editingPlanId ? { ...p, ...newPlan as ReadingPlan } : p
+      ));
+      setEditingPlanId(null);
+    } else {
+      const plan: ReadingPlan = {
+        id: Date.now().toString(),
+        title: newPlan.title!,
+        description: newPlan.description || '',
+        durationDays: newPlan.durationDays || 7,
+        categoryId: newPlan.categoryId || '1',
+        thumbnailUrl: newPlan.thumbnailUrl,
+        visibility: newPlan.visibility || 'público',
+        isAiGenerated: false,
+        createdAt: new Date().toISOString()
+      };
+      setReadingPlans([plan, ...readingPlans]);
+    }
+
+    setNewPlan({ title: '', description: '', durationDays: 7, categoryId: readingPlanCategories?.[0]?.id || '1', thumbnailUrl: '', visibility: 'público' });
+    setSuccess(true);
+    setTimeout(() => setSuccess(false), 3000);
+  };
+
+  const handleAddOrUpdatePlanContent = () => {
+    if (!newPlanContent.planId || !newPlanContent.day) return;
+
+    if (editingPlanContentId) {
+      setReadingPlanContent(readingPlanContent.map(item =>
+        item.id === editingPlanContentId ? { ...item, ...newPlanContent as ReadingPlanContent } : item
+      ));
+      setEditingPlanContentId(null);
+    } else {
+      const content: ReadingPlanContent = {
+        id: Date.now().toString(),
+        title: newPlanContent.title || 'Leitura do Dia',
+        planId: newPlanContent.planId,
+        week: newPlanContent.week || 'Semana 1',
+        day: newPlanContent.day,
+        resources: newPlanContent.resources || []
+      };
+      setReadingPlanContent([content, ...readingPlanContent]);
+    }
+
+    setNewPlanContent({ title: '', planId: '', week: 'Semana 1', day: 'Dia 1', resources: [] });
+    setSuccess(true);
+    setTimeout(() => setSuccess(false), 3000);
+  };
+
+  const addReadingResource = () => {
+    if (!readingResourceForm.title) return;
+    const resource: AcademyResource = {
+      id: Date.now().toString(),
+      type: readingResourceForm.type || 'leitura',
+      title: readingResourceForm.title,
+      duration: readingResourceForm.duration,
+      instruction: readingResourceForm.instruction
+    };
+    setNewPlanContent({
+      ...newPlanContent,
+      resources: [...(newPlanContent.resources || []), resource]
+    });
+    setReadingResourceForm({ type: 'leitura', title: '', duration: '1 cap', instruction: '' });
+  };
+
   return (
     <div className="flex flex-col space-y-10 animate-in fade-in duration-700 pb-24">
       <header className="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-white/5 pb-8">
@@ -281,13 +388,13 @@ const AdminPanel: React.FC = () => {
           <p className="text-gray-500 mt-2 font-medium">Controle de Dados e Infraestrutura.</p>
         </div>
         <div className="flex bg-[#161b22] p-1.5 rounded-2xl border border-white/5 shadow-2xl">
-          {(['bible', 'courses', 'lessons', 'users', 'config'] as const).map(tab => (
+          {(['bible', 'courses', 'lessons', 'plans', 'users', 'config'] as const).map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`px-6 md:px-10 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === tab ? 'bg-brand text-white shadow-lg shadow-brand/20' : 'text-gray-600 hover:text-gray-300'}`}
             >
-              {tab === 'bible' ? 'Escrituras' : tab === 'courses' ? 'Cursos' : tab === 'lessons' ? 'Aulas' : tab === 'users' ? 'Usuários' : 'Config'}
+              {tab === 'bible' ? 'Escrituras' : tab === 'courses' ? 'Cursos' : tab === 'lessons' ? 'Aulas' : tab === 'plans' ? 'Planos' : tab === 'users' ? 'Usuários' : 'Config'}
             </button>
           ))}
         </div>
