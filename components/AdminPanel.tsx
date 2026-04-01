@@ -761,7 +761,7 @@ const AdminPanel: React.FC = () => {
                   <h3 className="text-[10px] font-black text-white uppercase tracking-widest">Adicionar Versículos/Leitura</h3>
                   <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
                     <div className="md:col-span-8">
-                      <input type="text" placeholder="Referência (Ex: Mateus 5:1-12)" value={readingResourceForm.title} onChange={e => setReadingResourceForm({ ...readingResourceForm, title: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-xl px-6 py-4 text-white text-[10px] font-black outline-none" />
+                      <input type="text" placeholder="Referência (Ex: Mateus 5 (1 cap))" value={readingResourceForm.title} onChange={e => setReadingResourceForm({ ...readingResourceForm, title: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-xl px-6 py-4 text-white text-[10px] font-black outline-none" />
                     </div>
                     <div className="md:col-span-4">
                       <input type="text" placeholder="Duração (10 min)" value={readingResourceForm.duration} onChange={e => setReadingResourceForm({ ...readingResourceForm, duration: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-xl px-6 py-4 text-white text-[10px] font-black outline-none" />
