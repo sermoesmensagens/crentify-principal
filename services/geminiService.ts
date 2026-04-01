@@ -20,29 +20,41 @@ async function callGemini(prompt: string, temperature: number = 0.7) {
   let lastError: any = null;
 
   for (const modelName of models) {
-    try {
-      // Usamos v1beta pois é a mais compatível com todos os modelos da lista
-      const model = genAI.getGenerativeModel({ 
-        model: modelName, 
-        generationConfig: { temperature } 
-      });
-      
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      return response.text();
-    } catch (err: any) {
-      lastError = err;
-      const status = err.status || (err.message?.includes('404') ? 404 : err.message?.includes('429') ? 429 : 500);
-      
-      console.warn(`Tentativa com ${modelName} falhou (Status: ${status}). Tentando próximo...`);
-      
-      // Se for erro de quota (429) ou modelo não encontrado (404), tentamos o próximo
-      if (status === 404 || status === 429) {
-        continue;
+    let retryCount = 0;
+    const maxRetries = 2; // Total de 3 tentativas por modelo
+
+    while (retryCount <= maxRetries) {
+      try {
+        const model = genAI.getGenerativeModel({ 
+          model: modelName, 
+          generationConfig: { temperature } 
+        });
+        
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        return response.text();
+      } catch (err: any) {
+        const status = err.status || (err.message?.includes('404') ? 404 : err.message?.includes('429') ? 429 : 500);
+        
+        // Se for erro de quota (429), tentamos um retry rápido após 2 segundos
+        if (status === 429 && retryCount < maxRetries) {
+          retryCount++;
+          console.warn(`[GEMINI] Quota atingida em ${modelName}. Retry ${retryCount}/${maxRetries} em 2s...`);
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          continue;
+        }
+
+        lastError = err;
+        console.warn(`[GEMINI] Tentativa com ${modelName} falhou (Status: ${status}). Tentando próximo modelo...`);
+        
+        // Se for erro de quota (exauriu retries) ou modelo não encontrado (404), pulamos para o próximo modelo da lista
+        if (status === 404 || status === 429) {
+          break; // Sai do while para ir ao próximo modelName no for loop
+        }
+        
+        // Se for outro erro grave, paramos imediatamente
+        throw err;
       }
-      
-      // Se for outro erro grave, paramos
-      throw err;
     }
   }
 
