@@ -52,3 +52,60 @@ export const generateContentScript = async (
 
   return response.text;
 };
+
+/**
+ * Parses a block of text into a structured reading plan format using Gemini AI.
+ * Returns an array of partial ReadingPlanContent.
+ */
+export const parseReadingPlanWithAi = async (text: string) => {
+  const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
+  
+  const systemInstruction = `Você é um Assistente de Processamento de Dados Bíblicos.
+  Sua tarefa é extrair um plano de leitura de um texto bruto e retornar APENAS um JSON válido.
+  
+  O JSON deve ser um array de objetos seguindo esta estrutura:
+  [
+    {
+      "week": "Semana 1",
+      "day": "Dia 1",
+      "title": "Tema do Ponto/Reflexão",
+      "verses": ["Gênesis 1", "Gênesis 2"]
+    }
+  ]
+  
+  REGRAS:
+  1. Extraia o máximo de informações possível.
+  2. Normalize a semana para "Semana X" e o dia para "Dia Y".
+  3. No campo "verses", coloque apenas a referência (Ex: Mateus 5:1-12 ou Salmos 23).
+  4. Se não houver um título claro para o dia, gere um pequeno resumo baseado nos versículos (Ex: "A Queda do Homem").
+  5. Retorne APENAS o JSON, sem explicações ou markdown.`;
+
+  const prompt = `Extraia o plano de leitura deste texto:
+  
+  """
+  ${text}
+  """`;
+
+  try {
+    const model = ai.getGenerativeModel({ 
+      model: 'gemini-1.5-flash-latest',
+      systemInstruction: systemInstruction
+    });
+    
+    // Explicitly request JSON Response
+    const result = await model.generateContent(prompt);
+    const responseText = result.response.text();
+    
+    // Limpeza básica caso o modelo coloque markdown ```json
+    const cleanedJson = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
+    return JSON.parse(cleanedJson) as Array<{
+      week: string;
+      day: string;
+      title: string;
+      verses: string[];
+    }>;
+  } catch (error) {
+    console.error("Erro ao processar plano com IA:", error);
+    throw new Error("Não foi possível processar este trecho. Verifique o texto e tente novamente.");
+  }
+};
