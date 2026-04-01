@@ -316,6 +316,8 @@ const AdminPanel: React.FC = () => {
         p.id === editingPlanId ? { ...p, ...newPlan as ReadingPlan } : p
       ));
       setEditingPlanId(null);
+      // Opcional: resetar o seletor de plano no editor de conteúdo
+      setNewPlanContent({ ...newPlanContent, planId: '' });
     } else {
       const plan: ReadingPlan = {
         id: Date.now().toString(),
@@ -1075,7 +1077,11 @@ const AdminPanel: React.FC = () => {
                          </div>
                       </div>
                       <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-                        <button onClick={() => { setEditingPlanId(item.id); setNewPlan(item); }} className="p-2 text-gray-500 hover:text-brand transition-colors"><Edit2 size={16}/></button>
+                        <button onClick={() => { 
+                          setEditingPlanId(item.id); 
+                          setNewPlan(item); 
+                          setNewPlanContent(prev => ({ ...prev, planId: item.id }));
+                        }} className="p-2 text-gray-500 hover:text-brand transition-colors"><Edit2 size={16}/></button>
                         <button onClick={() => setReadingPlans(readingPlans.filter(p => p.id !== item.id))} className="p-2 text-gray-500 hover:text-rose-500 transition-colors"><Trash2 size={16}/></button>
                       </div>
                     </div>
@@ -1085,9 +1091,20 @@ const AdminPanel: React.FC = () => {
 
               {/* Lista de Conteúdos do Plano Selecionado */}
               <div className="bg-[#161b22] p-10 rounded-[48px] border border-white/5 shadow-2xl">
-                <h3 className="text-[10px] font-black text-blue-500 uppercase tracking-[0.3em] mb-8">Detalhes de Leitura ({readingPlanContent.length})</h3>
+                <div className="flex justify-between items-center mb-8">
+                  <h3 className="text-[10px] font-black text-blue-500 uppercase tracking-[0.3em]">
+                    {editingPlanId ? `Leituras deste Plano (${readingPlanContent.filter(c => c.planId === editingPlanId).length})` : `Todas as Leituras (${readingPlanContent.length})`}
+                  </h3>
+                  {editingPlanId && (
+                    <span className="text-[8px] bg-brand/20 text-brand px-3 py-1 rounded-full font-black">FILTRADO</span>
+                  )}
+                </div>
+                
                 <div className="space-y-4 max-h-[300px] overflow-y-auto custom-scrollbar">
-                  {readingPlanContent.map(item => (
+                  {(editingPlanId 
+                    ? readingPlanContent.filter(c => c.planId === editingPlanId)
+                    : readingPlanContent
+                  ).map(item => (
                     <div key={item.id} className={`flex items-center justify-between p-5 rounded-[28px] border transition-all group ${editingPlanContentId === item.id ? 'bg-blue-500/10 border-blue-500' : 'bg-[#0b0e14]/50 border-white/5 hover:border-blue-500/30'}`}>
                       <div className="min-w-0">
                         <p className="text-xs font-black text-white uppercase truncate tracking-tight">{item.week} - {item.day}</p>
@@ -1099,6 +1116,13 @@ const AdminPanel: React.FC = () => {
                       </div>
                     </div>
                   ))}
+
+                  {editingPlanId && readingPlanContent.filter(c => c.planId === editingPlanId).length === 0 && (
+                    <div className="py-10 text-center border border-dashed border-white/5 rounded-3xl">
+                      <p className="text-[9px] font-black text-gray-600 uppercase tracking-widest">Nenhuma leitura vinculada a este plano ainda.</p>
+                      <button onClick={() => setNewPlanContent({ ...newPlanContent, planId: editingPlanId })} className="text-[10px] font-black text-brand uppercase mt-2 hover:underline">Adicionar a primeira leitura</button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
