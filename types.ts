@@ -10,7 +10,8 @@ export enum Section {
   ADMIN = 'admin',
   ACADEMY = 'academy',
   STUDIES = 'studies',
-  PLANOS = 'planos'
+  PLANOS = 'planos',
+  PRAYER = 'prayer'
 }
 
 export interface AcademyProgressRecord {
