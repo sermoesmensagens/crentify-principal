@@ -11,6 +11,7 @@ import { HabitsProvider } from './contexts/HabitsContext';
 import { DiaryProvider } from './contexts/DiaryContext';
 import { StudyProvider } from './contexts/StudyContext';
 import { ReadingPlanProvider } from './contexts/ReadingPlanContext';
+import { PrayerProvider } from './contexts/PrayerContext';
 
 import ErrorBoundary from './components/ErrorBoundary';
 
@@ -32,7 +33,9 @@ root.render(
                     <HabitsProvider>
                     <DiaryProvider>
                       <ReadingPlanProvider>
-                        <App />
+                        <PrayerProvider>
+                          <App />
+                        </PrayerProvider>
                       </ReadingPlanProvider>
                     </DiaryProvider>
                     </HabitsProvider>
