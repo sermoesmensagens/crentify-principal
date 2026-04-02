@@ -9,7 +9,6 @@ import Workflow from './components/Workflow';
 import AdminPanel from './components/AdminPanel';
 import Habits from './components/Habits';
 import Academy from './components/Academy';
-import Studies from './components/Studies';
 import Projects from './components/Projects';
 import ProfileModal from './components/ProfileModal';
 import ReadingPlans from './components/ReadingPlans';

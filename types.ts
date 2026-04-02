@@ -9,7 +9,6 @@ export enum Section {
   PROJECTS = 'projects',
   ADMIN = 'admin',
   ACADEMY = 'academy',
-  STUDIES = 'studies',
   PLANOS = 'planos',
   PRAYER = 'prayer'
 }
