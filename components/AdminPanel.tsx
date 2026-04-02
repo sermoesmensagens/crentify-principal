@@ -973,8 +973,8 @@ const AdminPanel: React.FC = () => {
                 <div className="flex items-center gap-6">
                   <div className="w-20 h-20 bg-emerald-500/10 text-emerald-500 rounded-[28px] flex items-center justify-center border border-emerald-500/20 shadow-xl">
                     <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 3L9 11v7a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-7l-3-8Z" />
-                      <path d="M12 3v17" />
+                      <path d="M12 2C9.5 5.5 8 9.5 8 13v6a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-6c0-3.5-1.5-7.5-4-11Z" />
+                      <path d="M12 2v19" />
                     </svg>
                   </div>
                   <div>
@@ -1036,7 +1036,10 @@ const AdminPanel: React.FC = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-6">
                   <div className="w-20 h-20 bg-emerald-500/10 text-emerald-500 rounded-[28px] flex items-center justify-center border border-emerald-500/20 shadow-xl">
-                    <GraduationCap size={36} />
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 2C9.5 5.5 8 9.5 8 13v6a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-6c0-3.5-1.5-7.5-4-11Z" />
+                      <path d="M12 2v19" />
+                    </svg>
                   </div>
                   <div>
                     <h2 className="text-3xl font-black text-white uppercase tracking-tighter">
@@ -1664,8 +1667,8 @@ const AdminPanel: React.FC = () => {
                       ) : (
                         <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 border border-emerald-500/20">
                           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M12 3L9 11v7a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-7l-3-8Z" />
-                            <path d="M12 3v17" />
+                            <path d="M12 2C9.5 5.5 8 9.5 8 13v6a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-6c0-3.5-1.5-7.5-4-11Z" />
+                            <path d="M12 2v19" />
                           </svg>
                         </div>
                       )}
@@ -1705,8 +1708,8 @@ const AdminPanel: React.FC = () => {
                     <div className="flex items-center gap-4 overflow-hidden">
                       <div className="w-10 h-10 bg-emerald-500/10 text-emerald-500 rounded-xl flex items-center justify-center border border-emerald-500/20 flex-shrink-0">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M12 3L9 11v7a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-7l-3-8Z" />
-                          <path d="M12 3v17" />
+                          <path d="M12 2C9.5 5.5 8 9.5 8 13v6a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-6c0-3.5-1.5-7.5-4-11Z" />
+                          <path d="M12 2v19" />
                         </svg>
                       </div>
                       <div className="truncate">
