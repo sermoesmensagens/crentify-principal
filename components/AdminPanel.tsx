@@ -1649,6 +1649,76 @@ const AdminPanel: React.FC = () => {
                 ))}
               </div>
             </div>
+          ) : activeTab === 'prayerThemes' ? (
+            <div className="bg-[#161b22] p-10 rounded-[48px] border border-white/5 shadow-2xl">
+              <h3 className="text-[10px] font-black text-brand uppercase tracking-[0.3em] mb-8">Temas de Oração Ativos ({prayerThemes.length})</h3>
+              <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+                {prayerThemes.map(item => (
+                  <div key={item.id} className={`flex items-center justify-between p-6 rounded-[32px] border transition-all group ${editingPrayerThemeId === item.id ? 'bg-brand/10 border-brand' : 'bg-[#0b0e14]/50 border-white/5 hover:border-brand/30'}`}>
+                    <div className="flex items-center gap-4 overflow-hidden">
+                      {item.thumbnailUrl ? (
+                        <img src={item.thumbnailUrl} alt={item.title} className="w-12 h-12 rounded-xl object-cover border border-white/10" />
+                      ) : (
+                        <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-xl">🙏</div>
+                      )}
+                      <div className="truncate">
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-black text-white uppercase truncate tracking-tight">{item.title}</p>
+                          {item.visibility === 'privado' && <Lock size={12} className="text-rose-500" />}
+                        </div>
+                        <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">
+                          {prayerCategories.find(c => c.id === item.categoryId)?.name || 'Sem Categoria'}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                      <button onClick={() => { setEditingPrayerThemeId(item.id); setNewPrayerTheme(item); setActiveTab('prayerThemes'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-gray-500 hover:text-brand transition-colors p-2">
+                        <Edit2 size={18} />
+                      </button>
+                      <button onClick={() => {
+                        if (confirm('Excluir este tema de oração?')) {
+                          setPrayerThemes(prayerThemes.filter(t => t.id !== item.id));
+                          setPrayerContent(prayerContent.filter(c => c.themeId !== item.id));
+                        }
+                      }} className="text-gray-500 hover:text-rose-500 transition-colors p-2">
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : activeTab === 'prayerContent' ? (
+            <div className="bg-[#161b22] p-10 rounded-[48px] border border-white/5 shadow-2xl">
+              <h3 className="text-[10px] font-black text-brand uppercase tracking-[0.3em] mb-8">Conteúdos de Oração ({prayerContent.length})</h3>
+              <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+                {prayerContent.map(item => (
+                  <div key={item.id} className={`flex items-center justify-between p-6 rounded-[32px] border transition-all group ${editingPrayerContentId === item.id ? 'bg-brand/10 border-brand' : 'bg-[#0b0e14]/50 border-white/5 hover:border-brand/30'}`}>
+                    <div className="flex items-center gap-4 overflow-hidden">
+                      <div className="w-10 h-10 bg-emerald-500/10 text-emerald-500 rounded-xl flex items-center justify-center border border-emerald-500/20 flex-shrink-0 text-lg">
+                        🙏
+                      </div>
+                      <div className="truncate">
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-black text-white uppercase truncate tracking-tight">{item.title}</p>
+                        </div>
+                        <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">
+                          {prayerThemes.find(t => t.id === item.themeId)?.title || 'Tema não encontrado'}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                      <button onClick={() => { setEditingPrayerContentId(item.id); setNewPrayerContent(item); setActiveTab('prayerContent'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-gray-500 hover:text-brand transition-colors p-2">
+                        <Edit2 size={18} />
+                      </button>
+                      <button onClick={() => { if (confirm('Excluir este conteúdo?')) setPrayerContent(prayerContent.filter(c => c.id !== item.id)); }} className="text-gray-500 hover:text-rose-500 transition-colors p-2">
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           ) : activeTab === 'plans' ? (
             <div className="space-y-8">
               {/* Lista de Planos */}
