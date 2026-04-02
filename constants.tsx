@@ -24,7 +24,12 @@ export const NAV_ITEMS = [
   { id: Section.BIBLE, label: 'Bíblia', icon: <BookOpen size={20} /> },
   { id: Section.PLANOS, label: 'Planos', icon: <Compass size={20} /> },
   { id: Section.ACADEMY, label: 'Academia', icon: <GraduationCap size={20} /> },
-  { id: Section.PRAYER, label: 'Oração', icon: <span className="text-[20px]">🙏</span> },
+  { id: Section.PRAYER, label: 'Oração', icon: (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 20c-2-1-4-3-4-8V4c0-1.1.9-2 2-2s2 .9 2 2v16Z" />
+      <path d="M12 20c2-1 4-3 4-8V4c0-1.1-.9-2-2-2s-2 .9-2 2v16Z" />
+    </svg>
+  ) },
   { id: Section.HABITS, label: 'Hábitos', icon: <CalendarCheck size={20} /> },
   { id: Section.MENTOR, label: 'Mentor IA', icon: <MessageSquare size={20} /> },
   { id: Section.DIARY, label: 'Minhas Notas', icon: <BookMarked size={20} /> },
