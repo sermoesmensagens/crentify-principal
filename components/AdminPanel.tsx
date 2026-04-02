@@ -5,6 +5,9 @@ import { Upload, Database, GraduationCap, Plus, Trash2, CheckCircle2, AlertTrian
 import { getLogoUrl, uploadLogo, ensureBucketExists } from '../services/logoService';
 import { supabase } from '../services/supabaseClient';
 
+import { useAcademy } from '../contexts/AcademyContext';
+import { useDataContext } from '../contexts/DataContext';
+import { useReadingPlans } from '../contexts/ReadingPlanContext';
 import { ReadingPlan, ReadingPlanContent, ReadingPlanCategory, PrayerTheme, PrayerContent, PrayerCategory, PrayerWeekCategory, PrayerDayCategory } from '../types';
 import { parseReadingPlanWithAi } from '../services/geminiService';
 import { usePrayer } from '../contexts/PrayerContext';
@@ -147,6 +150,29 @@ const AdminPanel: React.FC = () => {
     title: '',
     duration: '1 cap',
     instruction: ''
+  });
+
+  // Estados de Oração
+  const [editingPrayerThemeId, setEditingPrayerThemeId] = useState<string | null>(null);
+  const [newPrayerTheme, setNewPrayerTheme] = useState<Partial<PrayerTheme>>({
+    title: '',
+    description: '',
+    categoryId: prayerCategories?.[0]?.id || '1',
+    thumbnailUrl: '',
+    visibility: 'público'
+  });
+
+  const [editingPrayerContentId, setEditingPrayerContentId] = useState<string | null>(null);
+  const [newPrayerContent, setNewPrayerContent] = useState<Partial<PrayerContent>>({
+    title: '',
+    description: '',
+    themeId: '',
+    categoryId: prayerCategories?.[0]?.id || '1',
+    type: 'video',
+    week: '',
+    day: '',
+    resources: [],
+    visibility: 'público'
   });
 
   // Normalizador Ultra-Tolerante (Lida com múltiplos formatos de JSON bíblico)
