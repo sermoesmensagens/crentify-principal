@@ -158,7 +158,10 @@ const PrayerView: React.FC = () => {
       <header className="flex flex-col md:flex-row justify-between items-end gap-6 mb-10 border-b border-white/5 pb-8">
         <div className="flex items-center gap-6">
           <div className="w-16 h-16 bg-brand/10 rounded-3xl flex items-center justify-center border border-brand/20 shadow-xl shadow-brand/10">
-            <span className="text-[32px]">🙏</span>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-brand">
+              <path d="M12 20c-2-1-4-3-4-8V4c0-1.1.9-2 2-2s2 .9 2 2v16Z" />
+              <path d="M12 20c2-1 4-3 4-8V4c0-1.1-.9-2-2-2s-2 .9-2 2v16Z" />
+            </svg>
           </div>
           <div>
             <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter uppercase neon-text">Oração</h1>
@@ -242,7 +245,12 @@ const PrayerView: React.FC = () => {
                         <div onClick={() => toggleWeek(weekName)} className="flex items-center justify-between p-8 cursor-pointer hover:bg-white/5 transition-colors group">
                           <div className="flex items-center gap-6">
                             <div className={`w-14 h-14 rounded-2xl flex items-center justify-center font-black shadow-lg transition-colors ${isWeekComplete ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-brand/10 text-brand border border-brand/20'}`}>
-                              {isWeekComplete ? <CheckCircle2 size={28} /> : <span className="text-xl">🙌</span>}
+                              {isWeekComplete ? <CheckCircle2 size={28} /> : (
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M12 20c-2-1-4-3-4-8V4c0-1.1.9-2 2-2s2 .9 2 2v16Z" />
+                                  <path d="M12 20c2-1 4-3 4-8V4c0-1.1-.9-2-2-2s-2 .9-2 2v16Z" />
+                                </svg>
+                              )}
                             </div>
                             <div>
                               <h3 className={`text-2xl font-black uppercase tracking-tighter transition-colors ${isExpanded ? 'text-white' : 'text-gray-300 group-hover:text-white'}`}>{weekName}</h3>
@@ -398,7 +406,10 @@ const PrayerView: React.FC = () => {
           <div className="space-y-4">
             {personalPrayers.length === 0 ? (
               <div className="py-24 text-center bg-black/20 rounded-[48px] border border-dashed border-white/10">
-                <span className="text-6xl mb-6 block opacity-20">🕊️</span>
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-6 opacity-20 text-gray-500">
+                  <path d="M12 20c-2-1-4-3-4-8V4c0-1.1.9-2 2-2s2 .9 2 2v16Z" />
+                  <path d="M12 20c2-1 4-3 4-8V4c0-1.1-.9-2-2-2s-2 .9-2 2v16Z" />
+                </svg>
                 <p className="font-black text-sm uppercase tracking-[0.2em] text-gray-600">Sua lista de orações está vazia.</p>
               </div>
             ) : (
