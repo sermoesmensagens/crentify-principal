@@ -78,6 +78,11 @@ export const loadSharedData = async (adminEmails: string[]): Promise<Record<stri
             'crentify_academy_courses',
             'crentify_academy_weeks',
             'crentify_academy_days',
+            'crentify_prayer_themes',
+            'crentify_prayer_content',
+            'crentify_prayer_categories',
+            'crentify_prayer_weeks',
+            'crentify_prayer_days',
             'crentify_reading_plans',
             'crentify_reading_plan_content',
             'crentify_reading_plan_categories'

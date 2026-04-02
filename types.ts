@@ -420,3 +420,58 @@ export interface ReadingPlanContent {
 export interface ReadingPlanProgress {
   completedResources: string[];
 }
+
+export interface PrayerCategory {
+  id: string;
+  name: string;
+}
+
+export interface PrayerWeekCategory {
+  id: string;
+  name: string;
+}
+
+export interface PrayerDayCategory {
+  id: string;
+  name: string;
+}
+
+export interface PrayerTheme {
+  id: string;
+  title: string;
+  description: string;
+  categoryId: string;
+  thumbnailUrl?: string;
+  visibility: AcademyVisibility;
+  createdAt: string;
+}
+
+export interface PrayerContent {
+  id: string;
+  themeId: string;
+  title: string;
+  description: string;
+  categoryId: string;
+  type: 'video' | 'text' | 'audio' | 'mixed';
+  url?: string;
+  week?: string;
+  day?: string;
+  resources?: AcademyResource[];
+  visibility?: AcademyVisibility;
+}
+
+export interface PersonalPrayer {
+  id: string;
+  title: string;
+  description?: string;
+  response?: string;
+  completed: boolean;
+  isAnswered?: boolean;
+  createdAt: string;
+  answeredAt?: string;
+}
+
+export interface PrayerProgress {
+  completedResources: string[];
+  records?: Record<string, AcademyProgressRecord>;
+}
