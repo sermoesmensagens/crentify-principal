@@ -376,8 +376,11 @@ const PrayerView: React.FC = () => {
         <div className="space-y-10 animate-in slide-in-from-left duration-500">
           
           <div className="bg-[#161b22] border border-white/5 p-10 rounded-[48px] shadow-2xl relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:scale-110 transition-transform duration-700">
-              <span className="text-[180px]">📖</span>
+            <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:scale-110 transition-transform duration-700 text-brand">
+              <svg width="180" height="180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 20c-2-1-4-3-4-8V4c0-1.1.9-2 2-2s2 .9 2 2v16Z" />
+                <path d="M12 20c2-1 4-3 4-8V4c0-1.1-.9-2-2-2s-2 .9-2 2v16Z" />
+              </svg>
             </div>
 
             <div className="relative z-10 space-y-8">
