@@ -5,11 +5,9 @@ import { Upload, Database, GraduationCap, Plus, Trash2, CheckCircle2, AlertTrian
 import { getLogoUrl, uploadLogo, ensureBucketExists } from '../services/logoService';
 import { supabase } from '../services/supabaseClient';
 
-import { useAcademy } from '../contexts/AcademyContext';
-import { useDataContext } from '../contexts/DataContext';
-import { useReadingPlans } from '../contexts/ReadingPlanContext';
-import { ReadingPlan, ReadingPlanContent, ReadingPlanCategory } from '../types';
+import { ReadingPlan, ReadingPlanContent, ReadingPlanCategory, PrayerTheme, PrayerContent, PrayerCategory, PrayerWeekCategory, PrayerDayCategory } from '../types';
 import { parseReadingPlanWithAi } from '../services/geminiService';
+import { usePrayer } from '../contexts/PrayerContext';
 
 const AdminPanel: React.FC = () => {
   const { bibleData, updateBibleData: setBibleData, cloudSyncStatus } = useDataContext();
@@ -35,11 +33,24 @@ const AdminPanel: React.FC = () => {
     setCategories: setReadingPlanCategories
   } = useReadingPlans();
 
-  const [categoryToManage, setCategoryToManage] = useState<'weeks' | 'days' | 'readingWeeks' | 'readingDays' | 'plans' | null>(null);
+  const {
+    themes: prayerThemes,
+    setThemes: setPrayerThemes,
+    content: prayerContent,
+    setContent: setPrayerContent,
+    categories: prayerCategories,
+    setCategories: setPrayerCategories,
+    weekCategories: prayerWeekCategories,
+    setWeekCategories: setPrayerWeekCategories,
+    dayCategories: prayerDayCategories,
+    setDayCategories: setPrayerDayCategories
+  } = usePrayer();
+
+  const [categoryToManage, setCategoryToManage] = useState<'weeks' | 'days' | 'readingWeeks' | 'readingDays' | 'plans' | 'prayerCategories' | 'prayerWeeks' | 'prayerDays' | null>(null);
   const [newCatName, setNewCatName] = useState('');
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'bible' | 'courses' | 'lessons' | 'plans' | 'users' | 'config'>('bible');
+  const [activeTab, setActiveTab] = useState<'bible' | 'courses' | 'lessons' | 'prayerThemes' | 'prayerContent' | 'plans' | 'users' | 'config'>('bible');
   const [profiles, setProfiles] = useState<{ id: string, email: string, created_at: string }[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
 
