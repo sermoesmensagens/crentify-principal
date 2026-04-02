@@ -572,9 +572,6 @@ const AdminPanel: React.FC = () => {
     setNewPlanContent({
       ...newPlanContent,
       resources: (newPlanContent.resources || []).filter(r => r.id !== id)
-    setNewPlanContent({
-      ...newPlanContent,
-      resources: (newPlanContent.resources || []).filter(r => r.id !== id)
     });
   };
 
