@@ -572,6 +572,100 @@ const AdminPanel: React.FC = () => {
     setNewPlanContent({
       ...newPlanContent,
       resources: (newPlanContent.resources || []).filter(r => r.id !== id)
+    setNewPlanContent({
+      ...newPlanContent,
+      resources: (newPlanContent.resources || []).filter(r => r.id !== id)
+    });
+  };
+
+  const handleAddOrUpdatePrayerTheme = () => {
+    if (!newPrayerTheme.title) return;
+
+    if (editingPrayerThemeId) {
+      setPrayerThemes(prayerThemes.map(t =>
+        t.id === editingPrayerThemeId ? { ...t, ...newPrayerTheme as PrayerTheme } : t
+      ));
+      setEditingPrayerThemeId(null);
+    } else {
+      const theme: PrayerTheme = {
+        id: Date.now().toString(),
+        title: newPrayerTheme.title!,
+        description: newPrayerTheme.description || '',
+        categoryId: newPrayerTheme.categoryId || '1',
+        thumbnailUrl: newPrayerTheme.thumbnailUrl,
+        visibility: newPrayerTheme.visibility || 'público',
+        createdAt: new Date().toISOString()
+      };
+      setPrayerThemes([theme, ...prayerThemes]);
+    }
+
+    setNewPrayerTheme({ title: '', description: '', categoryId: prayerCategories?.[0]?.id || '1', thumbnailUrl: '', visibility: 'público' });
+    setSuccess(true);
+    setTimeout(() => setSuccess(false), 3000);
+  };
+
+  const handleAddOrUpdatePrayerContent = () => {
+    if (!newPrayerContent.title || !newPrayerContent.themeId) return;
+
+    if (editingPrayerContentId) {
+      setPrayerContent(prayerContent.map(item =>
+        item.id === editingPrayerContentId ? { ...item, ...newPrayerContent as PrayerContent } : item
+      ));
+      setEditingPrayerContentId(null);
+    } else {
+      const content: PrayerContent = {
+        id: Date.now().toString(),
+        title: newPrayerContent.title!,
+        description: newPrayerContent.description || '',
+        themeId: newPrayerContent.themeId,
+        categoryId: newPrayerContent.categoryId || '1',
+        type: newPrayerContent.resources && newPrayerContent.resources.length > 1 ? 'mixed' : (newPrayerContent.type || 'video'),
+        week: newPrayerContent.week || 'Semana 1',
+        day: newPrayerContent.day || 'Segunda',
+        resources: newPrayerContent.resources || [],
+        visibility: newPrayerContent.visibility || 'público'
+      };
+      setPrayerContent([content, ...prayerContent]);
+    }
+
+    setNewPrayerContent({ title: '', description: '', themeId: '', categoryId: prayerCategories?.[0]?.id || '1', type: 'video', week: '', day: '', resources: [], visibility: 'público' });
+    setSuccess(true);
+    setTimeout(() => setSuccess(false), 3000);
+  };
+
+  const addPrayerResource = () => {
+    if (!resourceForm.title) return;
+
+    if (editingResourceId) {
+      setNewPrayerContent({
+        ...newPrayerContent,
+        resources: (newPrayerContent.resources || []).map(r =>
+          r.id === editingResourceId ? { ...r, ...resourceForm as AcademyResource } : r
+        )
+      });
+      setEditingResourceId(null);
+    } else {
+      const resource: AcademyResource = {
+        id: Date.now().toString(),
+        type: resourceForm.type || 'video',
+        title: resourceForm.title,
+        url: resourceForm.url,
+        content: resourceForm.content,
+        duration: resourceForm.duration,
+        instruction: resourceForm.instruction
+      };
+      setNewPrayerContent({
+        ...newPrayerContent,
+        resources: [...(newPrayerContent.resources || []), resource]
+      });
+    }
+    setResourceForm({ type: 'video', title: '', url: '', content: '', duration: '', instruction: '' });
+  };
+
+  const removePrayerResource = (id: string) => {
+    setNewPrayerContent({
+      ...newPrayerContent,
+      resources: (newPrayerContent.resources || []).filter(r => r.id !== id)
     });
   };
 
@@ -585,14 +679,20 @@ const AdminPanel: React.FC = () => {
           </h1>
           <p className="text-gray-500 mt-2 font-medium">Controle de Dados e Infraestrutura.</p>
         </div>
-        <div className="flex bg-[#161b22] p-1.5 rounded-2xl border border-white/5 shadow-2xl">
-          {(['bible', 'courses', 'lessons', 'plans', 'users', 'config'] as const).map(tab => (
+        <div className="flex bg-[#161b22] p-1.5 rounded-2xl border border-white/5 shadow-2xl overflow-x-auto custom-scrollbar">
+          {(['bible', 'courses', 'lessons', 'prayerThemes', 'prayerContent', 'plans', 'users', 'config'] as const).map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-6 md:px-10 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === tab ? 'bg-brand text-white shadow-lg shadow-brand/20' : 'text-gray-600 hover:text-gray-300'}`}
+              className={`px-6 md:px-10 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${activeTab === tab ? 'bg-brand text-white shadow-lg shadow-brand/20' : 'text-gray-600 hover:text-gray-300'}`}
             >
-              {tab === 'bible' ? 'Escrituras' : tab === 'courses' ? 'Cursos' : tab === 'lessons' ? 'Aulas' : tab === 'plans' ? 'Planos' : tab === 'users' ? 'Usuários' : 'Config'}
+              {tab === 'bible' ? 'Escrituras' : 
+               tab === 'courses' ? 'Cursos Academy' : 
+               tab === 'lessons' ? 'Aulas Academy' : 
+               tab === 'prayerThemes' ? 'Temas Oração' : 
+               tab === 'prayerContent' ? 'Aulas Oração' : 
+               tab === 'plans' ? 'Planos' : 
+               tab === 'users' ? 'Usuários' : 'Config'}
             </button>
           ))}
         </div>
