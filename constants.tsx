@@ -26,8 +26,8 @@ export const NAV_ITEMS = [
   { id: Section.ACADEMY, label: 'Academia', icon: <GraduationCap size={20} /> },
   { id: Section.PRAYER, label: 'Oração', icon: (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 20c-2-1-4-3-4-8V4c0-1.1.9-2 2-2s2 .9 2 2v16Z" />
-      <path d="M12 20c2-1 4-3 4-8V4c0-1.1-.9-2-2-2s-2 .9-2 2v16Z" />
+      <path d="M12 3L9 11v7a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-7l-3-8Z" />
+      <path d="M12 3v17" />
     </svg>
   ) },
   { id: Section.HABITS, label: 'Hábitos', icon: <CalendarCheck size={20} /> },

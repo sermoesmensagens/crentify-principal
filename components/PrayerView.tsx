@@ -159,8 +159,8 @@ const PrayerView: React.FC = () => {
         <div className="flex items-center gap-6">
           <div className="w-16 h-16 bg-brand/10 rounded-3xl flex items-center justify-center border border-brand/20 shadow-xl shadow-brand/10">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-brand">
-              <path d="M12 20c-2-1-4-3-4-8V4c0-1.1.9-2 2-2s2 .9 2 2v16Z" />
-              <path d="M12 20c2-1 4-3 4-8V4c0-1.1-.9-2-2-2s-2 .9-2 2v16Z" />
+              <path d="M12 3L9 11v7a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-7l-3-8Z" />
+              <path d="M12 3v17" />
             </svg>
           </div>
           <div>
@@ -247,8 +247,8 @@ const PrayerView: React.FC = () => {
                             <div className={`w-14 h-14 rounded-2xl flex items-center justify-center font-black shadow-lg transition-colors ${isWeekComplete ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-brand/10 text-brand border border-brand/20'}`}>
                               {isWeekComplete ? <CheckCircle2 size={28} /> : (
                                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                  <path d="M12 20c-2-1-4-3-4-8V4c0-1.1.9-2 2-2s2 .9 2 2v16Z" />
-                                  <path d="M12 20c2-1 4-3 4-8V4c0-1.1-.9-2-2-2s-2 .9-2 2v16Z" />
+                                  <path d="M12 3L9 11v7a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-7l-3-8Z" />
+                                  <path d="M12 3v17" />
                                 </svg>
                               )}
                             </div>
@@ -378,8 +378,8 @@ const PrayerView: React.FC = () => {
           <div className="bg-[#161b22] border border-white/5 p-10 rounded-[48px] shadow-2xl relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:scale-110 transition-transform duration-700 text-brand">
               <svg width="180" height="180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 20c-2-1-4-3-4-8V4c0-1.1.9-2 2-2s2 .9 2 2v16Z" />
-                <path d="M12 20c2-1 4-3 4-8V4c0-1.1-.9-2-2-2s-2 .9-2 2v16Z" />
+                <path d="M12 3L9 11v7a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-7l-3-8Z" />
+                <path d="M12 3v17" />
               </svg>
             </div>
 
@@ -410,8 +410,8 @@ const PrayerView: React.FC = () => {
             {personalPrayers.length === 0 ? (
               <div className="py-24 text-center bg-black/20 rounded-[48px] border border-dashed border-white/10">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-6 opacity-20 text-gray-500">
-                  <path d="M12 20c-2-1-4-3-4-8V4c0-1.1.9-2 2-2s2 .9 2 2v16Z" />
-                  <path d="M12 20c2-1 4-3 4-8V4c0-1.1-.9-2-2-2s-2 .9-2 2v16Z" />
+                  <path d="M12 3L9 11v7a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-7l-3-8Z" />
+                  <path d="M12 3v17" />
                 </svg>
                 <p className="font-black text-sm uppercase tracking-[0.2em] text-gray-600">Sua lista de orações está vazia.</p>
               </div>
