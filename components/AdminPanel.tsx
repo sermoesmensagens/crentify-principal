@@ -967,6 +967,215 @@ const AdminPanel: React.FC = () => {
             </div>
           )}
 
+          {activeTab === 'prayerThemes' && (
+            <div className="space-y-10 animate-in slide-in-from-right duration-500">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-6">
+                  <div className="w-20 h-20 bg-emerald-500/10 text-emerald-500 rounded-[28px] flex items-center justify-center border border-emerald-500/20 shadow-xl">
+                    <span className="text-3xl">🙏</span>
+                  </div>
+                  <div>
+                    <h2 className="text-3xl font-black text-white uppercase tracking-tighter">
+                      {editingPrayerThemeId ? 'Editar Tema' : 'Novo Tema de Oração'}
+                    </h2>
+                    <p className="text-xs text-gray-500 font-bold uppercase tracking-[0.2em]">Crie trilhas de oração guiada</p>
+                  </div>
+                </div>
+                {editingPrayerThemeId && (
+                  <button onClick={() => { setEditingPrayerThemeId(null); setNewPrayerTheme({ title: '', description: '', thumbnailUrl: '', visibility: 'público' }); }} className="text-rose-500 hover:scale-110 transition-all"><X size={24} /></button>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Título do Tema de Oração</label>
+                  <input type="text" placeholder="Ex: Soberania de Deus" value={newPrayerTheme.title} onChange={e => setNewPrayerTheme({ ...newPrayerTheme, title: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Capa (URL)</label>
+                  <div className="relative">
+                    <ImageIcon size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-700" />
+                    <input type="text" placeholder="https://..." value={newPrayerTheme.thumbnailUrl} onChange={e => setNewPrayerTheme({ ...newPrayerTheme, thumbnailUrl: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] pl-14 pr-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Categoria de Oração</label>
+                    <button onClick={() => setCategoryToManage('prayerCategories')} className="text-[9px] font-black text-brand hover:underline uppercase tracking-tighter transition-all">Gerenciar</button>
+                  </div>
+                  <select value={newPrayerTheme.categoryId} onChange={e => setNewPrayerTheme({ ...newPrayerTheme, categoryId: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none cursor-pointer hover:border-brand/30 transition-all">
+                    {prayerCategories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Visibilidade</label>
+                  <select value={newPrayerTheme.visibility} onChange={e => setNewPrayerTheme({ ...newPrayerTheme, visibility: e.target.value as AcademyVisibility })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none cursor-pointer hover:border-brand/30 transition-all">
+                    <option value="público">Público</option>
+                    <option value="não listado">Não Listado</option>
+                    <option value="privado">Privado</option>
+                  </select>
+                </div>
+                <div className="md:col-span-2 space-y-2">
+                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Descrição</label>
+                  <textarea placeholder="Propósito deste tema de oração..." value={newPrayerTheme.description} onChange={e => setNewPrayerTheme({ ...newPrayerTheme, description: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[32px] px-8 py-5 font-medium outline-none focus:ring-2 focus:ring-brand/30 h-32 resize-none" />
+                </div>
+              </div>
+
+              <button onClick={handleAddOrUpdatePrayerTheme} className="w-full bg-brand text-white py-6 rounded-[28px] font-black uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
+                {editingPrayerThemeId ? <CheckCircle2 size={24} /> : <Plus size={24} strokeWidth={3} />}
+                {editingPrayerThemeId ? 'SALVAR TEMA ORAÇÃO' : 'CRIAR TEMA ORAÇÃO'}
+              </button>
+            </div>
+          )}
+
+          {activeTab === 'prayerContent' && (
+            <div className="space-y-10 animate-in slide-in-from-right duration-500">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-6">
+                  <div className="w-20 h-20 bg-emerald-500/10 text-emerald-500 rounded-[28px] flex items-center justify-center border border-emerald-500/20 shadow-xl">
+                    <GraduationCap size={36} />
+                  </div>
+                  <div>
+                    <h2 className="text-3xl font-black text-white uppercase tracking-tighter">
+                      {editingPrayerContentId ? 'Editar Conteúdo' : 'Novo Conteúdo de Oração'}
+                    </h2>
+                    <p className="text-xs text-gray-500 font-bold uppercase tracking-[0.2em]">Adicione vídeos e guias de oração</p>
+                  </div>
+                </div>
+                {editingPrayerContentId && (
+                  <button onClick={() => { setEditingPrayerContentId(null); setNewPrayerContent({ title: '', description: '', themeId: '', resources: [], visibility: 'público' }); }} className="text-rose-500 hover:scale-110 transition-all"><X size={24} /></button>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Título do Conteúdo</label>
+                  <input type="text" placeholder="Ex: Adoração Início" value={newPrayerContent.title} onChange={e => setNewPrayerContent({ ...newPrayerContent, title: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Pertence ao Tema (Oração)</label>
+                  <div className="relative">
+                    <select value={newPrayerContent.themeId} onChange={e => {
+                      const theme = prayerThemes.find(t => t.id === e.target.value);
+                      setNewPrayerContent({ ...newPrayerContent, themeId: e.target.value, categoryId: theme?.categoryId });
+                    }} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none cursor-pointer hover:border-brand/30 transition-all">
+                      <option value="">Selecione um tema de oração...</option>
+                      {prayerThemes.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}
+                    </select>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Cronograma (Semanas/Meses)</label>
+                    <button onClick={() => setCategoryToManage('prayerWeeks')} className="text-[9px] font-black text-brand hover:underline uppercase tracking-tighter transition-all">Gerenciar</button>
+                  </div>
+                  <select 
+                    value={newPrayerContent.week || ''} 
+                    onChange={e => setNewPrayerContent({ ...newPrayerContent, week: e.target.value })} 
+                    className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none cursor-pointer hover:border-brand/30 transition-all"
+                  >
+                    <option value="">Selecione o Bloco...</option>
+                    {prayerWeekCategories.map(w => <option key={w.id} value={w.name}>{w.name}</option>)}
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Dia da Jornada</label>
+                    <button onClick={() => setCategoryToManage('prayerDays')} className="text-[9px] font-black text-brand hover:underline uppercase tracking-tighter transition-all">Gerenciar</button>
+                  </div>
+                  <select 
+                    value={newPrayerContent.day || ''} 
+                    onChange={e => setNewPrayerContent({ ...newPrayerContent, day: e.target.value })} 
+                    className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none cursor-pointer hover:border-brand/30 transition-all"
+                  >
+                    <option value="">Selecione o Dia...</option>
+                    {prayerDayCategories.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
+                  </select>
+                </div>
+              </div>
+
+               {/* Gerenciamento de Recursos de Oração */}
+               <div className="space-y-6 pt-6 border-t border-white/5">
+                <h3 className="text-xs font-black text-white uppercase tracking-[0.2em]">Guia de Oração</h3>
+
+                <div className="bg-black/20 p-8 rounded-[40px] border border-white/5 space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <div className="md:col-span-3">
+                      <select value={resourceForm.type} onChange={e => setResourceForm({ ...resourceForm, type: e.target.value as any })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-xl px-4 py-3 text-[10px] font-black outline-none">
+                        <option value="video">Vídeo Guiado</option>
+                        <option value="text">Instrução Texto</option>
+                        <option value="leitura">Base Bíblica</option>
+                      </select>
+                    </div>
+                    <div className="md:col-span-6">
+                      <input type="text" placeholder="Nome do Passo de Oração" value={resourceForm.title} onChange={e => setResourceForm({ ...resourceForm, title: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-xl px-6 py-3 text-white text-[10px] font-black outline-none" />
+                    </div>
+                    <div className="md:col-span-3">
+                      <input type="text" placeholder="Timer (ex: 5 min)" value={resourceForm.duration || ''} onChange={e => setResourceForm({ ...resourceForm, duration: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-xl px-6 py-3 text-white text-[10px] font-black outline-none" />
+                    </div>
+                  </div>
+
+                  <div className="relative">
+                    <textarea placeholder="Instrução detalhada de como orar este tópico..." value={resourceForm.instruction || ''} onChange={e => setResourceForm({ ...resourceForm, instruction: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-xs font-medium outline-none h-20 resize-none custom-scrollbar" />
+                  </div>
+
+                  {resourceForm.type === 'video' ? (
+                    <div className="relative">
+                      <Link size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
+                      <input type="text" placeholder="URL do YouTube" value={resourceForm.url} onChange={e => setResourceForm({ ...resourceForm, url: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-xl pl-12 pr-6 py-3 text-white text-[10px] font-medium outline-none" />
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                       <textarea placeholder="Conteúdo textual..." value={resourceForm.content} onChange={e => setResourceForm({ ...resourceForm, content: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-2xl px-6 py-4 text-xs font-medium outline-none h-32 resize-none custom-scrollbar" />
+                    </div>
+                  )}
+
+                  <div className="flex gap-2">
+                    <button onClick={addPrayerResource} className="flex-1 bg-white/5 border border-white/10 text-white py-3 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-brand hover:border-brand transition-all flex items-center justify-center gap-2">
+                      {editingResourceId ? <CheckCircle2 size={14} /> : <Plus size={14} />}
+                      {editingResourceId ? 'ATUALIZAR PASSO' : 'ADICIONAR PASSO'}
+                    </button>
+                    {editingResourceId && (
+                      <button onClick={() => { setEditingResourceId(null); setResourceForm({ type: 'video', title: '', url: '', content: '' }); }} className="px-4 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-xl hover:bg-rose-500 hover:text-white transition-all">
+                        <X size={14} />
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Lista de Recursos Adicionados */}
+                <div className="space-y-3">
+                  {(newPrayerContent.resources || []).map(r => (
+                    <div key={r.id} className="flex items-center justify-between p-4 bg-[#0b0e14]/50 rounded-2xl border border-white/5 group">
+                      <div className="flex items-center gap-4">
+                        <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-500 group-hover:text-brand transition-colors">
+                          {r.type === 'video' ? <Youtube size={14} /> : <FileText size={14} />}
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black text-white uppercase tracking-tight">{r.title}</p>
+                          <span className="text-[8px] text-gray-500 font-bold uppercase">{r.type} • {r.duration || 'Livre'}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button onClick={() => { setEditingResourceId(r.id); setResourceForm(r); }} className="text-gray-700 hover:text-brand transition-colors p-1">
+                          <Edit2 size={16} />
+                        </button>
+                        <button onClick={() => removePrayerResource(r.id)} className="text-gray-700 hover:text-rose-500 transition-colors p-1">
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <button onClick={handleAddOrUpdatePrayerContent} className="w-full bg-brand text-white py-6 rounded-[28px] font-black uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
+                {editingPrayerContentId ? <CheckCircle2 size={24} /> : <CheckCircle2 size={24} strokeWidth={3} />}
+                {editingPrayerContentId ? 'SALVAR CONTEÚDO' : 'PUBLICAR CONTEÚDO'}
+              </button>
+            </div>
+          )}
+
           {activeTab === 'plans' && (
             <div className="space-y-12 animate-in slide-in-from-right duration-500">
               {/* --- GESTÃO DE PLANOS (HEADER) --- */}
