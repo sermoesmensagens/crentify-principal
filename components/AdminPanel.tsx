@@ -1491,7 +1491,16 @@ const AdminPanel: React.FC = () => {
               <div className="bg-[#161b22] border border-white/10 rounded-[48px] w-full max-w-md overflow-hidden shadow-2xl flex flex-col">
                 <div className="p-8 border-b border-white/5 flex items-center justify-between">
                   <div>
-                    <h3 className="text-xl font-black text-white uppercase tracking-tighter">Gerenciar {categoryToManage === 'weeks' ? 'Semanas' : categoryToManage === 'plans' ? 'Categorias de Plano' : 'Dias'}</h3>
+                    <h3 className="text-xl font-black text-white uppercase tracking-tighter">
+                      Gerenciar {
+                        categoryToManage === 'weeks' ? 'Semanas' : 
+                        categoryToManage === 'plans' ? 'Categorias de Plano' : 
+                        categoryToManage === 'prayerCategories' ? 'Categorias de Oração' :
+                        categoryToManage === 'prayerWeeks' ? 'Blocos de Oração' :
+                        categoryToManage === 'prayerDays' ? 'Dias de Oração' :
+                        'Dias'
+                      }
+                    </h3>
                     <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Adicione ou exclua opções</p>
                   </div>
                   <button onClick={() => { setCategoryToManage(null); setNewCatName(''); }} className="p-2 bg-white/5 rounded-xl text-gray-400 hover:text-white transition-all"><X size={20}/></button>
@@ -1502,7 +1511,14 @@ const AdminPanel: React.FC = () => {
                   <div className="flex gap-2">
                     <input 
                       type="text" 
-                      placeholder={categoryToManage === 'weeks' ? "Ex: Semana 4" : categoryToManage === 'plans' ? "Ex: Bíblia em 180 Dias" : "Ex: Terça-feira"}
+                      placeholder={
+                        categoryToManage === 'weeks' ? "Ex: Semana 4" : 
+                        categoryToManage === 'plans' ? "Ex: Bíblia em 180 Dias" : 
+                        categoryToManage === 'prayerCategories' ? "Ex: Gratidão" :
+                        categoryToManage === 'prayerWeeks' ? "Ex: 7 Dias de Fogo" :
+                        categoryToManage === 'prayerDays' ? "Ex: Dia 1" :
+                        "Ex: Terça-feira"
+                      }
                       value={newCatName}
                       onChange={e => setNewCatName(e.target.value)}
                       className="flex-1 bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-white font-bold outline-none focus:ring-2 focus:ring-brand/30"
@@ -1513,6 +1529,9 @@ const AdminPanel: React.FC = () => {
                         const newCat = { id: Date.now().toString(), name: newCatName.trim(), color: '#9d5cff' };
                         if (categoryToManage === 'weeks') setWeekCategories([...weekCategories, newCat]);
                         else if (categoryToManage === 'plans') setReadingPlanCategories([...readingPlanCategories, newCat]);
+                        else if (categoryToManage === 'prayerCategories') setPrayerCategories([...prayerCategories, newCat]);
+                        else if (categoryToManage === 'prayerWeeks') setPrayerWeekCategories([...prayerWeekCategories, newCat]);
+                        else if (categoryToManage === 'prayerDays') setPrayerDayCategories([...prayerDayCategories, newCat]);
                         else setDayCategories([...dayCategories, newCat]);
                         setNewCatName('');
                       }}
@@ -1524,13 +1543,23 @@ const AdminPanel: React.FC = () => {
 
                   {/* Lista */}
                   <div className="max-h-60 overflow-y-auto pr-2 custom-scrollbar space-y-2">
-                    {(categoryToManage === 'weeks' ? weekCategories : categoryToManage === 'plans' ? readingPlanCategories : dayCategories).map(cat => (
+                    {(
+                      categoryToManage === 'weeks' ? weekCategories : 
+                      categoryToManage === 'plans' ? readingPlanCategories : 
+                      categoryToManage === 'prayerCategories' ? prayerCategories :
+                      categoryToManage === 'prayerWeeks' ? prayerWeekCategories :
+                      categoryToManage === 'prayerDays' ? prayerDayCategories :
+                      dayCategories
+                    ).map(cat => (
                       <div key={cat.id} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl group">
                         <span className="text-xs font-black text-white uppercase tracking-tight">{cat.name}</span>
                         <button 
                           onClick={() => {
                             if (categoryToManage === 'weeks') setWeekCategories(weekCategories.filter(w => w.id !== cat.id));
                             else if (categoryToManage === 'plans') setReadingPlanCategories((readingPlanCategories || []).filter(p => p.id !== cat.id));
+                            else if (categoryToManage === 'prayerCategories') setPrayerCategories(prayerCategories.filter(c => c.id !== cat.id));
+                            else if (categoryToManage === 'prayerWeeks') setPrayerWeekCategories(prayerWeekCategories.filter(w => w.id !== cat.id));
+                            else if (categoryToManage === 'prayerDays') setPrayerDayCategories(prayerDayCategories.filter(d => d.id !== cat.id));
                             else setDayCategories(dayCategories.filter(d => d.id !== cat.id));
                           }}
                           className="text-gray-600 hover:text-rose-500 transition-colors"
