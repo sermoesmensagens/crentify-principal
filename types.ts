@@ -10,7 +10,47 @@ export enum Section {
   ADMIN = 'admin',
   ACADEMY = 'academy',
   PLANOS = 'planos',
-  PRAYER = 'prayer'
+  PRAYER = 'prayer',
+  CULTOS = 'cultos'
+}
+
+export type FrequencyType = 'weekly' | 'once' | 'period';
+
+export interface ServiceFrequency {
+  id: string;
+  type: FrequencyType;
+  daysOfWeek?: number[]; // [0, 6] for Sunday to Saturday
+  time?: string; // HH:mm
+  date?: string; // for 'once'
+  startDate?: string; // for 'period'
+  endDate?: string; // for 'period'
+}
+
+export interface ServiceCategory {
+  id: string;
+  name: string;
+  color?: string;
+}
+
+export interface ServiceEvent {
+  id: string;
+  title: string;
+  categoryId: string;
+  thumbnailUrl?: string;
+  createdAt: string;
+}
+
+export interface ServiceDetail {
+  id: string;
+  eventId: string;
+  title?: string;
+  churchNameOrId?: string;
+  frequencies: ServiceFrequency[];
+  youtubeUrl?: string;
+  externalLink?: string;
+  address?: string;
+  notes?: string;
+  createdAt: string;
 }
 
 export interface AcademyProgressRecord {
