@@ -26,6 +26,25 @@ interface ReadingPlansProps {
   setActiveSection: (section: Section) => void;
 }
 
+const ReadingPlanIcon = ({ size = 20, className = "" }: { size?: number; className?: string }) => (
+  <svg 
+    width={size} 
+    height={size} 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round"
+    className={className}
+  >
+    <circle cx="12" cy="7" r="4" />
+    <path d="M4 22v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2" />
+    <path d="M10 14h4v8h-4z" />
+    <path d="M12 14v8" />
+  </svg>
+);
+
 const ReadingPlans: React.FC<ReadingPlansProps> = ({ setActiveSection }) => {
   const { plans, setPlans, planContent, setPlanContent, categories, progress, setProgress } = useReadingPlans();
   const { setSelectedBookName, setSelectedChapterIndex } = useBible();
@@ -286,7 +305,7 @@ const ReadingPlans: React.FC<ReadingPlansProps> = ({ setActiveSection }) => {
             {selectedPlan.thumbnailUrl ? (
                 <img src={selectedPlan.thumbnailUrl} className="w-full h-full object-cover" alt="" />
             ) : (
-                <BookOpen size={40} className="text-gray-700" />
+                <ReadingPlanIcon size={40} className="text-gray-700" />
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
           </div>
@@ -412,7 +431,7 @@ const ReadingPlans: React.FC<ReadingPlansProps> = ({ setActiveSection }) => {
       <div className="flex flex-col">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
             <h2 className="text-2xl font-black text-white uppercase tracking-tighter flex items-center gap-3">
-                <Layout size={24} className="text-brand" /> Planos de Leitura
+                <ReadingPlanIcon size={24} className="text-brand" /> Planos de Leitura
             </h2>
             <div className="flex w-full md:w-auto items-center bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-3 shadow-inner">
                 <Search size={18} className="text-gray-600 mr-4" />
@@ -461,7 +480,7 @@ const ReadingPlans: React.FC<ReadingPlansProps> = ({ setActiveSection }) => {
                                 <img src={plan.thumbnailUrl} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="" />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center text-gray-800">
-                                    <BookOpen size={64} />
+                                    <ReadingPlanIcon size={64} />
                                 </div>
                             )}
                             <div className="absolute top-4 left-4">
@@ -509,7 +528,7 @@ const ReadingPlans: React.FC<ReadingPlansProps> = ({ setActiveSection }) => {
 
             {filteredPlans.length === 0 && (
                 <div className="col-span-full py-20 bg-black/20 rounded-[48px] border border-dashed border-white/5 text-center flex flex-col items-center gap-4">
-                    <BookOpen size={48} className="text-gray-800" />
+                    <ReadingPlanIcon size={48} className="text-gray-800" />
                     <div className="text-gray-600 uppercase text-[10px] font-black tracking-widest">Nenhum plano encontrado</div>
                     <button onClick={() => { setActiveCategory('all'); setSearchTerm(''); }} className="text-brand text-xs font-black uppercase hover:underline">Limpar filtros</button>
                 </div>

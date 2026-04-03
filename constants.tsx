@@ -22,7 +22,14 @@ export const ADMIN_EMAILS = [
 export const NAV_ITEMS = [
   { id: Section.DASHBOARD, label: 'Início', icon: <LayoutDashboard size={20} /> },
   { id: Section.BIBLE, label: 'Bíblia', icon: <BookOpen size={20} /> },
-  { id: Section.PLANOS, label: 'Planos', icon: <Compass size={20} /> },
+  { id: Section.PLANOS, label: 'Planos', icon: (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="7" r="4" />
+      <path d="M4 22v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2" />
+      <path d="M10 14h4v8h-4z" />
+      <path d="M12 14v8" />
+    </svg>
+  ) },
   { id: Section.ACADEMY, label: 'Academia', icon: <GraduationCap size={20} /> },
   { id: Section.PRAYER, label: 'Oração', icon: (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
