@@ -1,3 +1,4 @@
+import React, { useState, useRef } from 'react';
 import {
   Users, Plus, Trash2, Calendar, Clock, Edit2, X, Link as LinkIcon,
   MapPin, Youtube, MessageSquare, ChevronDown, ChevronRight,
