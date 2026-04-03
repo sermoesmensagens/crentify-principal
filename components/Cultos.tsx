@@ -30,10 +30,9 @@ const Cultos: React.FC = () => {
   const [tempChurchName, setTempChurchName] = useState('');
   const [isQuickAddingDetail, setIsQuickAddingDetail] = useState<string | null>(null); // Church name currently adding to
 
-  // Form states for NEW EVENT
+  // Form states for NEW ACTIVITY TYPE
   const [newEvent, setNewEvent] = useState<Partial<ServiceEvent>>({
     title: '',
-    categoryId: categories[0]?.id || '1',
     thumbnailUrl: ''
   });
 
@@ -109,12 +108,12 @@ const Cultos: React.FC = () => {
     const event: ServiceEvent = {
       id: Date.now().toString(),
       title: newEvent.title,
-      categoryId: newEvent.categoryId || '1',
+      categoryId: '1', // Hardcoded as categories are removed
       thumbnailUrl: newEvent.thumbnailUrl,
       createdAt: new Date().toISOString()
     };
     setEvents([...events, event]);
-    setNewEvent({ title: '', categoryId: categories[0]?.id || '1', thumbnailUrl: '' });
+    setNewEvent({ title: '', categoryId: '1', thumbnailUrl: '' });
     setSelectedEventId(event.id);
     setNewDetail(prev => ({ ...prev, eventId: event.id }));
     setActiveTab('list');
@@ -140,7 +139,7 @@ const Cultos: React.FC = () => {
   };
 
   const deleteEvent = (id: string) => {
-    if (confirm('Deseja excluir este evento e todos os seus detalhes?')) {
+    if (confirm('Deseja excluir este tipo de atividade e todas as suas programações?')) {
       setEvents(events.filter(e => e.id !== id));
       setServiceDetails(serviceDetails.filter(d => d.eventId !== id));
       if (selectedEventId === id) setSelectedEventId(null);
@@ -193,7 +192,7 @@ const Cultos: React.FC = () => {
     const detail: ServiceDetail = {
       id: Date.now().toString(),
       eventId: selectedEventId,
-      title: quickDetailTitle || 'Momento de Culto',
+      title: quickDetailTitle || 'Momento de Atividade',
       churchNameOrId: churchName,
       frequencies: [{ id: Date.now().toString(), type: 'weekly', time: quickDetailTime, daysOfWeek: [0, 1, 2, 3, 4, 5, 6] }],
       createdAt: new Date().toISOString()
@@ -219,9 +218,10 @@ const Cultos: React.FC = () => {
         </div>
         <div className="flex bg-[#0b0e14] p-1.5 rounded-2xl border border-white/5 shadow-inner">
           {[
-            { id: 'list', label: 'Meus Eventos', icon: <Users size={14} /> },
-            { id: 'add', label: 'Novo Evento', icon: <Plus size={14} /> },
-            { id: 'config', label: 'Configurar', icon: <Edit2 size={14} /> }
+          {[
+            { id: 'list', label: 'Tipo de Atividade', icon: <Users size={14} /> },
+            { id: 'add', label: 'Nova Atividade', icon: <Plus size={14} /> },
+            { id: 'config', label: 'Configurar Atividades', icon: <Edit2 size={14} /> }
           ].map(tab => (
             <button
               key={tab.id}
@@ -297,23 +297,18 @@ const Cultos: React.FC = () => {
               );
             })}
 
-            <div
-              onClick={() => setActiveTab('add')}
-              className="border-2 border-dashed border-white/5 bg-white/[0.02] rounded-[48px] p-12 flex flex-col items-center justify-center gap-6 text-gray-600 hover:border-brand/30 hover:text-brand transition-all cursor-pointer group"
-            >
-              <div className="w-20 h-20 bg-white/5 rounded-[32px] flex items-center justify-center group-hover:bg-brand/10 transition-all">
-                <Plus size={48} strokeWidth={1} />
-              </div>
-              <span className="font-black text-xs uppercase tracking-[0.2em] text-center">Adicionar Novo Evento</span>
+            <div className="bg-[#161b22] border-2 border-dashed border-white/5 rounded-[48px] p-10 flex flex-col items-center justify-center text-gray-700 hover:border-brand/40 hover:text-brand transition-all group cursor-pointer h-full" onClick={() => setActiveTab('add')}>
+              <Plus size={48} className="mb-4 group-hover:scale-110 transition-transform" />
+              <span className="font-black text-xs uppercase tracking-[0.2em] text-center">Criar Novo Tipo de Atividade</span>
             </div>
           </div>
         </div>
       )}
 
-      {/* --- VISÃO DETALHADA DO EVENTO (ESTILO ACADEMY) --- */}
+      {/* --- VISÃO DETALHADA DA ATIVIDADE (ESTILO ACADEMY) --- */}
       {activeTab === 'list' && selectedEventId && selectedEvent && (
         <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500 pb-20">
-           {/* Header do Evento */}
+           {/* Header da Atividade */}
            <div className="bg-brand/5 p-8 rounded-[48px] border border-brand/10 flex flex-col md:flex-row gap-8 items-center shadow-2xl relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-r from-brand/5 to-transparent pointer-events-none"></div>
 
@@ -333,10 +328,10 @@ const Cultos: React.FC = () => {
               )}
 
               <div className="flex-1 text-center md:text-left z-10">
-                 <span className="text-[10px] font-black text-brand uppercase tracking-[0.3em] mb-2 block">SESSÃO DE EVENTOS</span>
+                 <span className="text-[10px] font-black text-brand uppercase tracking-[0.3em] mb-2 block">TIPO DE ATIVIDADE</span>
                  <h2 className="text-4xl font-black text-white uppercase tracking-tighter">{selectedEvent.title}</h2>
                  <p className="text-gray-500 text-xs mt-2 font-bold uppercase tracking-widest bg-white/5 inline-block px-3 py-1 rounded-lg">
-                    {categories.find(c => c.id === selectedEvent.categoryId)?.name || 'SERMÕES'}
+                    CRIAÇÃO: {new Date(selectedEvent.createdAt).toLocaleDateString()}
                  </p>
               </div>
 
@@ -353,11 +348,30 @@ const Cultos: React.FC = () => {
                <button
                  onClick={() => { setSelectedEventId(null); setExpandedChurches([]); }}
                  className="absolute top-6 right-6 w-10 h-10 bg-white/5 rounded-full flex items-center justify-center text-gray-500 hover:bg-rose-500 hover:text-white transition-all z-20 group"
-                 title="Fechar Evento"
+                 title="Voltar para Lista"
                >
                  <X size={20} className="group-hover:rotate-90 transition-transform" />
                </button>
            </div>
+
+           {/* Controles do Tipo de Atividade */}
+           <div className="flex justify-between items-center px-4">
+               <h3 className="text-xs font-black text-gray-500 uppercase tracking-widest">Igrejas e Congregações</h3>
+               <button
+                 onClick={() => {
+                   const churchName = prompt('Nome da Igreja ou Grupo:');
+                   if (churchName) {
+                     handleQuickCreateDetail(churchName);
+                     if (!expandedChurches.includes(churchName)) {
+                       setExpandedChurches([...expandedChurches, churchName]);
+                     }
+                   }
+                 }}
+                 className="flex items-center gap-2 px-6 py-3 bg-brand/10 text-brand rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-brand hover:text-white transition-all shadow-lg border border-brand/20"
+               >
+                 <Plus size={14} /> Adicionar Nova Igreja
+               </button>
+            </div>
 
            {/* Lista de Igrejas/Programações */}
            <div className="space-y-6">
@@ -545,21 +559,21 @@ const Cultos: React.FC = () => {
       {activeTab === 'add' && (
         <div className="space-y-12 animate-in slide-in-from-right duration-500">
 
-          {/* --- CRIAÇÃO DE EVENTO PAI --- */}
+          {/* --- CRIAÇÃO DE TIPO DE ATIVIDADE --- */}
           <section className="space-y-8 bg-[#161b22] p-10 rounded-[48px] border border-white/5 shadow-2xl">
             <div className="flex items-center gap-6">
               <div className="w-16 h-16 bg-brand/10 text-brand rounded-2xl flex items-center justify-center border border-brand/20">
                 <ImageIcon size={28} />
               </div>
               <div>
-                <h2 className="text-3xl font-black text-white uppercase tracking-tighter">Gerenciar Evento</h2>
-                <p className="text-xs text-gray-500 font-bold uppercase tracking-widest mt-1">Defina o tipo de evento (ex: Culto Online, Presencial)</p>
+                <h2 className="text-3xl font-black text-white uppercase tracking-tighter">Novo Tipo de Atividade</h2>
+                <p className="text-xs text-gray-500 font-bold uppercase tracking-widest mt-1">Crie um card (ex: Culto Online, Presencial, Devocional)</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Título do Evento</label>
+                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Título da Atividade</label>
                 <input
                   type="text"
                   placeholder="Ex: Culto Online"
@@ -569,14 +583,14 @@ const Cultos: React.FC = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Categoria</label>
-                <select
-                  value={newEvent.categoryId}
-                  onChange={e => setNewEvent({ ...newEvent, categoryId: e.target.value })}
-                  className="w-full bg-[#0b0e14] border border-white/5 rounded-[24px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all appearance-none"
-                >
-                  {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
-                </select>
+                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Thumbnail (Opcional)</label>
+                <input
+                  type="text"
+                  placeholder="URL da imagem..."
+                  value={newEvent.thumbnailUrl}
+                  onChange={e => setNewEvent({ ...newEvent, thumbnailUrl: e.target.value })}
+                  className="w-full bg-[#0b0e14] border border-white/5 rounded-[24px] px-8 py-5 text-white font-medium text-xs outline-none focus:ring-2 focus:ring-brand/30 transition-all"
+                />
               </div>
             </div>
 
@@ -585,42 +599,33 @@ const Cultos: React.FC = () => {
               disabled={!newEvent.title}
               className="bg-brand text-white font-black py-4 px-10 rounded-2xl transition-all uppercase text-[10px] tracking-widest shadow-xl shadow-brand/20 hover:scale-105 active:scale-95 disabled:opacity-30"
             >
-              Confirmar Evento
+              Confirmar Atividade
             </button>
           </section>
 
-          {/* --- DETALHES DO EVENTO (FILHO) --- */}
-          <section className="space-y-8 bg-[#161b22] p-10 rounded-[48px] border border-white/5 shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-12 opacity-[0.03] pointer-events-none">
-              <Calendar size={180} className="text-brand" />
-            </div>
+          {/* --- ADICIONAR PROGRAMAÇÃO A UMA ATIVIDADE --- */}
+          <section className="space-y-8 bg-[#161b22] p-10 rounded-[48px] border border-white/5 shadow-2xl">
+             <div className="flex items-center gap-6">
+                <div className="w-16 h-16 bg-emerald-500/10 text-emerald-500 rounded-2xl flex items-center justify-center border border-emerald-500/20">
+                  <Plus size={28} />
+                </div>
+                <div>
+                  <h2 className="text-3xl font-black text-white uppercase tracking-tighter">Adicionar Programação</h2>
+                  <p className="text-xs text-gray-500 font-bold uppercase tracking-widest mt-1">Vincule um horário e igreja a um tipo de atividade</p>
+                </div>
+             </div>
 
-            <div className="flex items-center gap-6 relative z-10">
-              <div className="w-16 h-16 bg-brand/10 text-brand rounded-2xl flex items-center justify-center border border-brand/20">
-                <Clock size={28} />
-              </div>
-              <div>
-                <h2 className="text-3xl font-black text-white uppercase tracking-tighter">Detalhes da Programação</h2>
-                <p className="text-xs text-gray-500 font-bold uppercase tracking-widest mt-1">Vincule horários, locais e anotações</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
-              <div className="space-y-2">
-                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Pertence ao Evento</label>
+             <div className="space-y-4">
+                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Tipo de Atividade</label>
                 <select
                   value={newDetail.eventId}
-                  onChange={e => {
-                    const id = e.target.value;
-                    setNewDetail({ ...newDetail, eventId: id });
-                    setSelectedEventId(id);
-                  }}
+                  onChange={e => setNewDetail({ ...newDetail, eventId: e.target.value })}
                   className="w-full bg-[#0b0e14] border border-white/5 rounded-[24px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all appearance-none"
                 >
-                  <option value="">Selecione um evento...</option>
-                  {events.map(e => <option key={e.id} value={e.id}>{e.title}</option>)}
+                  <option value="">Selecione um tipo de atividade...</option>
+                  {events.map(ev => <option key={ev.id} value={ev.id}>{ev.title}</option>)}
                 </select>
-              </div>
+             </div>
 
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Título/Tema (Opcional)</label>
@@ -768,14 +773,14 @@ const Cultos: React.FC = () => {
             </button>
           </section>
 
-          {/* --- LISTAGEM DE DETALHES EXISTENTES --- */}
-          {selectedEventId && (
-            <section className="space-y-6">
-              <div className="flex items-center gap-3 text-brand">
-                <Info size={16} />
-                <span className="text-[10px] font-black uppercase tracking-widest">Programações para "{selectedEvent?.title}"</span>
-              </div>
-              <div className="flex flex-col gap-3">
+          {/* --- LISTAGEM DE PROGRAMAÇÕES EXISTENTES --- */}
+           {selectedEventId && (
+             <section className="space-y-6">
+               <div className="flex items-center gap-3 text-brand">
+                 <Info size={16} />
+                 <span className="text-[10px] font-black uppercase tracking-widest">Programações Atuais</span>
+               </div>
+               <div className="flex flex-col gap-3">
                 {currentEventDetails.map(detail => (
                   <div key={detail.id} className="bg-[#161b22] border border-white/5 p-6 rounded-[28px] flex justify-between items-center group">
                     <div className="flex items-center gap-4">
@@ -807,32 +812,36 @@ const Cultos: React.FC = () => {
       {activeTab === 'config' && (
         <div className="space-y-12 animate-in slide-in-from-right duration-500">
           <section className="bg-[#161b22] p-10 rounded-[48px] border border-white/5 shadow-2xl">
-            <h2 className="text-3xl font-black text-white uppercase tracking-tighter mb-8">Gerenciar Categorias</h2>
+            <h2 className="text-3xl font-black text-white uppercase tracking-tighter mb-8">Gerenciar Tipos de Atividade</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-4">
-                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Nova Categoria</label>
-                <div className="flex gap-2">
-                  <input type="text" id="new-cat" className="flex-1 bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-white text-sm font-bold outline-none" placeholder="Ex: Eventos Especiais" />
-                  <button onClick={() => {
-                    const el = document.getElementById('new-cat') as HTMLInputElement;
-                    if (el.value) {
-                      setCategories([...categories, { id: Date.now().toString(), name: el.value.toUpperCase() }]);
-                      el.value = '';
-                    }
-                  }} className="px-6 bg-brand text-white rounded-2xl font-black text-xs uppercase transition-all hover:scale-105 active:scale-95">Adicionar</button>
+                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Lista de Atividades</label>
+                <div className="space-y-3 max-h-[600px] overflow-y-auto custom-scrollbar pr-2">
+                  {events.map(ev => (
+                    <div key={ev.id} className="flex items-center justify-between bg-white/[0.03] border border-white/5 p-5 rounded-[24px] group hover:border-brand/40 transition-all">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 bg-brand/10 text-brand rounded-xl flex items-center justify-center font-black">
+                           {ev.title.charAt(0)}
+                        </div>
+                        <span className="text-sm font-black text-white uppercase tracking-tight">{ev.title}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button onClick={() => {
+                          const newTitle = prompt('Novo título para ' + ev.title + ':', ev.title);
+                          if (newTitle) setEvents(events.map(e => e.id === ev.id ? { ...e, title: newTitle.toUpperCase() } : e));
+                        }} className="p-2 text-gray-500 hover:text-brand transition-colors"><Edit2 size={16} /></button>
+                        <button onClick={() => deleteEvent(ev.id)} className="p-2 text-gray-500 hover:text-rose-500 transition-colors">
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-              <div className="space-y-3 max-h-[400px] overflow-y-auto custom-scrollbar pr-2">
-                {categories.map(cat => (
-                  <div key={cat.id} className="flex items-center justify-between bg-white/[0.03] border border-white/5 p-4 rounded-2xl">
-                    <span className="text-xs font-black text-white uppercase tracking-widest">{cat.name}</span>
-                    {cat.id !== '1' && (
-                      <button onClick={() => setCategories(categories.filter(c => c.id !== cat.id))} className="text-gray-700 hover:text-rose-500 transition-colors">
-                        <Trash2 size={16} />
-                      </button>
-                    )}
-                  </div>
-                ))}
+              <div className="bg-brand/5 border border-brand/20 p-8 rounded-[40px] flex flex-col items-center justify-center text-center">
+                 <Zap className="text-brand mb-4" size={48} />
+                 <h4 className="text-lg font-black text-white uppercase tracking-tighter">Personalize sua Agenda</h4>
+                 <p className="text-xs text-gray-500 mt-2 font-medium">Edite os cards principais ou adicione novos para organizar diferentes tipos de reuniões e práticas espirituais.</p>
               </div>
             </div>
           </section>
