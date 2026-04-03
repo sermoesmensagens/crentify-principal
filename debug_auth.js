@@ -1,61 +1,53 @@
 
 import { createClient } from '@supabase/supabase-js';
+import fs from 'fs';
 
 const SUPABASE_URL = 'https://dhadesogklhggtixlcsk.supabase.co';
 const SUPABASE_SERVICE_ROLE_KEY = 'sb_secret_Xb1j9SsoByNilTqRGwPFfg_sR9lTewL';
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false
-  }
-});
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-async function debugSignup() {
-  console.log('Checking triggers on auth.users...');
-  const { data: triggers, error: triggerError } = await supabase.rpc('execute_sql', {
-    sql_query: `
-      SELECT 
-        trig.tgname AS trigger_name,
-        proc.proname AS function_name,
-        rel.relname AS table_name
-      FROM pg_trigger trig
-      JOIN pg_class rel ON trig.tgrelid = rel.oid
-      JOIN pg_proc proc ON trig.tgfoid = proc.oid
-      JOIN pg_namespace ns ON rel.relnamespace = ns.oid
-      WHERE rel.relname = 'users' AND ns.nspname = 'auth';
-    `
-  });
+async function run() {
+  const results = {};
 
-  if (triggerError) {
-    console.error('Error fetching triggers:', triggerError);
-    // Try a different way if RPC is not available
-    console.log('Trying direct query for users in public schema...');
-  } else {
-    console.log('Triggers:', triggers);
+  try {
+    // 1. List Users
+    const { data: authUsers, error: authError } = await supabase.auth.admin.listUsers();
+    results.authUsersCount = authUsers?.users?.length || 0;
+    results.targetUser = authUsers?.users?.find(u => u.email === 'robson28.carvalho@gmail.com');
+
+    // 2. Look for triggers/functions that might be failing
+    // We can query pg_trigger and pg_proc via the service role key if we use a dynamic SQL approach
+    // or just check the public schema for tables that might be related (profiles, etc.)
+    const { data: tables, error: tableError } = await supabase
+      .from('pg_catalog.pg_tables')
+      .select('tablename')
+      .eq('schemaname', 'public');
+    results.publicTables = tables;
+
+    // 3. Specifically check if there's a profiles table
+    const { data: profiles, error: profilesError } = await supabase
+      .from('profiles')
+      .select('*')
+      .limit(1);
+    results.profilesExist = !profilesError;
+
+    // 4. Try to find the error by looking at the logs if possible? No direct logs via SDK.
+    
+    // 5. Check user_data for the target user ID if found
+    if (results.targetUser) {
+        const { data: userData } = await supabase
+            .from('user_data')
+            .select('*')
+            .eq('user_id', results.targetUser.id);
+        results.targetUserData = userData;
+    }
+
+  } catch (err) {
+    results.error = err.message;
   }
 
-  // Check if the user exists in auth.users (requires service role)
-  const { data: authUsers, error: authError } = await supabase.auth.admin.listUsers();
-  if (authError) {
-    console.error('Error listing auth users:', authError);
-  } else {
-    const user = authUsers.users.find(u => u.email === 'robson28.carvalho@gmail.com');
-    console.log('User in auth.users:', user ? 'Found' : 'Not found');
-    if (user) console.log('User details:', JSON.stringify(user, null, 2));
-  }
-
-  // Check public.user_data or other tables
-  const { data: userData, error: userDataError } = await supabase
-    .from('user_data')
-    .select('*')
-    .limit(5);
-  
-  if (userDataError) {
-    console.error('Error fetching user_data:', userDataError);
-  } else {
-    console.log('Sample user_data:', userData);
-  }
+  fs.writeFileSync('debug_results.json', JSON.stringify(results, null, 2));
 }
 
-debugSignup();
+run();
