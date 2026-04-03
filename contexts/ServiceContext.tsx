@@ -9,29 +9,29 @@ interface ServiceContextType {
     setEvents: React.Dispatch<React.SetStateAction<ServiceEvent[]>>;
     details: ServiceDetail[];
     setDetails: React.Dispatch<React.SetStateAction<ServiceDetail[]>>;
-    categories: ServiceCategory[];
-    setCategories: React.Dispatch<React.SetStateAction<ServiceCategory[]>>;
     toggleServiceCompletion: (detailId: string, date: string) => void;
     updateServiceNotes: (detailId: string, notes: string) => void;
 }
 
 const ServiceContext = createContext<ServiceContextType | undefined>(undefined);
 
+const DEFAULT_ACTIVITIES: ServiceEvent[] = [
+    { id: '1', title: 'CULTO ONLINE', categoryId: '1', createdAt: new Date().toISOString() },
+    { id: '2', title: 'CULTO PRESENCIAL', categoryId: '1', createdAt: new Date().toISOString() },
+    { id: '3', title: 'DEVOCIONAL DIÁRIO', categoryId: '1', createdAt: new Date().toISOString() },
+    { id: '4', title: 'ESTUDO BÍBLICO', categoryId: '1', createdAt: new Date().toISOString() }
+];
+
 export const ServiceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const { cloudData, isDataLoaded, isInitialLoading } = useDataContext();
 
-    const [events, setEvents] = useState<ServiceEvent[]>(() =>
-        safeLocalStorageGet('crentify_service_events', [])
-    );
+    const [events, setEvents] = useState<ServiceEvent[]>(() => {
+        const saved = safeLocalStorageGet('crentify_service_events', []);
+        return saved.length > 0 ? saved : DEFAULT_ACTIVITIES;
+    });
 
     const [details, setDetails] = useState<ServiceDetail[]>(() =>
         safeLocalStorageGet('crentify_service_details', [])
-    );
-
-    const [categories, setCategories] = useState<ServiceCategory[]>(() =>
-        safeLocalStorageGet('crentify_service_categories', [
-            { id: '1', name: 'SERMÕES' }
-        ])
     );
 
     // Sync from Cloud
@@ -58,9 +58,6 @@ export const ServiceProvider: React.FC<{ children: React.ReactNode }> = ({ child
             if (cloudData.crentify_service_details) {
                 processValue('crentify_service_details', cloudData.crentify_service_details.value, cloudData.crentify_service_details.updated_at, setDetails);
             }
-            if (cloudData.crentify_service_categories) {
-                processValue('crentify_service_categories', cloudData.crentify_service_categories.value, cloudData.crentify_service_categories.updated_at, setCategories);
-            }
         }
     }, [isDataLoaded, cloudData]);
 
@@ -68,14 +65,12 @@ export const ServiceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const canSync = isDataLoaded && !isInitialLoading;
     useDataSync(canSync ? 'crentify_service_events' : '', events);
     useDataSync(canSync ? 'crentify_service_details' : '', details);
-    useDataSync(canSync ? 'crentify_service_categories' : '', categories);
 
     // Local Storage
     useEffect(() => {
         localStorage.setItem('crentify_service_events', JSON.stringify(events));
         localStorage.setItem('crentify_service_details', JSON.stringify(details));
-        localStorage.setItem('crentify_service_categories', JSON.stringify(categories));
-    }, [events, details, categories]);
+    }, [events, details]);
 
     const toggleServiceCompletion = (detailId: string, date: string) => {
         setDetails(prev => prev.map(d => {
@@ -103,7 +98,6 @@ export const ServiceProvider: React.FC<{ children: React.ReactNode }> = ({ child
         <ServiceContext.Provider value={{ 
             events, setEvents, 
             details, setDetails, 
-            categories, setCategories,
             toggleServiceCompletion,
             updateServiceNotes
         }}>
