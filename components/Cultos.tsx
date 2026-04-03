@@ -1,9 +1,10 @@
-import React, { useState, useRef } from 'react';
 import {
   Users, Plus, Trash2, Calendar, Clock, Edit2, X, Link as LinkIcon,
   MapPin, Youtube, MessageSquare, ChevronDown, ChevronRight,
-  Search, Info, Check, Image as ImageIcon
+  Search, Info, Check, Image as ImageIcon, Eye, Play, FileText,
+  CheckCircle2, GraduationCap, ChevronLeft, EyeOff, Zap
 } from 'lucide-react';
+import { getLocalDateString } from '../utils';
 import { useServices } from '../contexts/ServiceContext';
 import {
   ServiceEvent, ServiceDetail, ServiceFrequency, FrequencyType,
@@ -14,12 +15,16 @@ const Cultos: React.FC = () => {
   const {
     events, setEvents,
     details: serviceDetails, setDetails: setServiceDetails,
-    categories, setCategories
+    categories, setCategories,
+    toggleServiceCompletion,
+    updateServiceNotes
   } = useServices();
 
   const [activeTab, setActiveTab] = useState<'list' | 'add' | 'config'>('list');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+  const [activeDetailId, setActiveDetailId] = useState<string | null>(null);
+  const [expandedChurches, setExpandedChurches] = useState<string[]>([]);
 
   // Form states for NEW EVENT
   const [newEvent, setNewEvent] = useState<Partial<ServiceEvent>>({
@@ -143,6 +148,21 @@ const Cultos: React.FC = () => {
 
   const selectedEvent = events.find(e => e.id === selectedEventId);
   const currentEventDetails = serviceDetails.filter(d => d.eventId === selectedEventId);
+  const activeDetail = serviceDetails.find(d => d.id === activeDetailId);
+  const todayStr = getLocalDateString();
+
+  const toggleChurch = (churchName: string) => {
+    setExpandedChurches(prev =>
+      prev.includes(churchName) ? prev.filter(c => c !== churchName) : [...prev, churchName]
+    );
+  };
+
+  const getEventProgress = (eventId: string) => {
+    const evDetails = serviceDetails.filter(d => d.eventId === eventId);
+    if (evDetails.length === 0) return 0;
+    const completed = evDetails.filter(d => d.completions?.[todayStr]).length;
+    return Math.round((completed / evDetails.length) * 100);
+  };
 
   return (
     <div className="space-y-10 animate-in fade-in duration-700 pb-24">
@@ -168,44 +188,201 @@ const Cultos: React.FC = () => {
         </div>
       </header>
 
-      {activeTab === 'list' && (
-        <div className="space-y-12">
-          {/* Listagem de Cards no estilo Academy */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredEvents.map(event => (
-              <div
-                key={event.id}
-                onClick={() => { setSelectedEventId(event.id); setActiveTab('add'); }}
-                className={`bg-[#161b22] border border-white/5 rounded-[40px] p-8 hover:border-brand/30 transition-all cursor-pointer group relative overflow-hidden`}
-              >
-                <div className="flex flex-col gap-4">
-                  <div className="w-16 h-16 bg-brand/10 text-brand rounded-[24px] flex items-center justify-center border border-brand/20 shadow-xl">
-                    <Users size={32} />
+      {activeTab === 'list' && !selectedEventId && (
+        <div className="space-y-12 animate-in fade-in duration-500">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+            {filteredEvents.map(event => {
+              const progress = getEventProgress(event.id);
+              const eventDetails = serviceDetails.filter(d => d.eventId === event.id);
+              const completedCount = eventDetails.filter(d => d.completions?.[todayStr]).length;
+
+              return (
+                <div
+                  key={event.id}
+                  onClick={() => { setSelectedEventId(event.id); }}
+                  className="bg-[#161b22] border border-white/5 rounded-[48px] overflow-hidden hover:border-brand/30 transition-all cursor-pointer group shadow-2xl flex flex-col h-full"
+                >
+                  <div className="h-48 bg-black/40 relative overflow-hidden shrink-0">
+                    {event.thumbnailUrl ? (
+                      <img src={event.thumbnailUrl} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-60" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-brand/20 to-purple-900/20">
+                        <Users size={64} className="text-brand/40 group-hover:scale-110 transition-transform duration-700" />
+                      </div>
+                    )}
+                    <div className="absolute top-6 left-6">
+                      <span className="bg-brand/80 text-white text-[9px] font-black px-4 py-2 rounded-full uppercase tracking-widest backdrop-blur-md shadow-lg">
+                        {categories.find(c => c.id === event.categoryId)?.name || 'SERMÕES'}
+                      </span>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-2xl font-black text-white uppercase tracking-tighter group-hover:text-brand transition-colors">{event.title}</h3>
-                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">
-                      {categories.find(c => c.id === event.categoryId)?.name || 'SERMÕES'}
-                    </p>
-                  </div>
-                  <div className="pt-4 border-t border-white/5 flex justify-between items-center text-[10px] font-black text-gray-600 uppercase tracking-widest">
-                    <span>{serviceDetails.filter(d => d.eventId === event.id).length} Programações</span>
-                    <button onClick={(e) => { e.stopPropagation(); deleteEvent(event.id); }} className="text-gray-800 hover:text-rose-500 transition-colors">
-                      <Trash2 size={16} />
-                    </button>
+
+                  <div className="p-8 flex-1 flex flex-col justify-between gap-6">
+                    <div>
+                      <h3 className="text-2xl font-black text-white uppercase tracking-tighter group-hover:text-brand transition-colors mb-2 line-clamp-1">{event.title}</h3>
+                      <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
+                         {eventDetails.length} Programações Cadastradas
+                      </p>
+                    </div>
+
+                    <div className="bg-black/40 p-5 rounded-[32px] border border-white/5 shadow-inner">
+                      <div className="flex justify-between items-center mb-3">
+                        <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Seu Progresso Hoje</span>
+                        <span className="text-lg font-black text-brand tracking-tighter">{progress}%</span>
+                      </div>
+                      <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-brand to-purple-600 shadow-[0_0_10px_rgba(var(--brand-rgb),0.5)] transition-all duration-1000"
+                          style={{ width: `${progress}%` }}
+                        />
+                      </div>
+                      <p className="text-[8px] font-black text-gray-600 uppercase tracking-widest mt-2">
+                        {completedCount} de {eventDetails.length} Concluídas
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
 
             <div
               onClick={() => setActiveTab('add')}
-              className="border-2 border-dashed border-white/5 rounded-[40px] p-8 flex flex-col items-center justify-center gap-4 text-gray-600 hover:border-brand/30 hover:text-brand transition-all cursor-pointer bg-white/[0.02]"
+              className="border-2 border-dashed border-white/5 bg-white/[0.02] rounded-[48px] p-12 flex flex-col items-center justify-center gap-6 text-gray-600 hover:border-brand/30 hover:text-brand transition-all cursor-pointer group"
             >
-              <Plus size={48} strokeWidth={1} />
-              <span className="font-black text-xs uppercase tracking-widest">Novo Evento</span>
+              <div className="w-20 h-20 bg-white/5 rounded-[32px] flex items-center justify-center group-hover:bg-brand/10 transition-all">
+                <Plus size={48} strokeWidth={1} />
+              </div>
+              <span className="font-black text-xs uppercase tracking-[0.2em] text-center">Adicionar Novo Evento</span>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* --- VISÃO DETALHADA DO EVENTO (ESTILO ACADEMY) --- */}
+      {activeTab === 'list' && selectedEventId && selectedEvent && (
+        <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500 pb-20">
+           {/* Header do Evento */}
+           <div className="bg-brand/5 p-8 rounded-[48px] border border-brand/10 flex flex-col md:flex-row gap-8 items-center shadow-2xl relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-brand/5 to-transparent pointer-events-none"></div>
+
+              <button
+                onClick={() => { setSelectedEventId(null); setExpandedChurches([]); }}
+                className="w-14 h-14 bg-[#0b0e14] border border-white/5 rounded-2xl flex items-center justify-center text-gray-500 hover:text-brand hover:bg-brand/10 transition-all flex-shrink-0 z-10"
+              >
+                <ChevronLeft size={24} />
+              </button>
+
+              {selectedEvent.thumbnailUrl ? (
+                <img src={selectedEvent.thumbnailUrl} className="w-28 h-28 md:w-32 md:h-32 rounded-[40px] object-cover border border-white/10 shadow-2xl z-10" />
+              ) : (
+                <div className="w-28 h-28 md:w-32 md:h-32 rounded-[40px] bg-[#0b0e14] border border-white/5 flex items-center justify-center text-brand/30 z-10">
+                  <Users size={56} />
+                </div>
+              )}
+
+              <div className="flex-1 text-center md:text-left z-10">
+                 <span className="text-[10px] font-black text-brand uppercase tracking-[0.3em] mb-2 block">SESSÃO DE EVENTOS</span>
+                 <h2 className="text-4xl font-black text-white uppercase tracking-tighter">{selectedEvent.title}</h2>
+                 <p className="text-gray-500 text-xs mt-2 font-bold uppercase tracking-widest bg-white/5 inline-block px-3 py-1 rounded-lg">
+                    {categories.find(c => c.id === selectedEvent.categoryId)?.name || 'SERMÕES'}
+                 </p>
+              </div>
+
+              <div className="bg-black/40 p-8 rounded-[32px] border border-white/5 text-center min-w-[240px] shadow-inner z-10">
+                  <div className="flex justify-between items-center mb-3">
+                    <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Seu Progresso de Hoje</p>
+                    <p className="text-2xl font-black text-brand tracking-tighter">{getEventProgress(selectedEventId)}%</p>
+                  </div>
+                  <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden shadow-inner">
+                    <div
+                      className="h-full bg-gradient-to-r from-brand to-purple-600 transition-all duration-1000"
+                      style={{ width: `${getEventProgress(selectedEventId)}%` }}
+                    />
+                  </div>
+              </div>
+           </div>
+
+           {/* Lista de Igrejas/Programações */}
+           <div className="space-y-6">
+              {(() => {
+                const groupedByChurch = currentEventDetails.reduce((acc, detail) => {
+                  const church = detail.churchNameOrId || 'Outros';
+                  if (!acc[church]) acc[church] = [];
+                  acc[church].push(detail);
+                  return acc;
+                }, {} as Record<string, ServiceDetail[]>);
+
+                return Object.keys(groupedByChurch).map(church => {
+                   const items = groupedByChurch[church];
+                   const isExpanded = expandedChurches.includes(church);
+                   const isChurchComplete = items.every(d => d.completions?.[todayStr]);
+
+                   return (
+                     <div key={church} className={`border rounded-[40px] overflow-hidden transition-all duration-300 shadow-2xl ${isExpanded ? 'bg-[#161b22] border-brand/20' : 'bg-[#0b0e14] border-white/5 hover:border-white/10'}`}>
+                        <div onClick={() => toggleChurch(church)} className="flex items-center justify-between p-8 cursor-pointer hover:bg-white/5 transition-colors group">
+                           <div className="flex items-center gap-6">
+                              <div className={`w-14 h-14 rounded-[20px] flex items-center justify-center font-black shadow-lg transition-all ${isChurchComplete ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-brand/10 text-brand border border-brand/20'}`}>
+                                 {isChurchComplete ? <CheckCircle2 size={28} /> : <GraduationCap size={24} />}
+                              </div>
+                              <div>
+                                 <h3 className={`text-2xl font-black uppercase tracking-tighter transition-colors ${isExpanded ? 'text-white' : 'text-gray-400 group-hover:text-white'}`}>{church}</h3>
+                                 <p className="text-[10px] text-gray-500 uppercase tracking-widest mt-1 font-bold">
+                                    {items.length} Programações cadastradas
+                                 </p>
+                              </div>
+                           </div>
+                           <ChevronDown className={`text-gray-600 transition-transform duration-500 ${isExpanded ? 'rotate-180 text-brand' : ''}`} size={24} />
+                        </div>
+
+                        {isExpanded && (
+                          <div className="p-8 pt-2 space-y-4 animate-in slide-in-from-top-4 fade-in duration-300">
+                             {items.map(detail => {
+                               const isComplete = detail.completions?.[todayStr];
+                               return (
+                                 <div
+                                   key={detail.id}
+                                   onClick={() => setActiveDetailId(detail.id)}
+                                   className={`flex items-center justify-between p-5 rounded-[28px] transition-all group cursor-pointer ${isComplete ? 'bg-white/5 border border-white/5' : 'bg-[#1c232b] border border-white/5 shadow-lg hover:border-brand/40'}`}
+                                 >
+                                    <div className="flex items-center gap-5 pr-4 flex-1">
+                                       <div
+                                          onClick={(e) => { e.stopPropagation(); toggleServiceCompletion(detail.id, todayStr); }}
+                                          className={`w-10 h-10 rounded-xl border-4 flex items-center justify-center transition-all flex-shrink-0 ${isComplete ? 'bg-emerald-500 border-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.4)]' : 'border-[#0b0e14] bg-[#0b0e14] group-hover:border-brand/30'}`}
+                                        >
+                                          {isComplete && <Check size={14} strokeWidth={4} />}
+                                       </div>
+                                       <div>
+                                          <span className={`text-[15px] font-black uppercase tracking-tight transition-colors ${isComplete ? 'text-gray-600 line-through' : 'text-gray-200 group-hover:text-white'}`}>
+                                            {detail.title || 'Início da Programação'}
+                                          </span>
+                                          <div className="flex items-center gap-3 mt-1">
+                                             <span className="text-[9px] font-black text-gray-600 uppercase tracking-widest">{detail.frequencies.map(f => f.time).join(', ')}</span>
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <button
+                                      onClick={(e) => { e.stopPropagation(); setActiveDetailId(detail.id); }}
+                                      className={`px-8 py-3.5 text-[11px] font-black uppercase tracking-widest rounded-2xl transition-all shadow-xl flex items-center gap-2 ${isComplete ? 'bg-white/5 text-gray-500' : 'bg-brand text-white hover:scale-105 active:scale-95 shadow-brand/20'}`}
+                                    >
+                                       <Eye size={16} /> VER
+                                    </button>
+                                 </div>
+                               );
+                             })}
+                          </div>
+                        )}
+                     </div>
+                   );
+                });
+              })()}
+              {currentEventDetails.length === 0 && (
+                <div className="text-center py-24 bg-black/20 rounded-[48px] border border-dashed border-white/5 animate-pulse">
+                   <EyeOff size={48} className="text-gray-800 mx-auto mb-4" />
+                   <h3 className="text-xl font-black text-gray-700 uppercase tracking-widest">Nenhuma programação definida</h3>
+                   <button onClick={() => setActiveTab('add')} className="mt-6 text-brand font-black text-[10px] uppercase tracking-widest border border-brand/20 px-6 py-3 rounded-full hover:bg-brand hover:text-white transition-all">Configurar agora</button>
+                </div>
+              )}
+           </div>
         </div>
       )}
 
@@ -506,10 +683,93 @@ const Cultos: React.FC = () => {
         </div>
       )}
 
+      {/* --- MODAL DE VISUALIZAÇÃO/LIÇÃO DO CULTO (ESTILO ACADEMY) --- */}
+      {activeDetail && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-2 md:p-6 bg-black/95 backdrop-blur-3xl animate-in zoom-in-95 fade-in duration-400">
+           <div className="bg-[#161b22] w-full max-w-4xl h-full md:max-h-[92vh] rounded-[48px] border border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.8)] flex flex-col overflow-hidden relative">
+
+              {/* Header Modal */}
+              <div className="p-8 md:p-10 flex justify-between items-center border-b border-white/5 bg-gradient-to-r from-[#0b0e14] to-[#161b22] shrink-0">
+                 <div className="flex items-center gap-6">
+                    <div className="w-16 h-16 bg-brand/10 rounded-2xl flex items-center justify-center text-brand border border-brand/20 shadow-2xl">
+                       {activeDetail.youtubeUrl ? <Play size={28} fill="currentColor" /> : <FileText size={28} />}
+                    </div>
+                    <div>
+                       <h3 className="text-2xl font-black text-white uppercase tracking-tighter line-clamp-1">{activeDetail.title || 'Momento de Culto'}</h3>
+                       <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">{activeDetail.churchNameOrId}</p>
+                    </div>
+                 </div>
+                 <button
+                    onClick={() => setActiveDetailId(null)}
+                    className="w-14 h-14 bg-rose-500/10 text-rose-500 border border-rose-500/20 rounded-2xl flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all transform hover:rotate-90"
+                 >
+                    <X size={28} />
+                 </button>
+              </div>
+
+              {/* Conteúdo do Modal */}
+              <div className="flex-1 overflow-y-auto custom-scrollbar p-8 md:p-12 space-y-12">
+
+                 {/* Player ou Placeholder */}
+                 {activeDetail.youtubeUrl ? (
+                   <div className="bg-[#0b0e14] aspect-video rounded-[40px] border border-white/5 overflow-hidden shadow-2xl group relative">
+                      <iframe
+                        src={`https://www.youtube.com/embed/${activeDetail.youtubeUrl.split('v=')[1]?.split('&')[0] || activeDetail.youtubeUrl.split('/').pop()}`}
+                        className="w-full h-full"
+                        allowFullScreen
+                      />
+                   </div>
+                 ) : (
+                   <div className="bg-black/20 p-16 rounded-[48px] border border-dashed border-white/5 text-center flex flex-col items-center">
+                      <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mb-6">
+                        <Users size={48} className="text-gray-700" />
+                      </div>
+                      <h4 className="text-xl font-black text-gray-600 uppercase tracking-widest">Acompanhamento Presencial</h4>
+                      {activeDetail.address && <p className="text-xs text-brand font-bold uppercase mt-2">{activeDetail.address}</p>}
+                   </div>
+                 )}
+
+                 {/* Espaço para Anotações */}
+                 <div className="space-y-6">
+                    <div className="flex items-center gap-3 text-brand">
+                       <MessageSquare size={18} />
+                       <h4 className="text-[11px] font-black uppercase tracking-[0.2em]">Suas Anotações e Reflexões</h4>
+                    </div>
+                    <textarea
+                      value={activeDetail.notes || ''}
+                      onChange={(e) => updateServiceNotes(activeDetail.id, e.target.value)}
+                      placeholder="Escreva aqui tudo o que chamou sua atenção, anote insights da mensagem ou pontos de oração..."
+                      className="w-full h-64 bg-[#0b0e14]/50 border border-white/5 rounded-[40px] p-10 text-gray-300 text-lg font-medium leading-relaxed outline-none focus:border-brand/40 transition-all resize-none shadow-inner italic"
+                    />
+                 </div>
+              </div>
+
+              {/* Botão de Conclusão */}
+              <div className="p-8 md:p-10 border-t border-white/5 bg-[#0b0e14]/50 shrink-0">
+                 <button
+                   onClick={() => { toggleServiceCompletion(activeDetail.id, todayStr); setActiveDetailId(null); }}
+                   className={`w-full py-8 rounded-[32px] font-black uppercase tracking-[0.3em] text-sm flex items-center justify-center gap-4 transition-all shadow-2xl transform active:scale-95 ${activeDetail.completions?.[todayStr] ? 'bg-emerald-500/10 text-emerald-500 border-2 border-emerald-500 shadow-emerald-500/20' : 'bg-emerald-600 text-white hover:bg-emerald-500 hover:translate-y-[-4px] shadow-emerald-600/40'}`}
+                 >
+                    {activeDetail.completions?.[todayStr] ? (
+                      <>
+                        <CheckCircle2 size={24} /> TAREFA CONCLUÍDA
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle2 size={24} /> CONCLUIR CULTO
+                      </>
+                    )}
+                 </button>
+              </div>
+           </div>
+        </div>
+      )}
+
       <style>{`
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(var(--brand-rgb), 0.2); border-radius: 10px; }
-        .neon-text { text-shadow: 0 0 10px rgba(var(--brand-rgb), 0.5); }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(var(--brand-rgb), 0.3); border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .neon-text { text-shadow: 0 0 15px rgba(var(--brand-rgb), 0.4); }
       `}</style>
     </div>
   );
