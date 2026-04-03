@@ -218,7 +218,6 @@ const Cultos: React.FC = () => {
         </div>
         <div className="flex bg-[#0b0e14] p-1.5 rounded-2xl border border-white/5 shadow-inner">
           {[
-          {[
             { id: 'list', label: 'Tipo de Atividade', icon: <Users size={14} /> },
             { id: 'add', label: 'Nova Atividade', icon: <Plus size={14} /> },
             { id: 'config', label: 'Configurar Atividades', icon: <Edit2 size={14} /> }
