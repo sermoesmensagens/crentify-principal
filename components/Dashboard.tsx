@@ -3,7 +3,7 @@ import { Book, MessageSquare, Briefcase, CalendarCheck, Check, Flame, Trophy, Za
 import { useBible } from '../contexts/BibleContext';
 import { useDiary } from '../contexts/DiaryContext';
 import { useTarefas } from '../contexts/TarefasContext';
-import { useHabits } from '../contexts/HabitsContext';
+import { useServices } from '../contexts/ServiceContext';
 import { useAcademy } from '../contexts/AcademyContext';
 import { useStudies } from '../contexts/StudyContext';
 import { getLocalDateString, formatActivityDate } from '../utils';
@@ -14,7 +14,7 @@ const Dashboard: React.FC = () => {
   const { progress: bibleProgress } = useBible();
   const { entries: diaryEntries } = useDiary();
   const { tasks } = useTarefas();
-  const { habits } = useHabits();
+  const { details: serviceDetails, events } = useServices();
   const { progress: academyProgress, content } = useAcademy();
   const { studies } = useStudies();
   
@@ -94,10 +94,25 @@ const Dashboard: React.FC = () => {
     }).sort((a, b) => (a.time || '00:00').localeCompare(b.time || '00:00'));
   };
 
-  const filteredHabits = filterList(habits || [], habitsFilter);
   const filteredTasks = filterList(tasks || [], tasksFilter);
   const filteredStudies = filterList(studies || [], studiesFilter);
   const filteredProjectReminders = filterList(projectReminders || [], projectRemindersFilter);
+
+  const getUpcomingServices = () => {
+    const todayNum = new Date().getDay();
+    const todayDate = getLocalDateString();
+    
+    return serviceDetails.filter(detail => {
+        return detail.frequencies.some(f => {
+            if (f.type === 'weekly') return f.daysOfWeek?.includes(todayNum);
+            if (f.type === 'once') return f.date === todayDate;
+            if (f.type === 'period') return todayDate >= (f.startDate || '') && todayDate <= (f.endDate || '');
+            return false;
+        });
+    }).sort((a, b) => (a.frequencies[0]?.time || '00:00').localeCompare(b.frequencies[0]?.time || '00:00'));
+  };
+
+  const upcomingServices = getUpcomingServices();
 
   return (
     <div className="space-y-12 animate-in fade-in duration-700 pb-20">
@@ -123,7 +138,7 @@ const Dashboard: React.FC = () => {
       {/* Grid de Métricas */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: 'Disciplinas Ativas', val: filteredHabits.length, icon: <CalendarCheck />, bg: 'bg-brand/10', text: 'text-brand' },
+          { label: 'Próximos Cultos', val: upcomingServices.length, icon: <CalendarCheck />, bg: 'bg-brand/10', text: 'text-brand' },
           { label: 'Tarefas Hoje', val: filteredTasks.length, icon: <Briefcase />, bg: 'bg-blue-500/10', text: 'text-blue-500' },
           { label: 'Estudos Hoje', val: filteredStudies.length, icon: <Target />, bg: 'bg-emerald-500/10', text: 'text-emerald-500' },
         ].map((card, i) => (
@@ -207,7 +222,7 @@ const Dashboard: React.FC = () => {
       {/* Main Grid: 2x2 Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
-        {/* Bloco 1: Disciplinas (Espiritual) */}
+        {/* Bloco 1: Próximos Cultos & Eventos */}
         <section className="bg-[#161b22] p-10 rounded-[56px] border border-white/5 shadow-2xl relative overflow-hidden flex flex-col">
           <div className="absolute top-0 right-0 p-8 opacity-[0.03]">
             <Zap size={150} className="text-brand" />
@@ -215,42 +230,37 @@ const Dashboard: React.FC = () => {
           <div className="flex justify-between items-center mb-10 relative z-10">
             <h2 className="text-2xl font-black uppercase tracking-tighter flex items-center gap-3">
               <Zap className="text-brand" size={24} />
-              Disciplinas Espirituais
+              Próximos Cultos
             </h2>
             <div className="flex bg-[#0b0e14] p-1 rounded-xl border border-white/5">
-              {(['hoje', 'pendentes', 'todas'] as const).map(f => (
-                <button
-                  key={f}
-                  onClick={() => setHabitsFilter(f)}
-                  className={`px-3 py-1.5 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all ${habitsFilter === f ? 'bg-brand text-white shadow-md' : 'text-gray-500 hover:text-white'}`}
-                >
-                  {f === 'hoje' ? 'Hoje' : f === 'pendentes' ? 'Pend' : 'Todas'}
-                </button>
-              ))}
+                <span className="px-3 py-1.5 rounded-lg text-[8px] font-black uppercase tracking-widest bg-brand text-white shadow-md">Hoje</span>
             </div>
           </div>
 
           <div className="space-y-4 relative z-10">
-            {filteredHabits.length === 0 ? (
-              <div className="py-20 text-center opacity-30 italic font-bold">Nenhuma disciplina na lista.</div>
+            {upcomingServices.length === 0 ? (
+              <div className="py-20 text-center opacity-30 italic font-bold">Nenhum evento para hoje em sua lista.</div>
             ) : (
-              filteredHabits.map((habit: SpiritualHabit) => (
-                <div key={habit.id} className="flex items-center justify-between p-6 bg-[#0b0e14]/50 rounded-[32px] border border-white/5 hover:border-brand/30 transition-all group">
+              upcomingServices.map((detail) => (
+                <div key={detail.id} className="flex items-center justify-between p-6 bg-[#0b0e14]/50 rounded-[32px] border border-white/5 hover:border-brand/30 transition-all group">
                   <div className="flex items-center gap-5">
-                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black text-[10px] ${habit.completions[today] ? 'bg-emerald-500 text-white shadow-emerald-500/30' : 'bg-brand/20 text-brand border border-brand/20'}`}>
-                      {habit.completions[today] ? <Check size={24} /> : (habit.category?.slice(0, 2) || 'DI')}
+                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center font-black text-brand bg-brand/10 border border-brand/20">
+                      <Clock size={20} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <h4 className={`font-black uppercase text-xs tracking-tighter truncate ${habit.completions[today] ? 'text-gray-700 line-through' : 'text-white'}`}>{habit.category}</h4>
-                        <span className="px-1.5 py-0.5 bg-white/5 border border-white/10 rounded-full text-[7px] text-gray-400 font-black uppercase tracking-widest whitespace-nowrap">
-                          {formatActivityDate(habit)}
+                        <h4 className="font-black uppercase text-xs tracking-tighter truncate text-white">{detail.title || (events.find(e => e.id === detail.eventId)?.title)}</h4>
+                        <span className="px-1.5 py-0.5 bg-brand/10 border border-brand/20 rounded-full text-[7px] text-brand font-black uppercase tracking-widest whitespace-nowrap">
+                          {detail.frequencies.find(f => {
+                              const d = new Date().getDay();
+                              return f.type === 'weekly' && f.daysOfWeek?.includes(d) || f.type === 'once' || f.type === 'period';
+                          })?.time}
                         </span>
                       </div>
-                      <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1 opacity-70 truncate max-w-[150px]">{habit.description || 'Fidelidade Diária'}</p>
+                      <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1 opacity-70 truncate max-w-[200px]">{detail.churchNameOrId}</p>
                     </div>
                   </div>
-                  <div className={`w-3 h-3 rounded-full ${habit.completions[today] ? 'bg-emerald-500 neon-glow shadow-emerald-500' : 'bg-white/5 border border-white/10'}`}></div>
+                  <div className="w-3 h-3 rounded-full bg-brand neon-glow shadow-brand"></div>
                 </div>
               ))
             )}
