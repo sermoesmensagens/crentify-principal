@@ -12,6 +12,7 @@ import { DiaryProvider } from './contexts/DiaryContext';
 import { StudyProvider } from './contexts/StudyContext';
 import { ReadingPlanProvider } from './contexts/ReadingPlanContext';
 import { PrayerProvider } from './contexts/PrayerContext';
+import { ServiceProvider } from './contexts/ServiceContext';
 
 import ErrorBoundary from './components/ErrorBoundary';
 
@@ -34,7 +35,9 @@ root.render(
                     <DiaryProvider>
                       <ReadingPlanProvider>
                         <PrayerProvider>
-                          <App />
+                          <ServiceProvider>
+                            <App />
+                          </ServiceProvider>
                         </PrayerProvider>
                       </ReadingPlanProvider>
                     </DiaryProvider>
