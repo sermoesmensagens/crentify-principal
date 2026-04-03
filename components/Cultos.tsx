@@ -26,6 +26,9 @@ const Cultos: React.FC = () => {
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const [activeDetailId, setActiveDetailId] = useState<string | null>(null);
   const [expandedChurches, setExpandedChurches] = useState<string[]>([]);
+  const [editingChurchName, setEditingChurchName] = useState<string | null>(null);
+  const [tempChurchName, setTempChurchName] = useState('');
+  const [isQuickAddingDetail, setIsQuickAddingDetail] = useState<string | null>(null); // Church name currently adding to
 
   // Form states for NEW EVENT
   const [newEvent, setNewEvent] = useState<Partial<ServiceEvent>>({
@@ -156,6 +159,47 @@ const Cultos: React.FC = () => {
     setExpandedChurches(prev =>
       prev.includes(churchName) ? prev.filter(c => c !== churchName) : [...prev, churchName]
     );
+  };
+
+  const handleRenameChurch = (oldName: string) => {
+    if (!tempChurchName.trim() || tempChurchName === oldName) {
+      setEditingChurchName(null);
+      return;
+    }
+    setServiceDetails(prev => prev.map(d =>
+      (d.eventId === selectedEventId && d.churchNameOrId === oldName)
+        ? { ...d, churchNameOrId: tempChurchName.toUpperCase() }
+        : d
+    ));
+    setExpandedChurches(prev => prev.map(c => c === oldName ? tempChurchName.toUpperCase() : c));
+    setEditingChurchName(null);
+  };
+
+  const handleDeleteChurch = (churchName: string) => {
+    if (confirm(`Deseja excluir TODAS as programações de "${churchName}"?`)) {
+      setServiceDetails(prev => prev.filter(d =>
+        !(d.eventId === selectedEventId && d.churchNameOrId === churchName)
+      ));
+      setExpandedChurches(prev => prev.filter(c => c !== churchName));
+    }
+  };
+
+  const [quickDetailTitle, setQuickDetailTitle] = useState('');
+  const [quickDetailTime, setQuickDetailTime] = useState('19:00');
+
+  const handleQuickCreateDetail = (churchName: string) => {
+    if (!selectedEventId) return;
+    const detail: ServiceDetail = {
+      id: Date.now().toString(),
+      eventId: selectedEventId,
+      title: quickDetailTitle || 'Momento de Culto',
+      churchNameOrId: churchName,
+      frequencies: [{ id: Date.now().toString(), type: 'weekly', time: quickDetailTime, daysOfWeek: [0, 1, 2, 3, 4, 5, 6] }],
+      createdAt: new Date().toISOString()
+    };
+    setServiceDetails([...serviceDetails, detail]);
+    setIsQuickAddingDetail(null);
+    setQuickDetailTitle('');
   };
 
   const getEventProgress = (eventId: string) => {
@@ -319,54 +363,29 @@ const Cultos: React.FC = () => {
                    const isChurchComplete = items.every(d => d.completions?.[todayStr]);
 
                    return (
-                     <div key={church} className={`border rounded-[40px] overflow-hidden transition-all duration-300 shadow-2xl ${isExpanded ? 'bg-[#161b22] border-brand/20' : 'bg-[#0b0e14] border-white/5 hover:border-white/10'}`}>
-                        <div onClick={() => toggleChurch(church)} className="flex items-center justify-between p-8 cursor-pointer hover:bg-white/5 transition-colors group">
-                           <div className="flex items-center gap-6">
-                              <div className={`w-14 h-14 rounded-[20px] flex items-center justify-center font-black shadow-lg transition-all ${isChurchComplete ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-brand/10 text-brand border border-brand/20'}`}>
-                                 {isChurchComplete ? <CheckCircle2 size={28} /> : <GraduationCap size={24} />}
-                              </div>
-                              <div>
-                                 <h3 className={`text-2xl font-black uppercase tracking-tighter transition-colors ${isExpanded ? 'text-white' : 'text-gray-400 group-hover:text-white'}`}>{church}</h3>
-                                 <p className="text-[10px] text-gray-500 uppercase tracking-widest mt-1 font-bold">
-                                    {items.length} Programações cadastradas
-                                 </p>
-                              </div>
-                           </div>
-                           <ChevronDown className={`text-gray-600 transition-transform duration-500 ${isExpanded ? 'rotate-180 text-brand' : ''}`} size={24} />
-                        </div>
-
-                        {isExpanded && (
-                          <div className="p-8 pt-2 space-y-4 animate-in slide-in-from-top-4 fade-in duration-300">
-                             {items.map(detail => {
-                               const isComplete = detail.completions?.[todayStr];
-                               return (
-                                 <div
-                                   key={detail.id}
-                                   onClick={() => setActiveDetailId(detail.id)}
-                                   className={`flex items-center justify-between p-5 rounded-[28px] transition-all group cursor-pointer ${isComplete ? 'bg-white/5 border border-white/5' : 'bg-[#1c232b] border border-white/5 shadow-lg hover:border-brand/40'}`}
-                                 >
-                                    <div className="flex items-center gap-5 pr-4 flex-1">
-                                       <div
-                                          onClick={(e) => { e.stopPropagation(); toggleServiceCompletion(detail.id, todayStr); }}
-                                          className={`w-10 h-10 rounded-xl border-4 flex items-center justify-center transition-all flex-shrink-0 ${isComplete ? 'bg-emerald-500 border-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.4)]' : 'border-[#0b0e14] bg-[#0b0e14] group-hover:border-brand/30'}`}
-                                        >
-                                          {isComplete && <Check size={14} strokeWidth={4} />}
-                                       </div>
-                                       <div>
-                                          <span className={`text-[15px] font-black uppercase tracking-tight transition-colors ${isComplete ? 'text-gray-600 line-through' : 'text-gray-200 group-hover:text-white'}`}>
-                                            {detail.title || 'Início da Programação'}
-                                          </span>
-                                          <div className="flex items-center gap-3 mt-1">
-                                             <span className="text-[9px] font-black text-gray-600 uppercase tracking-widest">{detail.frequencies.map(f => f.time).join(', ')}</span>
-                                          </div>
-                                       </div>
+                      <div key={church} className={`border rounded-[40px] overflow-hidden transition-all duration-300 shadow-2xl ${isExpanded ? 'bg-[#161b22] border-brand/20' : 'bg-[#0b0e14] border-white/5 hover:border-white/10'}`}>
+                         <div onClick={() => toggleChurch(church)} className="flex items-center justify-between p-8 cursor-pointer hover:bg-white/5 transition-colors group">
+                            <div className="flex items-center gap-6 flex-1">
+                               <div className={`w-14 h-14 rounded-[20px] flex items-center justify-center font-black shadow-lg transition-all ${isChurchComplete ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-brand/10 text-brand border border-brand/20'}`}>
+                                  {isChurchComplete ? <CheckCircle2 size={28} /> : <GraduationCap size={24} />}
+                               </div>
+                               <div className="flex-1">
+                                  {editingChurchName === church ? (
+                                    <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
+                                      <input
+                                        autoFocus
+                                        type="text"
+                                        value={tempChurchName}
+                                        onChange={e => setTempChurchName(e.target.value)}
+                                        onKeyDown={e => {
+                                          if (e.key === 'Enter') handleRenameChurch(church);
+                                          if (e.key === 'Escape') setEditingChurchName(null);
+                                        }}
+                                        className="bg-[#0b0e14] border border-brand/30 rounded-xl px-4 py-2 text-white font-black uppercase text-xl outline-none"
+                                      />
+                                      <button onClick={() => handleRenameChurch(church)} className="p-2 bg-emerald-500 text-white rounded-lg hover:scale-110 transition-all"><Check size={16} /></button>
+                                      <button onClick={() => setEditingChurchName(null)} className="p-2 bg-white/5 text-gray-500 rounded-lg hover:scale-110 transition-all"><X size={16} /></button>
                                     </div>
-                                    <button
-                                      onClick={(e) => { e.stopPropagation(); setActiveDetailId(detail.id); }}
-                                      className={`px-8 py-3.5 text-[11px] font-black uppercase tracking-widest rounded-2xl transition-all shadow-xl flex items-center gap-2 ${isComplete ? 'bg-white/5 text-gray-500' : 'bg-brand text-white hover:scale-105 active:scale-95 shadow-brand/20'}`}
-                                    >
-                                       <Eye size={16} /> VER
-                                    </button>
                                  </div>
                                );
                              })}
