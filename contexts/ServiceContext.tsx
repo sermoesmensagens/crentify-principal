@@ -11,6 +11,8 @@ interface ServiceContextType {
     setDetails: React.Dispatch<React.SetStateAction<ServiceDetail[]>>;
     categories: ServiceCategory[];
     setCategories: React.Dispatch<React.SetStateAction<ServiceCategory[]>>;
+    toggleServiceCompletion: (detailId: string, date: string) => void;
+    updateServiceNotes: (detailId: string, notes: string) => void;
 }
 
 const ServiceContext = createContext<ServiceContextType | undefined>(undefined);
@@ -75,8 +77,36 @@ export const ServiceProvider: React.FC<{ children: React.ReactNode }> = ({ child
         localStorage.setItem('crentify_service_categories', JSON.stringify(categories));
     }, [events, details, categories]);
 
+    const toggleServiceCompletion = (detailId: string, date: string) => {
+        setDetails(prev => prev.map(d => {
+            if (d.id === detailId) {
+                const completions = { ...(d.completions || {}) };
+                completions[date] = !completions[date];
+                return { ...d, completions };
+            }
+            return d;
+        }));
+        localStorage.setItem('crentify_service_details_last_modified_at', new Date().toISOString());
+    };
+
+    const updateServiceNotes = (detailId: string, notes: string) => {
+        setDetails(prev => prev.map(d => {
+            if (d.id === detailId) {
+                return { ...d, notes };
+            }
+            return d;
+        }));
+        localStorage.setItem('crentify_service_details_last_modified_at', new Date().toISOString());
+    };
+
     return (
-        <ServiceContext.Provider value={{ events, setEvents, details, setDetails, categories, setCategories }}>
+        <ServiceContext.Provider value={{ 
+            events, setEvents, 
+            details, setDetails, 
+            categories, setCategories,
+            toggleServiceCompletion,
+            updateServiceNotes
+        }}>
             {children}
         </ServiceContext.Provider>
     );

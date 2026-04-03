@@ -1,20 +1,20 @@
 import React, { useState, useRef } from 'react';
-import { 
-  Users, Plus, Trash2, Calendar, Clock, Edit2, X, Link as LinkIcon, 
-  MapPin, Youtube, MessageSquare, ChevronDown, ChevronRight, 
+import {
+  Users, Plus, Trash2, Calendar, Clock, Edit2, X, Link as LinkIcon,
+  MapPin, Youtube, MessageSquare, ChevronDown, ChevronRight,
   Search, Info, Check, Image as ImageIcon
 } from 'lucide-react';
 import { useServices } from '../contexts/ServiceContext';
-import { 
+import {
   ServiceEvent, ServiceDetail, ServiceFrequency, FrequencyType,
-  ServiceCategory 
+  ServiceCategory
 } from '../types';
 
 const Cultos: React.FC = () => {
-  const { 
-    events, setEvents, 
+  const {
+    events, setEvents,
     details: serviceDetails, setDetails: setServiceDetails,
-    categories, setCategories 
+    categories, setCategories
   } = useServices();
 
   const [activeTab, setActiveTab] = useState<'list' | 'add' | 'config'>('list');
@@ -98,11 +98,11 @@ const Cultos: React.FC = () => {
   const handleCreateEvent = () => {
     if (!newEvent.title) return;
     const event: ServiceEvent = {
-        id: Date.now().toString(),
-        title: newEvent.title,
-        categoryId: newEvent.categoryId || '1',
-        thumbnailUrl: newEvent.thumbnailUrl,
-        createdAt: new Date().toISOString()
+      id: Date.now().toString(),
+      title: newEvent.title,
+      categoryId: newEvent.categoryId || '1',
+      thumbnailUrl: newEvent.thumbnailUrl,
+      createdAt: new Date().toISOString()
     };
     setEvents([...events, event]);
     setNewEvent({ title: '', categoryId: categories[0]?.id || '1', thumbnailUrl: '' });
@@ -113,16 +113,16 @@ const Cultos: React.FC = () => {
   const handleCreateDetail = () => {
     if (!newDetail.eventId) return;
     const detail: ServiceDetail = {
-        id: Date.now().toString(),
-        eventId: newDetail.eventId,
-        title: newDetail.title,
-        churchNameOrId: newDetail.churchNameOrId,
-        frequencies: newDetail.frequencies || [],
-        youtubeUrl: newDetail.youtubeUrl,
-        externalLink: newDetail.externalLink,
-        address: newDetail.address,
-        notes: newDetail.notes,
-        createdAt: new Date().toISOString()
+      id: Date.now().toString(),
+      eventId: newDetail.eventId,
+      title: newDetail.title,
+      churchNameOrId: newDetail.churchNameOrId,
+      frequencies: newDetail.frequencies || [],
+      youtubeUrl: newDetail.youtubeUrl,
+      externalLink: newDetail.externalLink,
+      address: newDetail.address,
+      notes: newDetail.notes,
+      createdAt: new Date().toISOString()
     };
     setServiceDetails([...serviceDetails, detail]);
     resetDetailForm();
@@ -131,13 +131,13 @@ const Cultos: React.FC = () => {
 
   const deleteEvent = (id: string) => {
     if (confirm('Deseja excluir este evento e todos os seus detalhes?')) {
-        setEvents(events.filter(e => e.id !== id));
-        setServiceDetails(serviceDetails.filter(d => d.eventId !== id));
-        if (selectedEventId === id) setSelectedEventId(null);
+      setEvents(events.filter(e => e.id !== id));
+      setServiceDetails(serviceDetails.filter(d => d.eventId !== id));
+      if (selectedEventId === id) setSelectedEventId(null);
     }
   };
 
-  const filteredEvents = events.filter(e => 
+  const filteredEvents = events.filter(e =>
     e.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -173,7 +173,7 @@ const Cultos: React.FC = () => {
           {/* Listagem de Cards no estilo Academy */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredEvents.map(event => (
-              <div 
+              <div
                 key={event.id}
                 onClick={() => { setSelectedEventId(event.id); setActiveTab('add'); }}
                 className={`bg-[#161b22] border border-white/5 rounded-[40px] p-8 hover:border-brand/30 transition-all cursor-pointer group relative overflow-hidden`}
@@ -191,14 +191,14 @@ const Cultos: React.FC = () => {
                   <div className="pt-4 border-t border-white/5 flex justify-between items-center text-[10px] font-black text-gray-600 uppercase tracking-widest">
                     <span>{serviceDetails.filter(d => d.eventId === event.id).length} Programações</span>
                     <button onClick={(e) => { e.stopPropagation(); deleteEvent(event.id); }} className="text-gray-800 hover:text-rose-500 transition-colors">
-                        <Trash2 size={16} />
+                      <Trash2 size={16} />
                     </button>
                   </div>
                 </div>
               </div>
             ))}
 
-            <div 
+            <div
               onClick={() => setActiveTab('add')}
               className="border-2 border-dashed border-white/5 rounded-[40px] p-8 flex flex-col items-center justify-center gap-4 text-gray-600 hover:border-brand/30 hover:text-brand transition-all cursor-pointer bg-white/[0.02]"
             >
@@ -211,7 +211,7 @@ const Cultos: React.FC = () => {
 
       {activeTab === 'add' && (
         <div className="space-y-12 animate-in slide-in-from-right duration-500">
-          
+
           {/* --- CRIAÇÃO DE EVENTO PAI --- */}
           <section className="space-y-8 bg-[#161b22] p-10 rounded-[48px] border border-white/5 shadow-2xl">
             <div className="flex items-center gap-6">
@@ -227,18 +227,18 @@ const Cultos: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Título do Evento</label>
-                <input 
-                  type="text" 
-                  placeholder="Ex: Culto Online" 
-                  value={newEvent.title} 
-                  onChange={e => setNewEvent({ ...newEvent, title: e.target.value })} 
-                  className="w-full bg-[#0b0e14] border border-white/5 rounded-[24px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all" 
+                <input
+                  type="text"
+                  placeholder="Ex: Culto Online"
+                  value={newEvent.title}
+                  onChange={e => setNewEvent({ ...newEvent, title: e.target.value })}
+                  className="w-full bg-[#0b0e14] border border-white/5 rounded-[24px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all"
                 />
               </div>
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Categoria</label>
-                <select 
-                  value={newEvent.categoryId} 
+                <select
+                  value={newEvent.categoryId}
                   onChange={e => setNewEvent({ ...newEvent, categoryId: e.target.value })}
                   className="w-full bg-[#0b0e14] border border-white/5 rounded-[24px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all appearance-none"
                 >
@@ -247,7 +247,7 @@ const Cultos: React.FC = () => {
               </div>
             </div>
 
-            <button 
+            <button
               onClick={handleCreateEvent}
               disabled={!newEvent.title}
               className="bg-brand text-white font-black py-4 px-10 rounded-2xl transition-all uppercase text-[10px] tracking-widest shadow-xl shadow-brand/20 hover:scale-105 active:scale-95 disabled:opacity-30"
@@ -275,8 +275,8 @@ const Cultos: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Pertence ao Evento</label>
-                <select 
-                  value={newDetail.eventId} 
+                <select
+                  value={newDetail.eventId}
                   onChange={e => {
                     const id = e.target.value;
                     setNewDetail({ ...newDetail, eventId: id });
@@ -291,23 +291,23 @@ const Cultos: React.FC = () => {
 
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Título/Tema (Opcional)</label>
-                <input 
-                  type="text" 
-                  placeholder="Ex: Culto Dominical" 
-                  value={newDetail.title} 
-                  onChange={e => setNewDetail({ ...newDetail, title: e.target.value })} 
-                  className="w-full bg-[#0b0e14] border border-white/5 rounded-[24px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all" 
+                <input
+                  type="text"
+                  placeholder="Ex: Culto Dominical"
+                  value={newDetail.title}
+                  onChange={e => setNewDetail({ ...newDetail, title: e.target.value })}
+                  className="w-full bg-[#0b0e14] border border-white/5 rounded-[24px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all"
                 />
               </div>
 
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Nome da Igreja / Instituição</label>
-                <input 
-                  type="text" 
-                  placeholder="Ex: Assembleia de Deus" 
-                  value={newDetail.churchNameOrId} 
-                  onChange={e => setNewDetail({ ...newDetail, churchNameOrId: e.target.value })} 
-                  className="w-full bg-[#0b0e14] border border-white/5 rounded-[24px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all" 
+                <input
+                  type="text"
+                  placeholder="Ex: Assembleia de Deus"
+                  value={newDetail.churchNameOrId}
+                  onChange={e => setNewDetail({ ...newDetail, churchNameOrId: e.target.value })}
+                  className="w-full bg-[#0b0e14] border border-white/5 rounded-[24px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all"
                 />
               </div>
             </div>
@@ -364,7 +364,7 @@ const Cultos: React.FC = () => {
 
                   <div className="flex items-center gap-4">
                     <input type="time" value={time} onChange={e => setTime(e.target.value)} className="flex-1 bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-white font-black text-2xl outline-none" />
-                    <button 
+                    <button
                       onClick={handleAddFrequency}
                       className="h-full px-6 bg-brand/20 text-brand border border-brand/20 rounded-2xl font-black text-[10px] uppercase hover:bg-brand hover:text-white transition-all"
                     >
@@ -402,13 +402,13 @@ const Cultos: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
               <div className="space-y-4">
                 <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1 flex items-center gap-2">
-                    <Youtube size={14} className="text-rose-500" /> Link do YouTube / Transmissão
+                  <Youtube size={14} className="text-rose-500" /> Link do YouTube / Transmissão
                 </label>
                 <input type="text" placeholder="https://youtube.com/..." value={newDetail.youtubeUrl} onChange={e => setNewDetail({ ...newDetail, youtubeUrl: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-white text-sm font-medium outline-none" />
               </div>
               <div className="space-y-4">
                 <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1 flex items-center gap-2">
-                    <MapPin size={14} className="text-blue-500" /> Endereço Presencial
+                  <MapPin size={14} className="text-blue-500" /> Endereço Presencial
                 </label>
                 <input type="text" placeholder="Rua Exemplo, 123 - Cidade" value={newDetail.address} onChange={e => setNewDetail({ ...newDetail, address: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-white text-sm font-medium outline-none" />
               </div>
@@ -416,17 +416,17 @@ const Cultos: React.FC = () => {
 
             <div className="space-y-4 relative z-10">
               <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1 flex items-center gap-2">
-                  <MessageSquare size={14} className="text-emerald-500" /> Minhas Reflexões / Anotações
+                <MessageSquare size={14} className="text-emerald-500" /> Minhas Reflexões / Anotações
               </label>
-              <textarea 
-                placeholder="O que você aprendeu com essa mensagem? Anote seus insights..." 
-                value={newDetail.notes} 
+              <textarea
+                placeholder="O que você aprendeu com essa mensagem? Anote seus insights..."
+                value={newDetail.notes}
                 onChange={e => setNewDetail({ ...newDetail, notes: e.target.value })}
                 className="w-full h-40 bg-[#0b0e14] border border-white/5 rounded-[32px] px-8 py-6 text-white text-sm font-medium outline-none focus:ring-2 focus:ring-brand/30 transition-all resize-none italic"
               />
             </div>
 
-            <button 
+            <button
               onClick={handleCreateDetail}
               disabled={!newDetail.eventId || (newDetail.frequencies?.length || 0) === 0}
               className="w-full bg-brand text-white font-black py-6 rounded-[32px] transition-all uppercase tracking-[0.2em] shadow-2xl shadow-brand/30 flex items-center justify-center gap-3 disabled:opacity-30 relative z-10"
@@ -437,35 +437,35 @@ const Cultos: React.FC = () => {
 
           {/* --- LISTAGEM DE DETALHES EXISTENTES --- */}
           {selectedEventId && (
-              <section className="space-y-6">
-                  <div className="flex items-center gap-3 text-brand">
-                      <Info size={16} />
-                      <span className="text-[10px] font-black uppercase tracking-widest">Programações para "{selectedEvent?.title}"</span>
+            <section className="space-y-6">
+              <div className="flex items-center gap-3 text-brand">
+                <Info size={16} />
+                <span className="text-[10px] font-black uppercase tracking-widest">Programações para "{selectedEvent?.title}"</span>
+              </div>
+              <div className="flex flex-col gap-3">
+                {currentEventDetails.map(detail => (
+                  <div key={detail.id} className="bg-[#161b22] border border-white/5 p-6 rounded-[28px] flex justify-between items-center group">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-gray-400 group-hover:text-brand transition-colors">
+                        {detail.youtubeUrl ? <Youtube size={20} /> : <Users size={20} />}
+                      </div>
+                      <div>
+                        <h4 className="font-black text-white text-sm uppercase tracking-tight">{detail.title || 'Sem Título'}</h4>
+                        <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">
+                          {detail.churchNameOrId} • {detail.frequencies.length} horários
+                        </p>
+                      </div>
+                    </div>
+                    <button onClick={() => setServiceDetails(prev => prev.filter(d => d.id !== detail.id))} className="w-10 h-10 rounded-xl bg-white/5 text-gray-700 hover:text-rose-500 hover:bg-rose-500/10 transition-all">
+                      <Trash2 size={16} />
+                    </button>
                   </div>
-                  <div className="flex flex-col gap-3">
-                      {currentEventDetails.map(detail => (
-                          <div key={detail.id} className="bg-[#161b22] border border-white/5 p-6 rounded-[28px] flex justify-between items-center group">
-                               <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-gray-400 group-hover:text-brand transition-colors">
-                                        {detail.youtubeUrl ? <Youtube size={20} /> : <Users size={20} />}
-                                    </div>
-                                    <div>
-                                        <h4 className="font-black text-white text-sm uppercase tracking-tight">{detail.title || 'Sem Título'}</h4>
-                                        <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">
-                                            {detail.churchNameOrId} • {detail.frequencies.length} horários
-                                        </p>
-                                    </div>
-                               </div>
-                               <button onClick={() => setServiceDetails(prev => prev.filter(d => d.id !== detail.id))} className="w-10 h-10 rounded-xl bg-white/5 text-gray-700 hover:text-rose-500 hover:bg-rose-500/10 transition-all">
-                                   <Trash2 size={16} />
-                               </button>
-                          </div>
-                      ))}
-                      {currentEventDetails.length === 0 && (
-                          <div className="py-10 text-center opacity-30 italic text-xs font-black uppercase text-gray-600">Nenhuma programação cadastrada.</div>
-                      )}
-                  </div>
-              </section>
+                ))}
+                {currentEventDetails.length === 0 && (
+                  <div className="py-10 text-center opacity-30 italic text-xs font-black uppercase text-gray-600">Nenhuma programação cadastrada.</div>
+                )}
+              </div>
+            </section>
           )}
 
         </div>
@@ -473,36 +473,36 @@ const Cultos: React.FC = () => {
 
       {activeTab === 'config' && (
         <div className="space-y-12 animate-in slide-in-from-right duration-500">
-           <section className="bg-[#161b22] p-10 rounded-[48px] border border-white/5 shadow-2xl">
-                <h2 className="text-3xl font-black text-white uppercase tracking-tighter mb-8">Gerenciar Categorias</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div className="space-y-4">
-                        <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Nova Categoria</label>
-                        <div className="flex gap-2">
-                             <input type="text" id="new-cat" className="flex-1 bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-white text-sm font-bold outline-none" placeholder="Ex: Eventos Especiais" />
-                             <button onClick={() => {
-                                 const el = document.getElementById('new-cat') as HTMLInputElement;
-                                 if (el.value) {
-                                     setCategories([...categories, { id: Date.now().toString(), name: el.value.toUpperCase() }]);
-                                     el.value = '';
-                                 }
-                             }} className="px-6 bg-brand text-white rounded-2xl font-black text-xs uppercase transition-all hover:scale-105 active:scale-95">Adicionar</button>
-                        </div>
-                    </div>
-                    <div className="space-y-3 max-h-[400px] overflow-y-auto custom-scrollbar pr-2">
-                        {categories.map(cat => (
-                            <div key={cat.id} className="flex items-center justify-between bg-white/[0.03] border border-white/5 p-4 rounded-2xl">
-                                <span className="text-xs font-black text-white uppercase tracking-widest">{cat.name}</span>
-                                {cat.id !== '1' && (
-                                    <button onClick={() => setCategories(categories.filter(c => c.id !== cat.id))} className="text-gray-700 hover:text-rose-500 transition-colors">
-                                        <Trash2 size={16} />
-                                    </button>
-                                )}
-                            </div>
-                        ))}
-                    </div>
+          <section className="bg-[#161b22] p-10 rounded-[48px] border border-white/5 shadow-2xl">
+            <h2 className="text-3xl font-black text-white uppercase tracking-tighter mb-8">Gerenciar Categorias</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-4">
+                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Nova Categoria</label>
+                <div className="flex gap-2">
+                  <input type="text" id="new-cat" className="flex-1 bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-white text-sm font-bold outline-none" placeholder="Ex: Eventos Especiais" />
+                  <button onClick={() => {
+                    const el = document.getElementById('new-cat') as HTMLInputElement;
+                    if (el.value) {
+                      setCategories([...categories, { id: Date.now().toString(), name: el.value.toUpperCase() }]);
+                      el.value = '';
+                    }
+                  }} className="px-6 bg-brand text-white rounded-2xl font-black text-xs uppercase transition-all hover:scale-105 active:scale-95">Adicionar</button>
                 </div>
-           </section>
+              </div>
+              <div className="space-y-3 max-h-[400px] overflow-y-auto custom-scrollbar pr-2">
+                {categories.map(cat => (
+                  <div key={cat.id} className="flex items-center justify-between bg-white/[0.03] border border-white/5 p-4 rounded-2xl">
+                    <span className="text-xs font-black text-white uppercase tracking-widest">{cat.name}</span>
+                    {cat.id !== '1' && (
+                      <button onClick={() => setCategories(categories.filter(c => c.id !== cat.id))} className="text-gray-700 hover:text-rose-500 transition-colors">
+                        <Trash2 size={16} />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
         </div>
       )}
 

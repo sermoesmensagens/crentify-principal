@@ -50,6 +50,7 @@ export interface ServiceDetail {
   externalLink?: string;
   address?: string;
   notes?: string;
+  completions?: Record<string, boolean>;
   createdAt: string;
 }
 
