@@ -646,8 +646,6 @@ const Cultos: React.FC = () => {
                   className="w-full bg-[#0b0e14] border border-white/5 rounded-[24px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all"
                 />
               </div>
-            </div>
-            </div>
 
             {/* --- GESTÃO DE FREQUÊNCIA --- */}
             <div className="bg-black/20 p-8 rounded-[32px] border border-white/5 space-y-6 relative z-10">
