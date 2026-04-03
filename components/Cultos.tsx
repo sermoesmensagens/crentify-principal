@@ -16,7 +16,6 @@ const Cultos: React.FC = () => {
   const {
     events, setEvents,
     details: serviceDetails, setDetails: setServiceDetails,
-    categories, setCategories,
     toggleServiceCompletion,
     updateServiceNotes
   } = useServices();
@@ -113,7 +112,7 @@ const Cultos: React.FC = () => {
       createdAt: new Date().toISOString()
     };
     setEvents([...events, event]);
-    setNewEvent({ title: '', categoryId: '1', thumbnailUrl: '' });
+    setNewEvent({ title: '', thumbnailUrl: '' });
     setSelectedEventId(event.id);
     setNewDetail(prev => ({ ...prev, eventId: event.id }));
     setActiveTab('list');
@@ -263,7 +262,7 @@ const Cultos: React.FC = () => {
                     )}
                     <div className="absolute top-6 left-6">
                       <span className="bg-brand/80 text-white text-[9px] font-black px-4 py-2 rounded-full uppercase tracking-widest backdrop-blur-md shadow-lg">
-                        {categories.find(c => c.id === event.categoryId)?.name || 'SERMÕES'}
+                        ATIVIDADE
                       </span>
                     </div>
                   </div>
@@ -624,7 +623,7 @@ const Cultos: React.FC = () => {
                   <option value="">Selecione um tipo de atividade...</option>
                   {events.map(ev => <option key={ev.id} value={ev.id}>{ev.title}</option>)}
                 </select>
-             </div>
+              </div>
 
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Título/Tema (Opcional)</label>
@@ -647,6 +646,7 @@ const Cultos: React.FC = () => {
                   className="w-full bg-[#0b0e14] border border-white/5 rounded-[24px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all"
                 />
               </div>
+            </div>
             </div>
 
             {/* --- GESTÃO DE FREQUÊNCIA --- */}
