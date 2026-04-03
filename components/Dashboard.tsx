@@ -493,17 +493,11 @@ const Dashboard: React.FC = () => {
                 });
               }
 
-              // 3. Hábitos (Últimos 7 dias)
+              // 3. Atividades (Últimos 7 dias)
               const last7Days = Array.from({length: 7}, (_, i) => {
                 const d = new Date();
                 d.setDate(d.getDate() - i);
                 return d.toISOString().split('T')[0];
-              });
-
-              habits.forEach(h => {
-                last7Days.forEach(d => {
-                  if (h.completions[d]) addToLog(d, 'habit', h.category);
-                });
               });
 
               tasks.forEach(t => {

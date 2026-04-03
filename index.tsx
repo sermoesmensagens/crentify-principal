@@ -7,7 +7,6 @@ import { DataProvider } from './contexts/DataContext';
 import { BibleProvider } from './contexts/BibleContext';
 import { TarefasProvider } from './contexts/TarefasContext';
 import { AcademyProvider } from './contexts/AcademyContext';
-import { HabitsProvider } from './contexts/HabitsContext';
 import { DiaryProvider } from './contexts/DiaryContext';
 import { StudyProvider } from './contexts/StudyContext';
 import { ReadingPlanProvider } from './contexts/ReadingPlanContext';
@@ -31,7 +30,6 @@ root.render(
             <TarefasProvider>
                 <AcademyProvider>
                   <StudyProvider>
-                    <HabitsProvider>
                     <DiaryProvider>
                       <ReadingPlanProvider>
                         <PrayerProvider>
@@ -41,7 +39,6 @@ root.render(
                         </PrayerProvider>
                       </ReadingPlanProvider>
                     </DiaryProvider>
-                    </HabitsProvider>
                   </StudyProvider>
                 </AcademyProvider>
             </TarefasProvider>

@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useStudies } from '../contexts/StudyContext';
 import { useTarefas } from '../contexts/TarefasContext';
-import { useHabits } from '../contexts/HabitsContext';
+import { useServices } from '../contexts/ServiceContext';
 import { Bell, Zap, X, AlertTriangle, CheckCircle } from 'lucide-react';
 import { getLocalDateString } from '../utils';
 
@@ -14,7 +14,7 @@ const NotificationManager: React.FC = () => {
 
     const studyContext = useStudies();
     const tarefasContext = useTarefas();
-    const habitsContext = useHabits();
+    const serviceContext = useServices();
 
     useEffect(() => {
         setMounted(true);
@@ -33,9 +33,10 @@ const NotificationManager: React.FC = () => {
 
                 const s = studyContext?.studies || [];
                 const t = tarefasContext?.tasks || [];
-                const h = habitsContext?.habits || [];
+                const serviceDetails = serviceContext?.details || [];
 
-                [...s, ...t, ...h].forEach((item: any) => {
+                // Standard items (Studies, Tasks)
+                [...s, ...t].forEach((item: any) => {
                     if (item && item.time === timeStr && !notifiedIds.current.has(item.id)) {
                         const isDone = item.completions && item.completions[todayStr];
                         if (!isDone) {
@@ -43,6 +44,26 @@ const NotificationManager: React.FC = () => {
                             notifiedIds.current.add(item.id);
                         }
                     }
+                });
+
+                // Services (Detailed Frequencies)
+                serviceDetails.forEach((detail) => {
+                    detail.frequencies.forEach(f => {
+                        if (f.time === timeStr && !notifiedIds.current.has(`${detail.id}_${f.id}`)) {
+                            const todayNum = new Date().getDay();
+                            let isScheduledToday = false;
+                            
+                            if (f.type === 'weekly') isScheduledToday = f.daysOfWeek?.includes(todayNum) || false;
+                            else if (f.type === 'once') isScheduledToday = f.date === todayStr;
+                            else if (f.type === 'period') isScheduledToday = todayStr >= (f.startDate || '') && todayStr <= (f.endDate || '');
+
+                            if (isScheduledToday) {
+                                const eventTitle = serviceContext?.events.find(e => e.id === detail.eventId)?.title || 'Culto';
+                                sendAlert(`CRENTIFY: Hora do ${eventTitle}!`, `${detail.title || 'Início da programação'}: ${detail.churchNameOrId}`);
+                                notifiedIds.current.add(`${detail.id}_${f.id}`);
+                            }
+                        }
+                    });
                 });
             } catch (err) {}
         };
@@ -68,7 +89,7 @@ const NotificationManager: React.FC = () => {
         const interval = setInterval(checkActivities, 15000);
         checkActivities();
         return () => clearInterval(interval);
-    }, [studyContext, tarefasContext, habitsContext]);
+    }, [studyContext, tarefasContext, serviceContext]);
 
     const handlePermission = async () => {
         if (typeof window !== 'undefined' && 'Notification' in window) {
