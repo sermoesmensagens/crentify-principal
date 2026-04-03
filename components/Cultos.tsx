@@ -386,14 +386,138 @@ const Cultos: React.FC = () => {
                                       <button onClick={() => handleRenameChurch(church)} className="p-2 bg-emerald-500 text-white rounded-lg hover:scale-110 transition-all"><Check size={16} /></button>
                                       <button onClick={() => setEditingChurchName(null)} className="p-2 bg-white/5 text-gray-500 rounded-lg hover:scale-110 transition-all"><X size={16} /></button>
                                     </div>
-                                 </div>
-                               );
-                             })}
-                          </div>
-                        )}
-                     </div>
-                   );
-                });
+                                  ) : (
+                                    <>
+                                       <h3 className={`text-2xl font-black uppercase tracking-tighter transition-colors ${isExpanded ? 'text-white' : 'text-gray-400 group-hover:text-white'}`}>{church}</h3>
+                                       <p className="text-[10px] text-gray-500 uppercase tracking-widest mt-1 font-bold">
+                                          {items.length} Programações cadastradas
+                                       </p>
+                                    </>
+                                  )}
+                               </div>
+                            </div>
+                            
+                            <div className="flex items-center gap-4">
+                               <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 p-1.5 rounded-2xl border border-white/5 gap-1">
+                                  <button
+                                    onClick={(e) => { e.stopPropagation(); setIsQuickAddingDetail(church); if (!isExpanded) toggleChurch(church); }}
+                                    className="p-3 hover:bg-brand/20 hover:text-brand text-gray-600 rounded-xl transition-all"
+                                    title="Adicionar Horário"
+                                  >
+                                    <Plus size={18} />
+                                  </button>
+                                  <button
+                                    onClick={(e) => { e.stopPropagation(); setEditingChurchName(church); setTempChurchName(church); }}
+                                    className="p-3 hover:bg-blue-500/20 hover:text-blue-500 text-gray-600 rounded-xl transition-all"
+                                    title="Editar Nome"
+                                  >
+                                    <Edit2 size={18} />
+                                  </button>
+                                  <button
+                                    onClick={(e) => { e.stopPropagation(); handleDeleteChurch(church); }}
+                                    className="p-3 hover:bg-rose-500/20 hover:text-rose-500 text-gray-600 rounded-xl transition-all"
+                                    title="Excluir Bloco"
+                                  >
+                                    <Trash2 size={18} />
+                                  </button>
+                               </div>
+                               <ChevronDown className={`text-gray-600 transition-transform duration-500 ${isExpanded ? 'rotate-180 text-brand' : ''}`} size={24} />
+                            </div>
+                         </div>
+
+                         {isExpanded && (
+                           <div className="p-8 pt-2 space-y-4 animate-in slide-in-from-top-4 fade-in duration-300">
+                              {items.map(detail => {
+                                const isComplete = detail.completions?.[todayStr];
+                                return (
+                                  <div
+                                    key={detail.id}
+                                    onClick={() => setActiveDetailId(detail.id)}
+                                    className={`flex items-center justify-between p-5 rounded-[28px] transition-all group cursor-pointer ${isComplete ? 'bg-white/5 border border-white/5' : 'bg-[#1c232b] border border-white/5 shadow-lg hover:border-brand/40'}`}
+                                  >
+                                     <div className="flex items-center gap-5 pr-4 flex-1">
+                                        <div
+                                           onClick={(e) => { e.stopPropagation(); toggleServiceCompletion(detail.id, todayStr); }}
+                                           className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all border-2 ${isComplete ? 'bg-emerald-500 border-emerald-500 text-white shadow-lg shadow-emerald-500/20' : 'border-white/10 text-transparent group-hover:border-brand/40 group-hover:text-brand/40'}`}
+                                        >
+                                           <Check size={20} strokeWidth={4} />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                           <h4 className={`text-sm font-black uppercase tracking-tight line-clamp-1 ${isComplete ? 'text-gray-600 line-through' : 'text-white'}`}>{detail.title}</h4>
+                                           <div className="flex items-center gap-2 mt-0.5 opacity-60">
+                                              <Clock size={12} className="text-brand" />
+                                              <span className="text-[10px] font-bold uppercase tracking-widest">{detail.frequencies[0]?.time || '--:--'}</span>
+                                           </div>
+                                        </div>
+                                     </div>
+                                     <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                                        <button
+                                          onClick={(e) => { e.stopPropagation(); if (confirm('Excluir esta programação?')) setServiceDetails(prev => prev.filter(d => d.id !== detail.id)); }}
+                                          className="w-10 h-10 rounded-xl border border-rose-500/20 text-rose-500/40 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center"
+                                        >
+                                          <Trash2 size={16} />
+                                        </button>
+                                        <div className="w-10 h-10 rounded-xl bg-brand/10 text-brand flex items-center justify-center shadow-lg">
+                                           <Eye size={18} />
+                                        </div>
+                                     </div>
+                                  </div>
+                                );
+                              })}
+
+                              {/* Formulário de Adição Rápida */}
+                              {isQuickAddingDetail === church ? (
+                                <div className="p-6 bg-brand/5 border border-brand/20 rounded-[32px] animate-in zoom-in-95 duration-300">
+                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                      <div className="space-y-2">
+                                         <label className="text-[9px] font-black text-brand uppercase tracking-widest ml-1">Título do Momento</label>
+                                         <input
+                                           autoFocus
+                                           type="text"
+                                           placeholder="Ex: Culto da Vitória"
+                                           value={quickDetailTitle}
+                                           onChange={e => setQuickDetailTitle(e.target.value)}
+                                           className="w-full bg-[#0b0e14] border border-white/5 rounded-2xl px-5 py-3 text-white text-xs font-bold outline-none ring-1 ring-white/5 focus:ring-brand/40"
+                                         />
+                                      </div>
+                                      <div className="space-y-2">
+                                         <label className="text-[9px] font-black text-brand uppercase tracking-widest ml-1">Horário</label>
+                                         <div className="flex gap-2">
+                                            <input
+                                              type="time"
+                                              value={quickDetailTime}
+                                              onChange={e => setQuickDetailTime(e.target.value)}
+                                              className="flex-1 bg-[#0b0e14] border border-white/5 rounded-2xl px-5 py-3 text-white text-xl font-black outline-none focus:ring-1 focus:ring-brand/40"
+                                            />
+                                            <button
+                                              onClick={() => handleQuickCreateDetail(church)}
+                                              className="px-6 bg-brand text-white rounded-2xl font-black text-[10px] uppercase shadow-lg shadow-brand/20 hover:scale-105 active:scale-95 transition-all"
+                                            >
+                                              Salvar
+                                            </button>
+                                            <button
+                                              onClick={() => setIsQuickAddingDetail(null)}
+                                              className="p-3 bg-white/5 text-gray-500 rounded-2xl hover:text-white transition-all"
+                                            >
+                                              <X size={20} />
+                                            </button>
+                                         </div>
+                                      </div>
+                                   </div>
+                                </div>
+                              ) : (
+                                <button
+                                  onClick={() => setIsQuickAddingDetail(church)}
+                                  className="w-full py-4 border-2 border-dashed border-white/5 rounded-[28px] text-[10px] font-black text-gray-600 uppercase tracking-widest hover:border-brand/40 hover:text-brand transition-all flex items-center justify-center gap-3 group"
+                                >
+                                   <Plus size={16} className="group-hover:scale-125 transition-transform" /> Adicionar Programação em {church}
+                                </button>
+                              )}
+                           </div>
+                         )}
+                      </div>
+                    );
+                 });
               })()}
               {currentEventDetails.length === 0 && (
                 <div className="text-center py-24 bg-black/20 rounded-[48px] border border-dashed border-white/5 animate-pulse">
