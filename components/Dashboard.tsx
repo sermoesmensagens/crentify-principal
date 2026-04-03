@@ -260,7 +260,7 @@ const Dashboard: React.FC = () => {
                       <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1 opacity-70 truncate max-w-[200px]">{detail.churchNameOrId}</p>
                     </div>
                   </div>
-                  <div className="w-3 h-3 rounded-full bg-brand neon-glow shadow-brand"></div>
+                  <div className={`w-3 h-3 rounded-full ${detail.completions?.[today] ? 'bg-emerald-500 neon-glow shadow-emerald-500' : 'bg-brand neon-glow shadow-brand'}`}></div>
                 </div>
               ))
             )}
