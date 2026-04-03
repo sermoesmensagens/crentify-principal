@@ -12,6 +12,15 @@ import { ReadingPlan, ReadingPlanContent, ReadingPlanCategory, PrayerTheme, Pray
 import { parseReadingPlanWithAi } from '../services/geminiService';
 import { usePrayer } from '../contexts/PrayerContext';
 
+const ReadingPlanIcon = ({ size = 20 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="7" r="4" />
+    <path d="M4 22v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2" />
+    <path d="M10 14h4v8h-4z" />
+    <path d="M12 14v8" />
+  </svg>
+);
+
 const AdminPanel: React.FC = () => {
   const { bibleData, updateBibleData: setBibleData, cloudSyncStatus } = useDataContext();
   const { 
@@ -1189,7 +1198,7 @@ const AdminPanel: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-6">
                     <div className="w-20 h-20 bg-brand/10 text-brand rounded-[28px] flex items-center justify-center border border-brand/20 shadow-xl">
-                      <ImageIcon size={36} />
+                      <ReadingPlanIcon size={36} />
                     </div>
                     <div>
                       <h2 className="text-3xl font-black text-white uppercase tracking-tighter">
