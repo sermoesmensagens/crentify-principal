@@ -183,24 +183,6 @@ const Cultos: React.FC = () => {
     }
   };
 
-  const [quickDetailTitle, setQuickDetailTitle] = useState('');
-  const [quickDetailTime, setQuickDetailTime] = useState('19:00');
-
-  const handleQuickCreateDetail = (churchName: string) => {
-    if (!selectedEventId) return;
-    const detail: ServiceDetail = {
-      id: Date.now().toString(),
-      eventId: selectedEventId,
-      title: quickDetailTitle || 'Momento de Atividade',
-      churchNameOrId: churchName,
-      frequencies: [{ id: Date.now().toString(), type: 'weekly', time: quickDetailTime, daysOfWeek: [0, 1, 2, 3, 4, 5, 6] }],
-      createdAt: new Date().toISOString()
-    };
-    setServiceDetails([...serviceDetails, detail]);
-    setIsQuickAddingDetail(null);
-    setQuickDetailTitle('');
-  };
-
   const getEventProgress = (eventId: string) => {
     const evDetails = serviceDetails.filter(d => d.eventId === eventId);
     if (evDetails.length === 0) return 0;
