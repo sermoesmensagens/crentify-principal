@@ -37,7 +37,13 @@ export const NAV_ITEMS = [
       <path d="M12 2v19" />
     </svg>
   ) },
-  { id: Section.HABITS, label: 'Hábitos', icon: <CalendarCheck size={20} /> },
+  { id: Section.CULTOS, label: 'Cultos', icon: (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2L3 9v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9L12 2z" />
+      <path d="M12 7v8" />
+      <path d="M10 9h4" />
+    </svg>
+  ) },
   { id: Section.MENTOR, label: 'Mentor IA', icon: <MessageSquare size={20} /> },
   { id: Section.DIARY, label: 'Minhas Notas', icon: <BookMarked size={20} /> },
   { id: Section.WORKFLOW, label: 'Tarefas', icon: <Briefcase size={20} /> },
