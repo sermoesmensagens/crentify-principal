@@ -7,7 +7,7 @@ import MentorAI from './components/MentorAI';
 import Diary from './components/Diary';
 import Workflow from './components/Workflow';
 import AdminPanel from './components/AdminPanel';
-import Habits from './components/Habits';
+import Cultos from './components/Cultos';
 import Academy from './components/Academy';
 import Projects from './components/Projects';
 import ProfileModal from './components/ProfileModal';
@@ -81,7 +81,7 @@ const App: React.FC = () => {
       {activeSection === Section.ACADEMY && <Academy />}
       {activeSection === Section.PLANOS && <ReadingPlans setActiveSection={setActiveSection} />}
       {activeSection === Section.PRAYER && <PrayerView />}
-      {activeSection === Section.HABITS && <Habits />}
+      {activeSection === Section.CULTOS && <Cultos />}
       {activeSection === Section.MENTOR && <MentorAI />}
       {activeSection === Section.DIARY && <Diary />}
       {activeSection === Section.WORKFLOW && <Workflow />}
