@@ -190,6 +190,192 @@ const Cultos: React.FC = () => {
     return Math.round((completed / evDetails.length) * 100);
   };
 
+  const renderServiceDetailForm = (isContextual: boolean = false) => (
+    <section className={`space-y-8 bg-[#161b22] ${isContextual ? 'p-8 rounded-[40px] border border-brand/20 my-4' : 'p-10 rounded-[48px] border border-white/5 shadow-2xl animate-in slide-in-from-right duration-500'}`}>
+       {!isContextual && (
+         <div className="flex items-center gap-6">
+            <div className="w-16 h-16 bg-emerald-500/10 text-emerald-500 rounded-2xl flex items-center justify-center border border-emerald-500/20">
+              <Plus size={28} />
+            </div>
+            <div>
+              <h2 className="text-3xl font-black text-white uppercase tracking-tighter">Adicionar Programação</h2>
+              <p className="text-xs text-gray-500 font-bold uppercase tracking-widest mt-1">Vincule um horário e igreja a um tipo de atividade</p>
+            </div>
+         </div>
+       )}
+
+       {!isContextual && (
+         <div className="space-y-4">
+            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Tipo de Atividade</label>
+            <select
+              value={newDetail.eventId}
+              onChange={e => setNewDetail({ ...newDetail, eventId: e.target.value })}
+              className="w-full bg-[#0b0e14] border border-white/5 rounded-[24px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all appearance-none"
+            >
+              <option value="">Selecione um tipo de atividade...</option>
+              {events.map(ev => <option key={ev.id} value={ev.id}>{ev.title}</option>)}
+            </select>
+          </div>
+       )}
+
+        <div className="space-y-2">
+          <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Título/Tema (Opcional)</label>
+          <input
+            type="text"
+            placeholder="Ex: Culto Dominical"
+            value={newDetail.title}
+            onChange={e => setNewDetail({ ...newDetail, title: e.target.value })}
+            className="w-full bg-[#0b0e14] border border-white/5 rounded-[24px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all"
+          />
+        </div>
+
+        {!isContextual && (
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Nome da Igreja / Instituição</label>
+            <input
+              type="text"
+              placeholder="Ex: Assembleia de Deus"
+              value={newDetail.churchNameOrId}
+              onChange={e => setNewDetail({ ...newDetail, churchNameOrId: e.target.value })}
+              className="w-full bg-[#0b0e14] border border-white/5 rounded-[24px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all"
+            />
+          </div>
+        )}
+
+      {/* --- GESTÃO DE FREQUÊNCIA --- */}
+      <div className="bg-black/20 p-8 rounded-[32px] border border-white/5 space-y-6 relative z-10">
+        <h3 className="text-xs font-black text-brand uppercase tracking-widest flex items-center gap-2">
+          <Clock size={16} /> Definir Horários e Frequência
+        </h3>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="space-y-4">
+            <div className="flex gap-2">
+              {[
+                { id: 'weekly', label: 'SEMANAL' },
+                { id: 'once', label: 'DATA ÚNICA' },
+                { id: 'period', label: 'PERÍODO' }
+              ].map(f => (
+                <button
+                  key={f.id}
+                  onClick={() => setFreqType(f.id as any)}
+                  className={`flex-1 py-3 rounded-xl text-[9px] font-black tracking-widest transition-all ${freqType === f.id ? 'bg-brand text-white shadow-lg' : 'bg-white/5 text-gray-600'}`}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+
+            {freqType === 'weekly' && (
+              <div className="flex justify-between p-2 bg-[#0b0e14] rounded-2xl border border-white/5 shadow-inner">
+                {['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].map((d, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setSelectedDays(prev => prev.includes(i) ? prev.filter(x => x !== i) : [...prev, i])}
+                    className={`w-10 h-10 rounded-xl text-[10px] font-black transition-all ${selectedDays.includes(i) ? 'bg-brand text-white shadow-lg' : 'text-gray-700 hover:text-gray-400'}`}
+                  >
+                    {d}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {freqType === 'once' && (
+              <input type="date" value={date} onChange={e => setDate(e.target.value)} className="w-full bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-white font-black text-xs outline-none" />
+            )}
+
+            {freqType === 'period' && (
+              <div className="flex items-center gap-3">
+                <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="flex-1 bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-white font-black text-xs outline-none" />
+                <span className="text-gray-700 text-[10px] font-black uppercase">até</span>
+                <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="flex-1 bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-white font-black text-xs outline-none" />
+              </div>
+            )}
+
+            <div className="flex items-center gap-4">
+              <input type="time" value={time} onChange={e => setTime(e.target.value)} className="flex-1 bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-white font-black text-2xl outline-none" />
+              <button
+                onClick={handleAddFrequency}
+                className="h-full px-6 bg-brand/20 text-brand border border-brand/20 rounded-2xl font-black text-[10px] uppercase hover:bg-brand hover:text-white transition-all"
+              >
+                Adicionar
+              </button>
+            </div>
+          </div>
+
+          <div className="space-y-3 max-h-[200px] overflow-y-auto custom-scrollbar pr-2">
+            {newDetail.frequencies?.map(f => (
+              <div key={f.id} className="flex items-center justify-between bg-white/[0.03] border border-white/5 p-4 rounded-2xl">
+                <div className="flex flex-col">
+                  <span className="text-[9px] font-black text-brand uppercase tracking-widest">
+                    {f.type === 'weekly' ? 'Semanal' : f.type === 'once' ? 'Data Única' : 'Período'}
+                  </span>
+                  <span className="text-xs font-black text-white">
+                    {f.type === 'weekly' ? f.daysOfWeek?.map(d => ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'][d]).join(', ') : f.date || `${f.startDate} - ${f.endDate}`}
+                    {' • '} {f.time}
+                  </span>
+                </div>
+                <button onClick={() => removeFrequency(f.id)} className="text-gray-700 hover:text-rose-500 transition-colors"><X size={16} /></button>
+              </div>
+            ))}
+            {(!newDetail.frequencies || newDetail.frequencies.length === 0) && (
+              <div className="h-full flex flex-col items-center justify-center opacity-20 py-10">
+                <Clock size={32} className="mb-2" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-center">Nenhum horário definido</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* --- ADICIONAIS --- */}
+      <div className={`grid grid-cols-1 ${isContextual ? 'md:grid-cols-1 gap-6' : 'md:grid-cols-2 gap-8'} relative z-10`}>
+        <div className="space-y-4">
+          <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1 flex items-center gap-2">
+            <Youtube size={14} className="text-rose-500" /> Link do YouTube / Transmissão
+          </label>
+          <input type="text" placeholder="https://youtube.com/..." value={newDetail.youtubeUrl} onChange={e => setNewDetail({ ...newDetail, youtubeUrl: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-white text-sm font-medium outline-none" />
+        </div>
+        <div className="space-y-4">
+          <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1 flex items-center gap-2">
+            <MapPin size={14} className="text-blue-500" /> Endereço Presencial
+          </label>
+          <input type="text" placeholder="Rua Exemplo, 123 - Cidade" value={newDetail.address} onChange={e => setNewDetail({ ...newDetail, address: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-white text-sm font-medium outline-none" />
+        </div>
+      </div>
+
+      <div className="space-y-4 relative z-10">
+        <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1 flex items-center gap-2">
+          <MessageSquare size={14} className="text-emerald-500" /> Minhas Reflexões / Anotações
+        </label>
+        <textarea
+          placeholder="O que você aprendeu com essa mensagem? Anote seus insights..."
+          value={newDetail.notes}
+          onChange={e => setNewDetail({ ...newDetail, notes: e.target.value })}
+          className={`w-full ${isContextual ? 'h-32' : 'h-40'} bg-[#0b0e14] border border-white/5 rounded-[32px] px-8 py-6 text-white text-sm font-medium outline-none focus:ring-2 focus:ring-brand/30 transition-all resize-none italic`}
+        />
+      </div>
+
+      <div className="flex gap-4">
+        <button
+          onClick={handleCreateDetail}
+          disabled={!newDetail.eventId || (newDetail.frequencies?.length || 0) === 0}
+          className="flex-1 bg-brand text-white font-black py-6 rounded-[32px] transition-all uppercase tracking-[0.2em] shadow-2xl shadow-brand/30 flex items-center justify-center gap-3 disabled:opacity-30 relative z-10 hover:scale-[1.02] active:scale-95"
+        >
+          <Check size={20} strokeWidth={3} /> {isContextual ? 'Publicar Agora' : 'Publicar Programação'}
+        </button>
+        {isContextual && (
+          <button
+            onClick={() => setIsQuickAddingDetail(null)}
+            className="px-8 bg-white/5 text-gray-500 font-black rounded-[32px] uppercase text-[10px] tracking-widest hover:bg-white/10 hover:text-white transition-all"
+          >
+            Cancelar
+          </button>
+        )}
+      </div>
+    </section>
+  );
+
   return (
     <div className="space-y-10 animate-in fade-in duration-700 pb-24">
       <header className="flex flex-col md:flex-row justify-between items-end gap-4 border-b border-white/5 pb-8">
@@ -341,7 +527,18 @@ const Cultos: React.FC = () => {
                  onClick={() => {
                    const churchName = prompt('Nome da Igreja ou Grupo:');
                    if (churchName) {
-                     handleQuickCreateDetail(churchName);
+                     setIsQuickAddingDetail(churchName);
+                     setNewDetail(prev => ({ 
+                       ...prev, 
+                       eventId: selectedEventId, 
+                       churchNameOrId: churchName,
+                       title: '',
+                       notes: '',
+                       youtubeUrl: '',
+                       address: '',
+                       externalLink: '',
+                       frequencies: []
+                     }));
                      if (!expandedChurches.includes(churchName)) {
                        setExpandedChurches([...expandedChurches, churchName]);
                      }
@@ -471,49 +668,25 @@ const Cultos: React.FC = () => {
                                 );
                               })}
 
-                              {/* Formulário de Adição Rápida */}
+                              {/* Formulário de Adição Contextual */}
                               {isQuickAddingDetail === church ? (
-                                <div className="p-6 bg-brand/5 border border-brand/20 rounded-[32px] animate-in zoom-in-95 duration-300">
-                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                      <div className="space-y-2">
-                                         <label className="text-[9px] font-black text-brand uppercase tracking-widest ml-1">Título do Momento</label>
-                                         <input
-                                           autoFocus
-                                           type="text"
-                                           placeholder="Ex: Culto da Vitória"
-                                           value={quickDetailTitle}
-                                           onChange={e => setQuickDetailTitle(e.target.value)}
-                                           className="w-full bg-[#0b0e14] border border-white/5 rounded-2xl px-5 py-3 text-white text-xs font-bold outline-none ring-1 ring-white/5 focus:ring-brand/40"
-                                         />
-                                      </div>
-                                      <div className="space-y-2">
-                                         <label className="text-[9px] font-black text-brand uppercase tracking-widest ml-1">Horário</label>
-                                         <div className="flex gap-2">
-                                            <input
-                                              type="time"
-                                              value={quickDetailTime}
-                                              onChange={e => setQuickDetailTime(e.target.value)}
-                                              className="flex-1 bg-[#0b0e14] border border-white/5 rounded-2xl px-5 py-3 text-white text-xl font-black outline-none focus:ring-1 focus:ring-brand/40"
-                                            />
-                                            <button
-                                              onClick={() => handleQuickCreateDetail(church)}
-                                              className="px-6 bg-brand text-white rounded-2xl font-black text-[10px] uppercase shadow-lg shadow-brand/20 hover:scale-105 active:scale-95 transition-all"
-                                            >
-                                              Salvar
-                                            </button>
-                                            <button
-                                              onClick={() => setIsQuickAddingDetail(null)}
-                                              className="p-3 bg-white/5 text-gray-500 rounded-2xl hover:text-white transition-all"
-                                            >
-                                              <X size={20} />
-                                            </button>
-                                         </div>
-                                      </div>
-                                   </div>
-                                </div>
+                                renderServiceDetailForm(true)
                               ) : (
                                 <button
-                                  onClick={() => setIsQuickAddingDetail(church)}
+                                  onClick={() => {
+                                    setIsQuickAddingDetail(church);
+                                    setNewDetail(prev => ({ 
+                                      ...prev, 
+                                      eventId: selectedEventId, 
+                                      churchNameOrId: church,
+                                      title: '',
+                                      notes: '',
+                                      youtubeUrl: '',
+                                      address: '',
+                                      externalLink: '',
+                                      frequencies: []
+                                    }));
+                                  }}
                                   className="w-full py-4 border-2 border-dashed border-white/5 rounded-[28px] text-[10px] font-black text-gray-600 uppercase tracking-widest hover:border-brand/40 hover:text-brand transition-all flex items-center justify-center gap-3 group"
                                 >
                                    <Plus size={16} className="group-hover:scale-125 transition-transform" /> Adicionar Programação em {church}
@@ -584,173 +757,7 @@ const Cultos: React.FC = () => {
           </section>
 
           {/* --- ADICIONAR PROGRAMAÇÃO A UMA ATIVIDADE --- */}
-          <section className="space-y-8 bg-[#161b22] p-10 rounded-[48px] border border-white/5 shadow-2xl">
-             <div className="flex items-center gap-6">
-                <div className="w-16 h-16 bg-emerald-500/10 text-emerald-500 rounded-2xl flex items-center justify-center border border-emerald-500/20">
-                  <Plus size={28} />
-                </div>
-                <div>
-                  <h2 className="text-3xl font-black text-white uppercase tracking-tighter">Adicionar Programação</h2>
-                  <p className="text-xs text-gray-500 font-bold uppercase tracking-widest mt-1">Vincule um horário e igreja a um tipo de atividade</p>
-                </div>
-             </div>
-
-             <div className="space-y-4">
-                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Tipo de Atividade</label>
-                <select
-                  value={newDetail.eventId}
-                  onChange={e => setNewDetail({ ...newDetail, eventId: e.target.value })}
-                  className="w-full bg-[#0b0e14] border border-white/5 rounded-[24px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all appearance-none"
-                >
-                  <option value="">Selecione um tipo de atividade...</option>
-                  {events.map(ev => <option key={ev.id} value={ev.id}>{ev.title}</option>)}
-                </select>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Título/Tema (Opcional)</label>
-                <input
-                  type="text"
-                  placeholder="Ex: Culto Dominical"
-                  value={newDetail.title}
-                  onChange={e => setNewDetail({ ...newDetail, title: e.target.value })}
-                  className="w-full bg-[#0b0e14] border border-white/5 rounded-[24px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Nome da Igreja / Instituição</label>
-                <input
-                  type="text"
-                  placeholder="Ex: Assembleia de Deus"
-                  value={newDetail.churchNameOrId}
-                  onChange={e => setNewDetail({ ...newDetail, churchNameOrId: e.target.value })}
-                  className="w-full bg-[#0b0e14] border border-white/5 rounded-[24px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all"
-                />
-              </div>
-
-            {/* --- GESTÃO DE FREQUÊNCIA --- */}
-            <div className="bg-black/20 p-8 rounded-[32px] border border-white/5 space-y-6 relative z-10">
-              <h3 className="text-xs font-black text-brand uppercase tracking-widest flex items-center gap-2">
-                <Clock size={16} /> Definir Horários e Frequência
-              </h3>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="space-y-4">
-                  <div className="flex gap-2">
-                    {[
-                      { id: 'weekly', label: 'SEMANAL' },
-                      { id: 'once', label: 'DATA ÚNICA' },
-                      { id: 'period', label: 'PERÍODO' }
-                    ].map(f => (
-                      <button
-                        key={f.id}
-                        onClick={() => setFreqType(f.id as any)}
-                        className={`flex-1 py-3 rounded-xl text-[9px] font-black tracking-widest transition-all ${freqType === f.id ? 'bg-brand text-white shadow-lg' : 'bg-white/5 text-gray-600'}`}
-                      >
-                        {f.label}
-                      </button>
-                    ))}
-                  </div>
-
-                  {freqType === 'weekly' && (
-                    <div className="flex justify-between p-2 bg-[#0b0e14] rounded-2xl border border-white/5 shadow-inner">
-                      {['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].map((d, i) => (
-                        <button
-                          key={i}
-                          onClick={() => setSelectedDays(prev => prev.includes(i) ? prev.filter(x => x !== i) : [...prev, i])}
-                          className={`w-10 h-10 rounded-xl text-[10px] font-black transition-all ${selectedDays.includes(i) ? 'bg-brand text-white shadow-lg' : 'text-gray-700 hover:text-gray-400'}`}
-                        >
-                          {d}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-
-                  {freqType === 'once' && (
-                    <input type="date" value={date} onChange={e => setDate(e.target.value)} className="w-full bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-white font-black text-xs outline-none" />
-                  )}
-
-                  {freqType === 'period' && (
-                    <div className="flex items-center gap-3">
-                      <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="flex-1 bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-white font-black text-xs outline-none" />
-                      <span className="text-gray-700 text-[10px] font-black uppercase">até</span>
-                      <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="flex-1 bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-white font-black text-xs outline-none" />
-                    </div>
-                  )}
-
-                  <div className="flex items-center gap-4">
-                    <input type="time" value={time} onChange={e => setTime(e.target.value)} className="flex-1 bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-white font-black text-2xl outline-none" />
-                    <button
-                      onClick={handleAddFrequency}
-                      className="h-full px-6 bg-brand/20 text-brand border border-brand/20 rounded-2xl font-black text-[10px] uppercase hover:bg-brand hover:text-white transition-all"
-                    >
-                      Adicionar
-                    </button>
-                  </div>
-                </div>
-
-                <div className="space-y-3 max-h-[200px] overflow-y-auto custom-scrollbar pr-2">
-                  {newDetail.frequencies?.map(f => (
-                    <div key={f.id} className="flex items-center justify-between bg-white/[0.03] border border-white/5 p-4 rounded-2xl">
-                      <div className="flex flex-col">
-                        <span className="text-[9px] font-black text-brand uppercase tracking-widest">
-                          {f.type === 'weekly' ? 'Semanal' : f.type === 'once' ? 'Data Única' : 'Período'}
-                        </span>
-                        <span className="text-xs font-black text-white">
-                          {f.type === 'weekly' ? f.daysOfWeek?.map(d => ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'][d]).join(', ') : f.date || `${f.startDate} - ${f.endDate}`}
-                          {' • '} {f.time}
-                        </span>
-                      </div>
-                      <button onClick={() => removeFrequency(f.id)} className="text-gray-700 hover:text-rose-500 transition-colors"><X size={16} /></button>
-                    </div>
-                  ))}
-                  {(!newDetail.frequencies || newDetail.frequencies.length === 0) && (
-                    <div className="h-full flex flex-col items-center justify-center opacity-20 py-10">
-                      <Clock size={32} className="mb-2" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-center">Nenhum horário definido</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* --- ADICIONAIS --- */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
-              <div className="space-y-4">
-                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1 flex items-center gap-2">
-                  <Youtube size={14} className="text-rose-500" /> Link do YouTube / Transmissão
-                </label>
-                <input type="text" placeholder="https://youtube.com/..." value={newDetail.youtubeUrl} onChange={e => setNewDetail({ ...newDetail, youtubeUrl: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-white text-sm font-medium outline-none" />
-              </div>
-              <div className="space-y-4">
-                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1 flex items-center gap-2">
-                  <MapPin size={14} className="text-blue-500" /> Endereço Presencial
-                </label>
-                <input type="text" placeholder="Rua Exemplo, 123 - Cidade" value={newDetail.address} onChange={e => setNewDetail({ ...newDetail, address: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-white text-sm font-medium outline-none" />
-              </div>
-            </div>
-
-            <div className="space-y-4 relative z-10">
-              <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1 flex items-center gap-2">
-                <MessageSquare size={14} className="text-emerald-500" /> Minhas Reflexões / Anotações
-              </label>
-              <textarea
-                placeholder="O que você aprendeu com essa mensagem? Anote seus insights..."
-                value={newDetail.notes}
-                onChange={e => setNewDetail({ ...newDetail, notes: e.target.value })}
-                className="w-full h-40 bg-[#0b0e14] border border-white/5 rounded-[32px] px-8 py-6 text-white text-sm font-medium outline-none focus:ring-2 focus:ring-brand/30 transition-all resize-none italic"
-              />
-            </div>
-
-            <button
-              onClick={handleCreateDetail}
-              disabled={!newDetail.eventId || (newDetail.frequencies?.length || 0) === 0}
-              className="w-full bg-brand text-white font-black py-6 rounded-[32px] transition-all uppercase tracking-[0.2em] shadow-2xl shadow-brand/30 flex items-center justify-center gap-3 disabled:opacity-30 relative z-10"
-            >
-              <Check size={20} strokeWidth={3} /> PUBLICAR PROGRAMAÇÃO
-            </button>
-          </section>
+          {renderServiceDetailForm(false)}
 
           {/* --- LISTAGEM DE PROGRAMAÇÕES EXISTENTES --- */}
            {selectedEventId && (
