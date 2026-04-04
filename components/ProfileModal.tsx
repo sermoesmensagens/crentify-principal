@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { X, User, Shield, LogOut, Bookmark, Trash2, Edit2, Check } from 'lucide-react';
+import { X, User, Shield, LogOut, Bookmark, Loader2, Edit2, Check } from 'lucide-react';
 import { BibleNote } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -10,20 +10,40 @@ interface ProfileModalProps {
 }
 
 const ProfileModal: React.FC<ProfileModalProps> = ({ onClose, bibleNotes = [] }) => {
-  const { user, signOut } = useAuth();
-  const [name, setName] = useState(user?.user_metadata?.full_name || 'Usuário CRENTIFY');
-  const [email, setEmail] = useState(user?.email || 'contato@crentify.app');
+  const { user, profile, signOut, updatePassword, updateProfile } = useAuth();
+  const [name, setName] = useState('');
   const [activeTab, setActiveTab] = useState<'info' | 'notes'>('info');
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordMessage, setPasswordMessage] = useState<{ text: string, type: 'success' | 'error' } | null>(null);
-  const { updatePassword } = useAuth();
+
+  // Sync name from profile (loaded from Supabase)
+  useEffect(() => {
+    if (profile?.full_name) {
+      setName(profile.full_name);
+    } else {
+      setName(user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Usuário CRENTIFY');
+    }
+  }, [profile, user]);
 
   const handleSignOut = async () => {
     await signOut();
     onClose();
+  };
+
+  const handleSaveName = async () => {
+    setIsSaving(true);
+    const { error } = await updateProfile({ full_name: name });
+    setIsSaving(false);
+    if (!error) {
+      setSaveSuccess(true);
+      setIsEditing(false);
+      setTimeout(() => setSaveSuccess(false), 3000);
+    }
   };
 
   const handleUpdatePassword = async () => {
@@ -49,6 +69,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ onClose, bibleNotes = [] })
       }, 2000);
     }
   };
+
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl animate-in fade-in duration-300">
