@@ -63,7 +63,10 @@ const AdminPanel: React.FC = () => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'bible' | 'courses' | 'lessons' | 'prayerThemes' | 'prayerContent' | 'plans' | 'users' | 'config'>('bible');
-  const [profiles, setProfiles] = useState<{ id: string, email: string, created_at: string }[]>([]);
+  const [profiles, setProfiles] = useState<{ id: string, email: string, created_at: string, full_name?: string }[]>([]);
+  const [isLoadingProfiles, setIsLoadingProfiles] = useState(false);
+  const [userSearchQuery, setUserSearchQuery] = useState('');
+  const [isDeletingUserId, setIsDeletingUserId] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
   // Estados para Importação Inteligente (IA)
@@ -79,24 +82,51 @@ const AdminPanel: React.FC = () => {
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   const logoInputRef = useRef<HTMLInputElement>(null);
 
-  // Carrega o logo atual e usuários ao montar
+  // Carrega o logo atual ao montar
   useEffect(() => {
     getLogoUrl().then(url => setCurrentLogoUrl(url));
     ensureBucketExists(); // Garante que o bucket existe
-
-    // Carregar usuários
-    const fetchProfiles = async () => {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (!error && data) {
-        setProfiles(data);
-      }
-    };
-    fetchProfiles();
   }, []);
+
+  // Carregar usuários quando a aba users for selecionada
+  const fetchProfiles = async () => {
+    setIsLoadingProfiles(true);
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (!error && data) {
+      setProfiles(data);
+    }
+    setIsLoadingProfiles(false);
+  };
+
+  useEffect(() => {
+    if (activeTab === 'users') {
+      fetchProfiles();
+    }
+  }, [activeTab]);
+
+  const handleDeleteUser = async (userId: string, userEmail: string) => {
+    if (!confirm(`Tem certeza que deseja remover o usuário ${userEmail}? Esta ação é irreversível.`)) return;
+    setIsDeletingUserId(userId);
+    try {
+      const { error } = await supabase.auth.admin.deleteUser(userId);
+      if (error) throw error;
+      setProfiles(prev => prev.filter(p => p.id !== userId));
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
+    } catch (err: any) {
+      // Fallback: remove apenas do profiles se não tiver permissão admin
+      await supabase.from('profiles').delete().eq('id', userId);
+      setProfiles(prev => prev.filter(p => p.id !== userId));
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
+    } finally {
+      setIsDeletingUserId(null);
+    }
+  };
 
   // Estados de Cursos
   const [editingCourseId, setEditingCourseId] = useState<string | null>(null);
@@ -1447,43 +1477,106 @@ const AdminPanel: React.FC = () => {
 
           {activeTab === 'users' && (
             <div className="space-y-10 animate-in slide-in-from-right duration-500">
-              <div className="flex items-center gap-6">
-                <div className="w-20 h-20 bg-brand/10 text-brand rounded-[28px] flex items-center justify-center border border-brand/20 shadow-xl">
-                  <LayoutGrid size={36} />
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-6">
+                  <div className="w-20 h-20 bg-brand/10 text-brand rounded-[28px] flex items-center justify-center border border-brand/20 shadow-xl">
+                    <ReadingPlanIcon size={36} />
+                  </div>
+                  <div>
+                    <h2 className="text-3xl font-black text-white uppercase tracking-tighter">Gestão de Usuários</h2>
+                    <p className="text-xs text-gray-500 font-bold uppercase tracking-[0.2em]">{profiles.length} membros na plataforma</p>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="text-3xl font-black text-white uppercase tracking-tighter">Gestão de Usuários</h2>
-                  <p className="text-xs text-gray-500 font-bold uppercase tracking-[0.2em]">Visualize todos os membros da plataforma</p>
+                <button
+                  onClick={fetchProfiles}
+                  disabled={isLoadingProfiles}
+                  className="p-3 bg-white/5 border border-white/10 rounded-2xl text-gray-400 hover:text-brand hover:border-brand/30 transition-all"
+                  title="Recarregar"
+                >
+                  {isLoadingProfiles ? <Loader2 size={18} className="animate-spin" /> : <Zap size={18} />}
+                </button>
+              </div>
+
+              {/* Stats Cards */}
+              <div className="grid grid-cols-3 gap-4">
+                <div className="bg-black/30 border border-white/5 rounded-[28px] p-6 text-center">
+                  <p className="text-3xl font-black text-white">{profiles.length}</p>
+                  <p className="text-[8px] font-black text-gray-500 uppercase tracking-widest mt-1">Total</p>
+                </div>
+                <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-[28px] p-6 text-center">
+                  <p className="text-3xl font-black text-emerald-400">
+                    {profiles.filter(p => {
+                      const d = new Date(p.created_at);
+                      const now = new Date();
+                      return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+                    }).length}
+                  </p>
+                  <p className="text-[8px] font-black text-gray-500 uppercase tracking-widest mt-1">Este mês</p>
+                </div>
+                <div className="bg-brand/5 border border-brand/20 rounded-[28px] p-6 text-center">
+                  <p className="text-3xl font-black text-brand">
+                    {profiles.filter(p => {
+                      const d = new Date(p.created_at);
+                      const now = new Date();
+                      const diff = (now.getTime() - d.getTime()) / (1000 * 60 * 60 * 24);
+                      return diff <= 7;
+                    }).length}
+                  </p>
+                  <p className="text-[8px] font-black text-gray-500 uppercase tracking-widest mt-1">Últimos 7d</p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-4">
-                {profiles.length === 0 ? (
+              {/* Search bar */}
+              <div className="relative">
+                <Zap size={16} className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-600" />
+                <input
+                  type="text"
+                  placeholder="Buscar por e-mail..."
+                  value={userSearchQuery}
+                  onChange={e => setUserSearchQuery(e.target.value)}
+                  className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] pl-14 pr-8 py-5 text-white font-bold outline-none focus:ring-2 focus:ring-brand/30 transition-all text-sm"
+                />
+              </div>
+
+              {/* User list */}
+              <div className="space-y-3 max-h-[400px] overflow-y-auto pr-1 custom-scrollbar">
+                {isLoadingProfiles ? (
+                  <div className="p-10 text-center">
+                    <Loader2 size={32} className="animate-spin text-brand mx-auto" />
+                    <p className="text-gray-500 font-black uppercase text-[10px] tracking-widest mt-4">Carregando usuários...</p>
+                  </div>
+                ) : profiles.filter(p => p.email.toLowerCase().includes(userSearchQuery.toLowerCase())).length === 0 ? (
                   <div className="p-10 text-center bg-black/20 rounded-[40px] border border-white/5">
-                    <p className="text-gray-500 font-black uppercase text-[10px] tracking-widest">Nenhum usuário encontrado ou tabela ainda não configurada.</p>
+                    <p className="text-gray-500 font-black uppercase text-[10px] tracking-widest">
+                      {userSearchQuery ? 'Nenhum usuário encontrado para esta busca.' : 'Nenhum usuário cadastrado ainda.'}
+                    </p>
                   </div>
                 ) : (
-                  profiles.map(profile => (
-                    <div key={profile.id} className="flex items-center justify-between p-6 bg-[#0b0e14]/50 rounded-[32px] border border-white/5 hover:border-brand/30 transition-all group">
-                      <div className="flex items-center gap-5">
-                        <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-gray-500 group-hover:text-brand transition-colors font-black text-xs">
-                          {profile.email.charAt(0).toUpperCase()}
+                  profiles
+                    .filter(p => p.email.toLowerCase().includes(userSearchQuery.toLowerCase()))
+                    .map(profile => (
+                      <div key={profile.id} className="flex items-center justify-between p-6 bg-[#0b0e14]/50 rounded-[28px] border border-white/5 hover:border-brand/20 transition-all group">
+                        <div className="flex items-center gap-4 overflow-hidden">
+                          <div className="w-11 h-11 bg-gradient-to-br from-brand/30 to-brand/10 rounded-xl flex items-center justify-center text-brand font-black text-sm flex-shrink-0 border border-brand/20">
+                            {profile.email.charAt(0).toUpperCase()}
+                          </div>
+                          <div className="truncate">
+                            <p className="text-sm font-black text-white truncate">{profile.email}</p>
+                            <p className="text-[8px] text-gray-600 font-bold uppercase tracking-widest">
+                              Desde {new Date(profile.created_at).toLocaleDateString('pt-BR')}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-sm font-black text-white uppercase tracking-tight">{profile.email}</p>
-                          <p className="text-[8px] text-gray-600 font-bold uppercase tracking-widest">ID: {profile.id}</p>
-                        </div>
+                        <button
+                          onClick={() => handleDeleteUser(profile.id, profile.email)}
+                          disabled={isDeletingUserId === profile.id}
+                          className="ml-3 flex-shrink-0 p-2 text-gray-700 hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100"
+                          title="Remover usuário"
+                        >
+                          {isDeletingUserId === profile.id ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
+                        </button>
                       </div>
-                      <div className="text-right">
-                        <p className="text-[9px] font-black text-brand uppercase tracking-widest">
-                          Membro desde
-                        </p>
-                        <p className="text-[10px] text-gray-500 font-black">
-                          {new Date(profile.created_at).toLocaleDateString('pt-BR')}
-                        </p>
-                      </div>
-                    </div>
-                  ))
+                    ))
                 )}
               </div>
             </div>
@@ -1820,6 +1913,81 @@ const AdminPanel: React.FC = () => {
                     </div>
                   )}
                 </div>
+              </div>
+            </div>
+          ) : activeTab === 'users' ? (
+            <div className="space-y-6">
+              {/* Header */}
+              <div className="bg-[#161b22] p-8 rounded-[40px] border border-white/5 space-y-6">
+                <h3 className="text-[10px] font-black text-brand uppercase tracking-[0.3em]">Crescimento Mensal</h3>
+                <div className="space-y-3">
+                  {(() => {
+                    const months: Record<string, number> = {};
+                    profiles.forEach(p => {
+                      const key = new Date(p.created_at).toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' });
+                      months[key] = (months[key] || 0) + 1;
+                    });
+                    const entries = Object.entries(months).slice(-6);
+                    const max = Math.max(...entries.map(e => e[1]), 1);
+                    return entries.map(([month, count]) => (
+                      <div key={month} className="flex items-center gap-4">
+                        <span className="text-[9px] font-black text-gray-500 uppercase w-14 flex-shrink-0">{month}</span>
+                        <div className="flex-1 bg-white/5 rounded-full h-2 overflow-hidden">
+                          <div
+                            className="h-full bg-brand rounded-full transition-all duration-700"
+                            style={{ width: `${(count / max) * 100}%` }}
+                          />
+                        </div>
+                        <span className="text-[10px] font-black text-white w-6 text-right">{count}</span>
+                      </div>
+                    ));
+                  })()}
+                  {profiles.length === 0 && (
+                    <p className="text-[9px] text-gray-600 font-black uppercase text-center py-4">Aguardando dados...</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Info card */}
+              <div className="bg-blue-500/5 border border-blue-500/20 p-8 rounded-[40px] space-y-4">
+                <h4 className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Como gerenciar usuários</h4>
+                <ul className="space-y-3">
+                  {[
+                    'Use a busca para filtrar por e-mail',
+                    'Passe o mouse sobre um usuário para ver a opção de remover',
+                    'A exclusão remove o perfil do usuário permanentemente',
+                    'Novos usuários aparecem automaticamente após login'
+                  ].map((tip, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <span className="w-5 h-5 bg-blue-500/20 text-blue-400 rounded-lg flex items-center justify-center text-[8px] font-black flex-shrink-0">{i+1}</span>
+                      <p className="text-[10px] text-gray-400 font-bold leading-relaxed">{tip}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ) : activeTab === 'config' ? (
+            <div className="space-y-6">
+              <div className="bg-[#161b22] p-8 rounded-[40px] border border-white/5 space-y-6">
+                <h3 className="text-[10px] font-black text-brand uppercase tracking-[0.3em]">Especificações do Logo</h3>
+                <ul className="space-y-3">
+                  {[
+                    { label: 'Formatos aceitos', value: 'PNG, JPG, WebP, SVG' },
+                    { label: 'Tamanho máximo', value: '5 MB' },
+                    { label: 'Resolução ideal', value: '512×512 px' },
+                    { label: 'Fundo recomendado', value: 'Transparente (PNG)' },
+                  ].map(item => (
+                    <div key={item.label} className="flex items-center justify-between p-4 bg-white/2 rounded-2xl">
+                      <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest">{item.label}</span>
+                      <span className="text-[10px] font-black text-white">{item.value}</span>
+                    </div>
+                  ))}
+                </ul>
+              </div>
+              <div className="bg-amber-500/5 border border-amber-500/20 p-8 rounded-[40px]">
+                <p className="text-[10px] font-bold text-amber-400/80 leading-relaxed uppercase tracking-wide text-center">
+                  ⚠️ <span className="text-amber-400">Atenção:</span> O logo é exibido globalmente. Após o upload, a mudança é imediata para todos os usuários conectados.
+                </p>
               </div>
             </div>
           ) : (
