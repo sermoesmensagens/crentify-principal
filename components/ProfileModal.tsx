@@ -88,7 +88,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ onClose, bibleNotes = [] })
             </div>
             <div className="pb-2">
               <h2 className="text-xl font-black tracking-tighter uppercase neon-text text-white">{name}</h2>
-              <p className="text-gray-400 font-bold uppercase text-[9px] tracking-widest">{email}</p>
+              <p className="text-gray-400 font-bold uppercase text-[9px] tracking-widest">{user?.email || 'contato@crentify.app'}</p>
             </div>
           </div>
         </div>
@@ -111,11 +111,15 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ onClose, bibleNotes = [] })
           </div>
 
           <button
-            onClick={() => setIsEditing(!isEditing)}
+            onClick={() => {
+              if (isEditing) handleSaveName();
+              else setIsEditing(true);
+            }}
+            disabled={isSaving}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${isEditing ? 'bg-emerald-500 text-white' : 'bg-white/5 text-gray-500 hover:text-brand'}`}
           >
-            {isEditing ? <Check size={14} /> : <Edit2 size={14} />}
-            {isEditing ? 'SALVAR' : 'EDITAR'}
+            {isSaving ? <Loader2 size={14} className="animate-spin" /> : isEditing ? <Check size={14} /> : <Edit2 size={14} />}
+            {isSaving ? 'SALVANDO...' : isEditing ? 'SALVAR' : 'EDITAR'}
           </button>
         </div>
 
@@ -143,7 +147,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ onClose, bibleNotes = [] })
                     <input
                       type="email"
                       disabled={true}
-                      value={email}
+                      value={user?.email || ''}
                       className="w-full bg-[#161b22] border border-white/10 rounded-xl px-4 py-3 font-bold text-sm text-gray-500 cursor-not-allowed opacity-70"
                     />
                   </div>
