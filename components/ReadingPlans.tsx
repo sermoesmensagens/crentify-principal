@@ -84,6 +84,17 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
     setIsTimerRunning(false);
   };
 
+  const openPlan = (plan: ReadingPlan) => {
+    setSelectedPlan(plan);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+
+  const closePlan = () => {
+    setSelectedPlan(null);
+    setExpandedWeeks([]);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+
   const toggleWeek = (week: string) => {
     setExpandedWeeks(prev =>
       prev.includes(week) ? prev.filter(w => w !== week) : [...prev, week]
@@ -240,7 +251,7 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
       <div className="flex flex-col pt-24 md:pt-0 animate-in fade-in duration-500 pb-20">
         {/* Header */}
         <div className="bg-brand/5 p-6 rounded-[40px] border border-brand/10 mb-8 flex flex-col md:flex-row gap-6 items-center">
-          <button onClick={() => { setSelectedPlan(null); setExpandedWeeks([]); }}
+          <button onClick={closePlan}
             className="w-12 h-12 bg-[#0b0e14] border border-white/5 rounded-2xl flex items-center justify-center hover:bg-brand/20 hover:text-brand transition-all flex-shrink-0">
             <X size={20} />
           </button>
