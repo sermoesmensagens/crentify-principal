@@ -58,6 +58,9 @@ const ReadingPlans: React.FC<ReadingPlansProps> = ({ setActiveSection }) => {
   const [expandedWeeks, setExpandedWeeks] = useState<string[]>([]);
   
   const [isGenerating, setIsGenerating] = useState(false);
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [quizStep, setQuizStep] = useState(0);
+  const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});
 
   // Embedded Reader states
   const { bibleData } = useDataContext();
