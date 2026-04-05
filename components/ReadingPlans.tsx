@@ -575,8 +575,8 @@ const ReadingPlans: React.FC<ReadingPlansProps> = ({ setActiveSection }) => {
             )}
         </div>
       </div>
-      )}
-    </div>
+      </div>
+    );
   );
 };
 
