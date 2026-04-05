@@ -80,29 +80,27 @@ export const ReadingPlanProvider: React.FC<{ children: React.ReactNode }> = ({ c
     const isAdmin = session?.user?.email && ADMIN_EMAILS.includes(session.user.email.toLowerCase());
 
     const [plans, setPlans] = useState<ReadingPlan[]>(() => {
-        const local = safeLocalStorageGet('crentify_reading_plans', null);
-        if (local && local.length > 0) {
-            // Always ensure mock plans are present with latest data
-            const merged = [...local];
-            for (const mock of INITIAL_MOCK_PLANS) {
-                if (!merged.find(p => p.id === mock.id)) merged.unshift(mock);
+        const local = safeLocalStorageGet('crentify_reading_plans', []);
+        
+        // Always ensure mock plans are present with latest data
+        let merged = [...(local || [])];
+        for (const mock of INITIAL_MOCK_PLANS) {
+            if (!merged.find(p => p.id === mock.id)) {
+                merged.unshift(mock);
             }
-            return merged;
         }
-        return isAdmin ? [] : INITIAL_MOCK_PLANS;
+        return merged;
     });
     const [planContent, setPlanContent] = useState<ReadingPlanContent[]>(() => {
-        const local = safeLocalStorageGet('crentify_reading_plan_content', null);
-        if (local && local.length > 0) {
-            // If the 365-day plan content is missing or incomplete, inject it
-            const hasBible365 = local.filter((c: ReadingPlanContent) => c.planId === 'plan-bible-year').length >= 365;
-            if (!hasBible365) {
-                const otherContent = local.filter((c: ReadingPlanContent) => c.planId !== 'plan-bible-year');
-                return [...BIBLE_365_CONTENT, ...otherContent];
-            }
-            return local;
+        const local = safeLocalStorageGet('crentify_reading_plan_content', []);
+        
+        // If the 365-day plan content is missing or incomplete, inject it
+        const hasBible365 = (local || []).some((c: ReadingPlanContent) => c.planId === 'plan-bible-year');
+        if (!hasBible365) {
+            const otherContent = (local || []).filter((c: ReadingPlanContent) => c.planId !== 'plan-bible-year');
+            return [...BIBLE_365_CONTENT, ...otherContent];
         }
-        return isAdmin ? [] : INITIAL_MOCK_CONTENT;
+        return local || [];
     });
     const [categories, setCategories] = useState<ReadingPlanCategory[]>(() => {
         const local = safeLocalStorageGet('crentify_reading_plan_categories', null);
@@ -122,8 +120,25 @@ export const ReadingPlanProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
             // Admin specific User Data
             if (isAdmin) {
-                if (cloudData.crentify_reading_plans?.value?.length > 0) setPlans(cloudData.crentify_reading_plans.value);
-                if (cloudData.crentify_reading_plan_content?.value?.length > 0) setPlanContent(cloudData.crentify_reading_plan_content.value);
+                if (cloudData.crentify_reading_plans?.value?.length > 0) {
+                    const cloudPlans = cloudData.crentify_reading_plans.value;
+                    // Ensure system plans are present in cloud data too
+                    const mergedPlans = [...cloudPlans];
+                    for (const mock of INITIAL_MOCK_PLANS) {
+                        if (!mergedPlans.find(p => p.id === mock.id)) mergedPlans.unshift(mock);
+                    }
+                    setPlans(mergedPlans);
+                }
+                
+                if (cloudData.crentify_reading_plan_content?.value) {
+                    let cloudContent = cloudData.crentify_reading_plan_content.value;
+                    // Ensure 365 plan is NOT empty in cloud data
+                    const hasBible365 = cloudContent.some((c: ReadingPlanContent) => c.planId === 'plan-bible-year');
+                    if (!hasBible365) {
+                        cloudContent = [...BIBLE_365_CONTENT, ...cloudContent];
+                    }
+                    setPlanContent(cloudContent);
+                }
                 if (cloudData.crentify_reading_plan_categories) setCategories(cloudData.crentify_reading_plan_categories.value);
             }
         }
