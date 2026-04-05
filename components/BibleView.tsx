@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { BibleNote } from '../types';
-import { CheckCircle2, Circle, Share2, ArrowLeft, ArrowRight, BookOpen, X, Edit3, Trash2, Bookmark, Search, Loader2, ListChecks, Check } from 'lucide-react';
+import { CheckCircle2, Circle, Share2, ArrowLeft, ArrowRight, BookOpen, X, Edit3, Trash2, Bookmark, Search, Loader2, ListChecks, Check, StopCircle, Play } from 'lucide-react';
 import { useDataContext } from '../contexts/DataContext';
 import { useBible } from '../contexts/BibleContext';
 
@@ -23,6 +23,8 @@ const BibleView: React.FC = () => {
   const [activeNoteVerse, setActiveNoteVerse] = useState<{ number: number, text: string } | null>(null);
   const [noteInput, setNoteInput] = useState('');
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+  const [timerSeconds, setTimerSeconds] = useState(0);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
   const journalRef = useRef<HTMLDivElement>(null);
   const readerRef = useRef<HTMLDivElement>(null);
 
@@ -32,7 +34,7 @@ const BibleView: React.FC = () => {
     }
   }, [showJournal]);
 
-  // Reset scroll when book or chapter changes
+  // Reset scroll and timer when book or chapter changes
   useEffect(() => {
     // Scroll the reader container itself
     if (readerRef.current) {
@@ -40,12 +42,32 @@ const BibleView: React.FC = () => {
     }
     
     // CRITICAL: Scroll the main app container to the top
-    // Since our layout uses a scrollable <main> element, window.scrollTo(0,0) often doesn't work.
     const mainContainer = document.querySelector('main');
     if (mainContainer) {
       mainContainer.scrollTo({ top: 0, behavior: 'instant' });
     }
+
+    // Timer logic when changing focus
+    setTimerSeconds(0);
+    setIsTimerRunning(true); // Start timing automatically when entering a chapter
   }, [selectedBookName, selectedChapterIndex]);
+
+  // Hook do Timer
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isTimerRunning) {
+      interval = setInterval(() => {
+        setTimerSeconds(s => s + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isTimerRunning]);
+
+  const formatTime = (totalSeconds: number) => {
+    const m = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+    const s = (totalSeconds % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+  };
 
   // Sincronizar seleção inicial caso a bíblia demore a carregar
   useEffect(() => {
@@ -92,17 +114,28 @@ const BibleView: React.FC = () => {
     
     // Update completion dates
     const updatedDates = { ...(progress.completionDates || {}) };
+    const updatedRecords = { ...(progress.records || {}) };
+
     if (!isCompleted) {
       if (!updatedDates[bookName]) updatedDates[bookName] = {};
       updatedDates[bookName][chapterNum] = new Date().toISOString();
-    } else if (updatedDates[bookName]) {
-      delete updatedDates[bookName][chapterNum];
+
+      if (!updatedRecords[bookName]) updatedRecords[bookName] = {};
+      updatedRecords[bookName][chapterNum] = {
+        completed: true,
+        timeSpent: timerSeconds,
+        completedAt: new Date().toISOString()
+      };
+    } else {
+      if (updatedDates[bookName]) delete updatedDates[bookName][chapterNum];
+      if (updatedRecords[bookName]) delete updatedRecords[bookName][chapterNum];
     }
     
     setProgress({ 
       ...progress, 
       completedChapters: { ...progress.completedChapters, [bookName]: updated },
-      completionDates: updatedDates
+      completionDates: updatedDates,
+      records: updatedRecords
     });
   };
 
@@ -343,6 +376,22 @@ const BibleView: React.FC = () => {
                       className="p-3 rounded-lg bg-white/5 text-gray-500 hover:text-brand hover:bg-brand/10 disabled:opacity-10 transition-all border border-transparent hover:border-brand/20 hidden md:flex"
                     >
                       <ArrowRight size={16} />
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-4 bg-[#0b0e14]/50 px-4 py-2 rounded-2xl border border-white/5 shadow-inner">
+                    <div className="flex flex-col items-center">
+                      <p className="text-[7px] font-black text-gray-600 uppercase tracking-widest leading-none mb-1">Tempo de Leitura</p>
+                      <div className={`text-xl font-black tabular-nums tracking-tighter ${isTimerRunning ? 'text-brand' : 'text-gray-600'}`}>
+                        {formatTime(timerSeconds)}
+                      </div>
+                    </div>
+                    <div className="h-8 w-[1px] bg-white/5" />
+                    <button 
+                      onClick={() => setIsTimerRunning(!isTimerRunning)}
+                      className={`p-2 rounded-lg transition-all ${isTimerRunning ? 'text-rose-500 hover:bg-rose-500/10' : 'text-emerald-500 hover:bg-emerald-500/10'}`}
+                    >
+                      {isTimerRunning ? <StopCircle size={18} /> : <Play size={18} fill="currentColor" />}
                     </button>
                   </div>
 
