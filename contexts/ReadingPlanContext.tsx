@@ -81,12 +81,27 @@ export const ReadingPlanProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
     const [plans, setPlans] = useState<ReadingPlan[]>(() => {
         const local = safeLocalStorageGet('crentify_reading_plans', null);
-        if (local) return local;
+        if (local && local.length > 0) {
+            // Always ensure mock plans are present with latest data
+            const merged = [...local];
+            for (const mock of INITIAL_MOCK_PLANS) {
+                if (!merged.find(p => p.id === mock.id)) merged.unshift(mock);
+            }
+            return merged;
+        }
         return isAdmin ? [] : INITIAL_MOCK_PLANS;
     });
     const [planContent, setPlanContent] = useState<ReadingPlanContent[]>(() => {
         const local = safeLocalStorageGet('crentify_reading_plan_content', null);
-        if (local) return local;
+        if (local && local.length > 0) {
+            // If the 365-day plan content is missing or incomplete, inject it
+            const hasBible365 = local.filter((c: ReadingPlanContent) => c.planId === 'plan-bible-year').length >= 365;
+            if (!hasBible365) {
+                const otherContent = local.filter((c: ReadingPlanContent) => c.planId !== 'plan-bible-year');
+                return [...BIBLE_365_CONTENT, ...otherContent];
+            }
+            return local;
+        }
         return isAdmin ? [] : INITIAL_MOCK_CONTENT;
     });
     const [categories, setCategories] = useState<ReadingPlanCategory[]>(() => {
