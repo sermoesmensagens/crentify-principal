@@ -319,6 +319,7 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
                                       </span>
                                     )}
                                   </div>
+                                </div>
                                 <div className="flex items-center gap-3 mt-4 md:mt-0">
                                   <button
                                     onClick={() => handleBibleNavigation(res, selectedPlan.id)}
