@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { AcademyContent, AcademyCategory, AcademyReflection, AcademyProgress, AcademyCourse } from '../types';
 import { Play, FileText, Search, GraduationCap, X, MessageCircle, Zap, Info, Loader2, Sparkles, Send, Lock, EyeOff, CheckCircle2, AlertTriangle, ChevronDown, ChevronUp, Calendar, StopCircle, RefreshCw, Eye } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
@@ -19,12 +19,18 @@ const Academy: React.FC = () => {
   const [activeResourceId, setActiveResourceId] = useState<string | null>(null);
 
   const [reflectionText, setReflectionText] = useState('');
+  const modalScrollRef = useRef<HTMLDivElement>(null);
 
   // Load existing reflection when opening a resource
   useEffect(() => {
     if (activeResourceId) {
       const existingRef = [...reflections].sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime()).find(r => r.contentId === activeResourceId);
       setReflectionText(existingRef ? existingRef.text : '');
+      
+      // Scroll to top when opening a new resource
+      if (modalScrollRef.current) {
+        modalScrollRef.current.scrollTo({ top: 0, behavior: 'auto' });
+      }
     }
   }, [activeResourceId]); // Only when opening the modal
 
@@ -468,28 +474,31 @@ const Academy: React.FC = () => {
             </div>
 
             {/* Conteúdo Rolável da Tarefa */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar p-6 md:p-10 space-y-10">
+            <div 
+              ref={modalScrollRef}
+              className="flex-1 overflow-y-auto custom-scrollbar p-6 md:p-10 space-y-10"
+            >
               
               {/* Cronômetro */}
-              <div className="bg-[#0b0e14]/80 border border-white/5 rounded-[40px] p-8 flex flex-col items-center justify-center text-center shadow-inner relative overflow-hidden">
+              <div className="bg-[#0b0e14]/80 border border-white/5 rounded-[40px] p-6 flex flex-col items-center justify-center text-center shadow-inner relative overflow-hidden">
                 <div className="absolute inset-0 bg-brand/5 blur-3xl rounded-full translate-y-1/2 pointer-events-none opacity-50"></div>
                 
-                <div className={`text-6xl md:text-8xl font-black tracking-tighter tabular-nums leading-none mb-8 ${isTimerRunning ? 'text-brand drop-shadow-[0_0_15px_rgba(var(--brand-rgb),0.5)]' : 'text-gray-400'} transition-all`}>
+                <div className={`text-4xl md:text-5xl font-black tracking-tighter tabular-nums leading-none mb-6 ${isTimerRunning ? 'text-brand drop-shadow-[0_0_15px_rgba(var(--brand-rgb),0.5)]' : 'text-gray-400'} transition-all`}>
                   {formatTime(timerSeconds)}
                 </div>
                 
                 <div className="flex items-center gap-4 relative z-10">
                   {isTimerRunning ? (
-                    <button onClick={() => setIsTimerRunning(false)} className="px-8 py-4 bg-rose-500/10 text-rose-500 border border-rose-500/30 rounded-2xl font-black text-[10px] tracking-[0.2em] uppercase hover:bg-rose-500 hover:text-white transition-all flex items-center gap-2 shadow-lg shadow-rose-500/20">
-                      <StopCircle size={16} fill="currentColor"/> PAUSAR
+                    <button onClick={() => setIsTimerRunning(false)} className="px-6 py-3 bg-rose-500/10 text-rose-500 border border-rose-500/30 rounded-2xl font-black text-[9px] tracking-[0.2em] uppercase hover:bg-rose-500 hover:text-white transition-all flex items-center gap-2 shadow-lg shadow-rose-500/20">
+                      <StopCircle size={14} fill="currentColor"/> PAUSAR
                     </button>
                   ) : (
-                    <button onClick={() => setIsTimerRunning(true)} className="px-8 py-4 bg-brand text-white shadow-[0_0_20px_rgba(var(--brand-rgb),0.4)] rounded-2xl font-black text-[10px] tracking-[0.2em] uppercase hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
-                      <Play size={16} fill="currentColor" /> {timerSeconds > 0 ? 'RETOMAR TEMPO' : 'INICIAR TEMPO'}
+                    <button onClick={() => setIsTimerRunning(true)} className="px-6 py-3 bg-brand text-white shadow-[0_0_20px_rgba(var(--brand-rgb),0.4)] rounded-2xl font-black text-[9px] tracking-[0.2em] uppercase hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
+                      <Play size={14} fill="currentColor" /> {timerSeconds > 0 ? 'RETOMAR' : 'INICIAR TEMPO'}
                     </button>
                   )}
-                  <button onClick={() => { setIsTimerRunning(false); setTimerSeconds(0); }} className="w-14 h-14 bg-white/5 text-gray-500 rounded-2xl flex items-center justify-center hover:text-white hover:bg-white/10 transition-colors border border-white/5 group" title="Zerar Cronômetro">
-                    <RefreshCw size={20} className="group-hover:-rotate-180 transition-transform duration-500" />
+                  <button onClick={() => { setIsTimerRunning(false); setTimerSeconds(0); }} className="w-12 h-12 bg-white/5 text-gray-500 rounded-2xl flex items-center justify-center hover:text-white hover:bg-white/10 transition-colors border border-white/5 group" title="Zerar Cronômetro">
+                    <RefreshCw size={18} className="group-hover:-rotate-180 transition-transform duration-500" />
                   </button>
                 </div>
               </div>
@@ -551,7 +560,6 @@ const Academy: React.FC = () => {
                 <div className="relative group">
                   <div className="absolute -inset-1 bg-gradient-to-b from-brand/20 to-transparent rounded-[32px] blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
                   <textarea
-                    autoFocus
                     value={reflectionText}
                     onChange={e => setReflectionText(e.target.value)}
                     placeholder="Escreva aqui tudo o que chamou sua atenção, anote suas respostas das tarefas ou insights do dia..."
