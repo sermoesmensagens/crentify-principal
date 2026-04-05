@@ -84,15 +84,21 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
     setIsTimerRunning(false);
   };
 
+  const scrollToTop = () => {
+    const el = document.getElementById('main-scroll');
+    if (el) el.scrollTop = 0;
+  };
+
   const openPlan = (plan: ReadingPlan) => {
     setSelectedPlan(plan);
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    setExpandedWeeks([]);
+    setTimeout(scrollToTop, 0);
   };
 
   const closePlan = () => {
     setSelectedPlan(null);
     setExpandedWeeks([]);
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    setTimeout(scrollToTop, 0);
   };
 
   const toggleWeek = (week: string) => {
