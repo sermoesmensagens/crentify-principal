@@ -259,9 +259,16 @@ export interface BibleData {
   }[];
 }
 
+export interface BibleProgressRecord {
+  completed: boolean;
+  timeSpent?: number; // Time in seconds
+  completedAt?: string; // ISO date string
+}
+
 export interface BibleProgress {
   completedChapters: Record<string, number[]>;
   completionDates?: Record<string, Record<number, string>>; // bookName -> chapterNumber -> ISO date string
+  records?: Record<string, Record<number, BibleProgressRecord>>; // bookName -> chapterNumber -> record
 }
 
 export interface FinancialTransaction {
