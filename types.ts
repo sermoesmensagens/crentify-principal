@@ -466,6 +466,7 @@ export interface ReadingPlanContent {
 
 export interface ReadingPlanProgress {
   completedResources: string[];
+  timeSpent?: Record<string, number>; // resourceId -> seconds
 }
 
 export interface PrayerCategory {

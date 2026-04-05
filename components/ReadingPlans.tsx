@@ -98,13 +98,20 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
     return Math.round((done / total) * 100);
   };
 
-  const toggleResourceCompletion = (planId: string, resourceId: string) => {
+  const toggleResourceCompletion = (planId: string, resourceId: string, timeInSeconds?: number) => {
     const curr = progress[planId] || { completedResources: [] };
     const isDone = curr.completedResources.includes(resourceId);
     const updated = isDone
       ? curr.completedResources.filter(id => id !== resourceId)
       : [...curr.completedResources, resourceId];
-    setProgress({ ...progress, [planId]: { ...curr, completedResources: updated } });
+
+    // Save time spent if completing (not un-completing)
+    const updatedTimeSpent = { ...(curr.timeSpent || {}) };
+    if (!isDone && timeInSeconds && timeInSeconds > 0) {
+      updatedTimeSpent[resourceId] = timeInSeconds;
+    }
+
+    setProgress({ ...progress, [planId]: { ...curr, completedResources: updated, timeSpent: updatedTimeSpent } });
   };
 
   // ─── QUIZ VIEW ───────────────────────────────────────────────────────────────
@@ -291,6 +298,10 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
                         <div className="space-y-3">
                           {day.resources.map(res => {
                             const isDone = (progress[selectedPlan.id]?.completedResources || []).includes(res.id);
+                            const savedTime = progress[selectedPlan.id]?.timeSpent?.[res.id];
+                            const fmtSaved = savedTime
+                              ? `${Math.floor(savedTime / 60).toString().padStart(2,'0')}:${(savedTime % 60).toString().padStart(2,'0')}`
+                              : null;
                             return (
                               <div key={res.id} className={`flex flex-col md:flex-row md:items-center justify-between p-4 rounded-2xl border transition-all ${isDone ? 'bg-white/5 border-emerald-500/10' : 'bg-[#161b22] border-white/5 hover:border-brand/30'}`}>
                                 <div className="flex items-center gap-4 flex-1">
@@ -298,10 +309,16 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
                                     className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all ${isDone ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-gray-700 hover:border-brand'}`}>
                                     {isDone && <CheckCircle2 size={14} strokeWidth={4} />}
                                   </button>
-                                  <span className={`text-sm font-black uppercase tracking-tight ${isDone ? 'text-gray-600 line-through' : 'text-gray-200'}`}>
-                                    {res.title}
-                                  </span>
-                                </div>
+                                  <div className="flex flex-col">
+                                    <span className={`text-sm font-black uppercase tracking-tight ${isDone ? 'text-gray-600 line-through' : 'text-gray-200'}`}>
+                                      {res.title}
+                                    </span>
+                                    {isDone && fmtSaved && (
+                                      <span className="flex items-center gap-1 text-[9px] font-black text-emerald-500 uppercase tracking-widest mt-1">
+                                        <Clock size={10} /> {fmtSaved} lidos
+                                      </span>
+                                    )}
+                                  </div>
                                 <div className="flex items-center gap-3 mt-4 md:mt-0">
                                   <button
                                     onClick={() => handleBibleNavigation(res, selectedPlan.id)}
@@ -401,7 +418,7 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
                 </div>
                 <button
                   onClick={() => {
-                    toggleResourceCompletion(readingResource.planId, readingResource.resource.id);
+                    toggleResourceCompletion(readingResource.planId, readingResource.resource.id, timerSeconds);
                     closeReader();
                   }}
                   className="w-full md:w-auto px-10 py-4 bg-brand text-white rounded-3xl font-black uppercase tracking-widest text-xs hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 shadow-lg shadow-brand/20"
