@@ -47,9 +47,20 @@ const BibleView: React.FC = () => {
       mainContainer.scrollTo({ top: 0, behavior: 'instant' });
     }
 
-    // Timer logic when changing focus
-    setTimerSeconds(0);
-    setIsTimerRunning(true); // Start timing automatically when entering a chapter
+    // Timer logic when changing chapter focus
+    if (selectedBookName) {
+      const chapterNum = selectedChapterIndex + 1;
+      const isCompleted = (progress.completedChapters[selectedBookName] || []).includes(chapterNum);
+      const record = progress.records?.[selectedBookName]?.[chapterNum];
+
+      if (isCompleted && record) {
+        setTimerSeconds(record.timeSpent || 0);
+        setIsTimerRunning(false);
+      } else {
+        setTimerSeconds(0);
+        setIsTimerRunning(true);
+      }
+    }
   }, [selectedBookName, selectedChapterIndex]);
 
   // Hook do Timer
@@ -126,6 +137,9 @@ const BibleView: React.FC = () => {
         timeSpent: timerSeconds,
         completedAt: new Date().toISOString()
       };
+      
+      // Stop timer when clicking "Concluir" (mark as read)
+      setIsTimerRunning(false);
     } else {
       if (updatedDates[bookName]) delete updatedDates[bookName][chapterNum];
       if (updatedRecords[bookName]) delete updatedRecords[bookName][chapterNum];
