@@ -499,7 +499,7 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
             const pp = getPlanProgress(plan.id);
             const done = pp === 100;
             return (
-              <div key={plan.id} onClick={() => setSelectedPlan(plan)}
+              <div key={plan.id} onClick={() => openPlan(plan)}
                 className="bg-[#0b0e14] border border-white/5 rounded-[40px] p-6 hover:border-brand/40 hover:bg-brand/5 transition-all cursor-pointer group">
                 <div className="aspect-[16/10] bg-[#161b22] rounded-[32px] mb-6 overflow-hidden relative border border-white/5">
                   {plan.thumbnailUrl
