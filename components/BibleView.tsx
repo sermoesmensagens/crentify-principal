@@ -311,28 +311,47 @@ const BibleView: React.FC = () => {
             {selectedBook ? (
               <>
                 <div className="p-6 border-b border-white/5 flex flex-col md:flex-row items-start md:items-center justify-between bg-black/20 backdrop-blur-xl z-20 gap-4">
-                  <div className="flex items-center gap-6 w-full md:w-auto">
-                    <h2 className="text-xl md:text-2xl font-black text-white uppercase tracking-tighter truncate">{selectedBook.name}</h2>
+                  <div className="flex items-center gap-4 w-full md:w-auto">
+                    <h2 className="text-xl md:text-2xl font-black text-white uppercase tracking-tighter truncate md:max-w-[150px]">{selectedBook.name}</h2>
+                    
+                    {/* Botão Anterior Discreto */}
+                    <button 
+                      disabled={selectedChapterIndex === 0}
+                      onClick={() => setSelectedChapterIndex(prev => prev - 1)}
+                      className="p-3 rounded-lg bg-white/5 text-gray-500 hover:text-brand hover:bg-brand/10 disabled:opacity-10 transition-all border border-transparent hover:border-brand/20 hidden md:flex"
+                    >
+                      <ArrowLeft size={16} />
+                    </button>
+
                     <div className="relative flex-1 md:flex-none">
                       <select
                         value={selectedChapterIndex}
                         onChange={(e) => setSelectedChapterIndex(Number(e.target.value))}
-                        className="w-full bg-[#0b0e14] border border-white/10 rounded-xl px-6 py-3 text-[10px] font-black text-white outline-none focus:ring-4 focus:ring-brand/20 appearance-none cursor-pointer pr-12"
+                        className="w-full bg-[#0b0e14] border border-white/10 rounded-xl px-4 md:px-6 py-3 text-[10px] font-black text-white outline-none focus:ring-4 focus:ring-brand/20 appearance-none cursor-pointer pr-10 md:pr-12"
                       >
                         {selectedBook.chapters?.map((_, i) => (
-                          <option key={i} value={i}>Capítulo {i + 1}</option>
+                          <option key={i} value={i}>Cap. {i + 1}</option>
                         ))}
                       </select>
                       <ArrowRight className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-brand rotate-90" size={14} />
                     </div>
+
+                    {/* Botão Próximo Discreto */}
+                    <button 
+                      disabled={selectedChapterIndex === (selectedBook.chapters?.length || 1) - 1}
+                      onClick={() => setSelectedChapterIndex(prev => prev + 1)}
+                      className="p-3 rounded-lg bg-white/5 text-gray-500 hover:text-brand hover:bg-brand/10 disabled:opacity-10 transition-all border border-transparent hover:border-brand/20 hidden md:flex"
+                    >
+                      <ArrowRight size={16} />
+                    </button>
                   </div>
 
                   <div className="flex items-center gap-2 w-full md:w-auto">
                     <button
                       onClick={openSelectionModal}
-                      className="hidden md:flex items-center gap-2 px-4 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest bg-white/5 text-gray-500 border border-white/5 hover:border-brand/30 hover:text-brand transition-all"
+                      className="hidden xl:flex items-center gap-2 px-4 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest bg-white/5 text-gray-500 border border-white/5 hover:border-brand/30 hover:text-brand transition-all"
                     >
-                      <ListChecks size={16} /> MARCAR VÁRIOS
+                      <ListChecks size={16} /> LISTAR CAPÍTULOS
                     </button>
 
                     <button
@@ -350,8 +369,30 @@ const BibleView: React.FC = () => {
 
                 <div 
                   ref={readerRef}
-                  className="p-8 md:p-12 space-y-6 bg-[#0b0e14]/50 reader-container"
+                  className="p-8 md:p-12 lg:px-24 space-y-6 bg-[#0b0e14]/50 reader-container relative"
                 >
+                  {/* Floating Navigation Arrows - Acompanham o scroll */}
+                  <div className="absolute left-6 inset-y-0 hidden md:flex items-center z-10 pointer-events-none">
+                    <button 
+                      disabled={selectedChapterIndex === 0}
+                      onClick={() => setSelectedChapterIndex(prev => prev - 1)}
+                      className="sticky top-[45vh] p-4 rounded-full bg-[#161b22] text-gray-500 hover:text-brand border border-white/10 hover:border-brand/40 transition-all pointer-events-auto disabled:opacity-0 shadow-2xl active:scale-90"
+                      title="Anterior"
+                    >
+                      <ArrowLeft size={24} />
+                    </button>
+                  </div>
+                  
+                  <div className="absolute right-6 inset-y-0 hidden md:flex items-center z-10 pointer-events-none">
+                    <button 
+                      disabled={selectedChapterIndex === (selectedBook.chapters?.length || 1) - 1}
+                      onClick={() => setSelectedChapterIndex(prev => prev + 1)}
+                      className="sticky top-[45vh] p-4 rounded-full bg-[#161b22] text-gray-500 hover:text-brand border border-white/10 hover:border-brand/40 transition-all pointer-events-auto disabled:opacity-0 shadow-2xl active:scale-90"
+                      title="Próximo"
+                    >
+                      <ArrowRight size={24} />
+                    </button>
+                  </div>
                   {selectedChapter?.verses?.map((v) => (
                     <div key={v.number} className="group relative">
                       <div className="flex gap-8">
@@ -376,27 +417,6 @@ const BibleView: React.FC = () => {
 
                 </div>
 
-                {/* Floating Side Nav Arrows (Desktop) */}
-                <div className="absolute inset-y-0 left-0 flex items-center p-4 z-10 pointer-events-none hidden xl:flex">
-                  <button 
-                    disabled={selectedChapterIndex === 0}
-                    onClick={() => setSelectedChapterIndex(prev => prev - 1)}
-                    className="p-4 rounded-xl bg-[#161b22]/40 backdrop-blur-md text-gray-500 hover:text-brand border border-white/10 hover:border-brand/40 transition-all pointer-events-auto disabled:opacity-0"
-                    title="Capítulo Anterior"
-                  >
-                    <ArrowLeft size={24} />
-                  </button>
-                </div>
-                <div className="absolute inset-y-0 right-0 flex items-center p-4 z-10 pointer-events-none hidden xl:flex">
-                  <button 
-                    disabled={selectedChapterIndex === (selectedBook.chapters?.length || 1) - 1}
-                    onClick={() => setSelectedChapterIndex(prev => prev + 1)}
-                    className="p-4 rounded-xl bg-[#161b22]/40 backdrop-blur-md text-gray-500 hover:text-brand border border-white/10 hover:border-brand/40 transition-all pointer-events-auto disabled:opacity-0"
-                    title="Próximo Capítulo"
-                  >
-                    <ArrowRight size={24} />
-                  </button>
-                </div>
 
                 <div className="p-6 border-t border-white/5 flex items-center justify-between bg-black/20">
                   <button disabled={selectedChapterIndex === 0} onClick={() => setSelectedChapterIndex(prev => prev - 1)} className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white/5 text-[9px] font-black uppercase tracking-widest text-gray-500 hover:text-brand disabled:opacity-10 transition-all border border-transparent hover:border-brand/20">
