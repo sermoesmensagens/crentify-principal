@@ -6,6 +6,7 @@ import { useDataSync } from '../hooks/useDataSync';
 import { useAuth } from './AuthContext';
 import { ADMIN_EMAILS } from '../constants';
 import { safeLocalStorageGet } from '../utils';
+import { BIBLE_365_CONTENT } from '../data/bible365Plan';
 
 interface ReadingPlanContextType {
     plans: ReadingPlan[];
@@ -24,11 +25,12 @@ const INITIAL_MOCK_PLANS: ReadingPlan[] = [
     {
         id: "plan-bible-year",
         title: "Bíblia em 365 Dias",
-        description: "Uma jornada completa por toda a Escritura em um ano, do Gênesis ao Apocalipse.",
+        description: "Uma jornada completa por toda a Escritura em um ano, do Gênesis ao Apocalipse. 1.189 capítulos divididos em 365 dias de comunhão com Deus.",
         durationDays: 365,
         categoryId: "1",
         isAiGenerated: false,
         visibility: "público",
+        thumbnailUrl: "https://images.unsplash.com/photo-1504052434569-70ad5836ab65?q=80&w=2070&auto=format&fit=crop",
         createdAt: new Date().toISOString()
     },
     {
@@ -39,11 +41,15 @@ const INITIAL_MOCK_PLANS: ReadingPlan[] = [
         categoryId: "2",
         isAiGenerated: true,
         visibility: "público",
+        thumbnailUrl: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=2099&auto=format&fit=crop",
         createdAt: new Date().toISOString()
     }
 ];
 
 const INITIAL_MOCK_CONTENT: ReadingPlanContent[] = [
+    // ── Bíblia em 365 Dias (gerado automaticamente) ────────────────────────────
+    ...BIBLE_365_CONTENT,
+    // ── Vencendo a Ansiedade ────────────────────────────────────────────────────
     {
         id: "c1",
         planId: "plan-vencendo-ansiedade",
