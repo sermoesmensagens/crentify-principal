@@ -113,6 +113,30 @@ export const ReadingPlanProvider: React.FC<{ children: React.ReactNode }> = ({ c
     });
     const [progress, setProgress] = useState<Record<string, ReadingPlanProgress>>(() => safeLocalStorageGet('crentify_reading_plan_progress', {}));
 
+    // Helper to ensure system plans and content are always present
+    const ensureSystemData = (currentPlans: ReadingPlan[], currentContent: ReadingPlanContent[]) => {
+        let updatedPlans = [...currentPlans];
+        let plansModified = false;
+        for (const mock of INITIAL_MOCK_PLANS) {
+            if (!updatedPlans.find(p => p.id === mock.id)) {
+                updatedPlans.unshift(mock);
+                plansModified = true;
+            }
+        }
+
+        let updatedContent = [...currentContent];
+        let contentModified = false;
+        // Check for Bible 365 content specifically
+        const hasBible365 = updatedContent.some((c: ReadingPlanContent) => c.planId === 'plan-bible-year');
+        if (!hasBible365) {
+            updatedContent = [...BIBLE_365_CONTENT, ...updatedContent];
+            contentModified = true;
+        }
+
+        if (plansModified) setPlans(updatedPlans);
+        if (contentModified) setPlanContent(updatedContent);
+    };
+
     // Sync from Cloud (User Progress)
     useEffect(() => {
         if (isDataLoaded) {
@@ -120,9 +144,8 @@ export const ReadingPlanProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
             // Admin specific User Data
             if (isAdmin) {
-                if (cloudData.crentify_reading_plans?.value?.length > 0) {
+                if (cloudData.crentify_reading_plans?.value) {
                     const cloudPlans = cloudData.crentify_reading_plans.value;
-                    // Ensure system plans are present in cloud data too
                     const mergedPlans = [...cloudPlans];
                     for (const mock of INITIAL_MOCK_PLANS) {
                         if (!mergedPlans.find(p => p.id === mock.id)) mergedPlans.unshift(mock);
@@ -132,7 +155,6 @@ export const ReadingPlanProvider: React.FC<{ children: React.ReactNode }> = ({ c
                 
                 if (cloudData.crentify_reading_plan_content?.value) {
                     let cloudContent = cloudData.crentify_reading_plan_content.value;
-                    // Ensure 365 plan is NOT empty in cloud data
                     const hasBible365 = cloudContent.some((c: ReadingPlanContent) => c.planId === 'plan-bible-year');
                     if (!hasBible365) {
                         cloudContent = [...BIBLE_365_CONTENT, ...cloudContent];
@@ -147,19 +169,34 @@ export const ReadingPlanProvider: React.FC<{ children: React.ReactNode }> = ({ c
     // Sync from Shared Data (Admins and Users)
     useEffect(() => {
         if (!isSharedDataLoading && sharedData) {
-            // Prioritize shared data for content to ensure consistency across accounts
             if (sharedData.crentify_reading_plans?.length > 0) {
-                console.log("☁️ ReadingPlanContext: Carregando planos compartilhados...");
-                setPlans(sharedData.crentify_reading_plans);
+                const sPlans = sharedData.crentify_reading_plans;
+                const mergedPlans = [...sPlans];
+                for (const mock of INITIAL_MOCK_PLANS) {
+                    if (!mergedPlans.find(p => p.id === mock.id)) mergedPlans.unshift(mock);
+                }
+                setPlans(mergedPlans);
+            } else if (!isAdmin) {
+                // If shared plans are empty for a normal user, at least show mocks
+                setPlans(INITIAL_MOCK_PLANS);
             }
-            if (sharedData.crentify_reading_plan_content?.length > 0) {
-                setPlanContent(sharedData.crentify_reading_plan_content);
+
+            if (sharedData.crentify_reading_plan_content) {
+                let sContent = sharedData.crentify_reading_plan_content;
+                const hasBible365 = sContent.some((c: ReadingPlanContent) => c.planId === 'plan-bible-year');
+                if (!hasBible365) {
+                    sContent = [...BIBLE_365_CONTENT, ...sContent];
+                }
+                setPlanContent(sContent);
+            } else if (!isAdmin) {
+                setPlanContent(INITIAL_MOCK_CONTENT);
             }
+
             if (sharedData.crentify_reading_plan_categories) {
                 setCategories(sharedData.crentify_reading_plan_categories);
             }
         }
-    }, [isSharedDataLoading, sharedData]);
+    }, [isSharedDataLoading, sharedData, isAdmin]);
 
     const isAllDataLoaded = isDataLoaded && !isInitialLoading && !isSharedDataLoading;
     
