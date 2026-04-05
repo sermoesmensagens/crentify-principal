@@ -40,26 +40,26 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection, onPr
     <aside className="w-20 md:w-64 bg-[#0b0e14] border-r border-white/5 flex flex-col h-full transition-all duration-300 z-50 overflow-hidden min-h-0">
       {/* Logo Unidade (Conceito 4) */}
       <div className="p-8 flex items-center gap-4">
-        <div className="relative group cursor-pointer">
+        <div className="relative group cursor-pointer shrink-0">
           <div className="absolute -inset-2 bg-brand/30 rounded-full blur-xl group-hover:bg-brand/50 transition-all opacity-50"></div>
           {logoUrl ? (
             <img
               src={logoUrl}
               alt="CRENTIFY Logo"
-              width="40"
-              height="40"
-              className="relative rounded-lg"
+              width="64"
+              height="64"
+              className="relative rounded-xl object-contain drop-shadow-2xl"
               style={{ filter: 'saturate(1.5) brightness(1.15) hue-rotate(-10deg)' }}
               onError={(e) => { e.currentTarget.src = '/logo.png'; }}
             />
           ) : (
-            <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center">
-              <div className="w-4 h-4 border-2 border-brand border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-16 h-16 bg-white/5 rounded-xl flex items-center justify-center">
+              <div className="w-6 h-6 border-2 border-brand border-t-transparent rounded-full animate-spin"></div>
             </div>
           )}
         </div>
         <div className="hidden md:flex flex-col justify-center">
-          <span className="text-2xl font-black text-white tracking-tighter neon-text leading-none mt-1">CRENTIFY</span>
+          <span className="text-3xl font-black text-white tracking-tighter neon-text leading-none mt-1">CRENTIFY</span>
         </div>
       </div>
 
