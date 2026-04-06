@@ -2,7 +2,7 @@ import { supabase } from './supabaseClient';
 
 const BUCKET_NAME = 'app-assets';
 const LOGO_PATH = 'logo/main-logo.png';
-const FALLBACK_LOGO = '/logo-v2.png';
+const FALLBACK_LOGO = '/favicon.png';
 
 /**
  * Busca a URL pública do logo do Supabase Storage

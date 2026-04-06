@@ -50,7 +50,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection, onPr
               height="64"
               className="relative rounded-xl object-contain drop-shadow-2xl"
               style={{ filter: 'saturate(1.5) brightness(1.15) hue-rotate(-10deg)' }}
-              onError={(e) => { e.currentTarget.src = '/logo.png'; }}
+              onError={(e) => { e.currentTarget.src = '/favicon.png'; }}
             />
           ) : (
             <div className="w-16 h-16 bg-white/5 rounded-xl flex items-center justify-center">
