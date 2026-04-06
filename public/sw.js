@@ -1,12 +1,10 @@
 // Service Worker for CRENTIFY PWA
-const CACHE_NAME = 'crentify-v18';
+const CACHE_NAME = 'crentify-v19';
 const urlsToCache = [
     '/',
     '/index.html',
     '/manifest.json',
-    '/icon-192.png',
-    '/icon-512.png',
-    '/logo.png'
+    '/favicon.png'
 ];
 
 // Install event - cache resources

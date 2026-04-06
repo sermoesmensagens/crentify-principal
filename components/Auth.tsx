@@ -91,7 +91,7 @@ const Auth: React.FC = () => {
                                     alt="CRENTIFY Logo"
                                     className="relative w-20 h-20 object-contain rounded-xl"
                                     style={{ filter: 'saturate(1.5) brightness(1.15) hue-rotate(-10deg)' }}
-                                    onError={(e) => { e.currentTarget.src = '/logo.png'; }}
+                                    onError={(e) => { e.currentTarget.src = '/favicon.png'; }}
                                 />
                             ) : (
                                 <div className="w-20 h-20 bg-white/5 rounded-xl flex items-center justify-center">
