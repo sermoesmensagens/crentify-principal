@@ -17,6 +17,7 @@ import Auth from './components/Auth';
 import Layout from './components/Layout';
 import NotificationManager from './components/NotificationManager';
 import { InstallButton } from './components/InstallButton';
+import { UpdateNotification } from './components/UpdateNotification';
 import { useAuth } from './contexts/AuthContext';
 import { Loader2 } from 'lucide-react';
 
@@ -92,6 +93,7 @@ const App: React.FC = () => {
 
     </Layout>
     <NotificationManager />
+    <UpdateNotification />
     </>
   );
 };
