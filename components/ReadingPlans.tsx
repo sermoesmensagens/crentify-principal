@@ -115,20 +115,27 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
     return Math.round((done / total) * 100);
   };
 
-  const toggleResourceCompletion = (planId: string, resourceId: string, timeInSeconds?: number) => {
+  const toggleResourceCompletion = (planId: string, resourceId: string, timeInSeconds?: number, forceCompleted?: boolean) => {
     const curr = progress[planId] || { completedResources: [] };
     const isDone = curr.completedResources.includes(resourceId);
-    const updated = isDone
-      ? curr.completedResources.filter(id => id !== resourceId)
-      : [...curr.completedResources, resourceId];
+    
+    // newState is forced to forceCompleted if provided, otherwise it's a toggle
+    const newState = forceCompleted !== undefined ? forceCompleted : !isDone;
 
-    // Save time spent if completing (not un-completing)
-    const updatedTimeSpent = { ...(curr.timeSpent || {}) };
-    if (!isDone && timeInSeconds && timeInSeconds > 0) {
-      updatedTimeSpent[resourceId] = timeInSeconds;
+    let updatedResources;
+    if (!newState) {
+      updatedResources = curr.completedResources.filter(id => id !== resourceId);
+    } else {
+      updatedResources = isDone ? curr.completedResources : [...curr.completedResources, resourceId];
     }
 
-    setProgress({ ...progress, [planId]: { ...curr, completedResources: updated, timeSpent: updatedTimeSpent } });
+    // Save time spent (cumulative)
+    const updatedTimeSpent = { ...(curr.timeSpent || {}) };
+    if (timeInSeconds && timeInSeconds > 0) {
+      updatedTimeSpent[resourceId] = (updatedTimeSpent[resourceId] || 0) + timeInSeconds;
+    }
+
+    setProgress({ ...progress, [planId]: { ...curr, completedResources: updatedResources, timeSpent: updatedTimeSpent } });
   };
 
   // ─── QUIZ VIEW ───────────────────────────────────────────────────────────────
@@ -436,7 +443,7 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
                 </div>
                 <button
                   onClick={() => {
-                    toggleResourceCompletion(readingResource.planId, readingResource.resource.id, timerSeconds);
+                    toggleResourceCompletion(readingResource.planId, readingResource.resource.id, timerSeconds, true);
                     closeReader();
                   }}
                   className="w-full md:w-auto px-10 py-4 accent-gradient text-white rounded-3xl font-extrabold uppercase tracking-widest text-xs hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 shadow-lg shadow-brand-accent/20 accent-gradient-hover"

@@ -139,13 +139,16 @@ const Academy: React.FC = () => {
     return themes[categoryId] || defaultTheme;
   };
 
-  const toggleResourceCompletion = (resourceId: string, seconds?: number) => {
+  const toggleResourceCompletion = (resourceId: string, seconds?: number, forceCompleted?: boolean) => {
     const isCompleted = progress.completedLessons.includes(resourceId);
+    // newState is forced to forceCompleted if provided, otherwise it's a toggle
+    const newState = forceCompleted !== undefined ? forceCompleted : !isCompleted;
+    
     let updatedList;
-    if (isCompleted) {
+    if (!newState) {
       updatedList = progress.completedLessons.filter(id => id !== resourceId);
     } else {
-      updatedList = [...progress.completedLessons, resourceId];
+      updatedList = isCompleted ? progress.completedLessons : [...progress.completedLessons, resourceId];
     }
     
     // Update detailed records
@@ -153,9 +156,11 @@ const Academy: React.FC = () => {
     const currentRecord = updatedRecords[resourceId] || { completed: false, timeSpent: 0 };
     
     updatedRecords[resourceId] = {
-      completed: !isCompleted,
+      completed: newState,
+      // If we are forcing completion or toggling ON, we add time if provided.
+      // If we are toggling OFF, we don't necessarily want to zero it out, so we keep old time.
       timeSpent: (currentRecord.timeSpent || 0) + (seconds || 0),
-      completedAt: !isCompleted ? new Date().toISOString() : undefined
+      completedAt: newState && !isCompleted ? new Date().toISOString() : (currentRecord.completedAt || undefined)
     };
     
     setProgress({ ...progress, completedLessons: updatedList, records: updatedRecords });
@@ -288,7 +293,7 @@ const Academy: React.FC = () => {
                                         <span className={`text-[12px] md:text-[14px] font-extrabold uppercase tracking-tight line-clamp-2 transition-colors ${isResComplete ? 'text-c-text-muted line-through' : 'text-gray-200 group-hover:text-white'}`}>
                                           {resource.title}
                                         </span>
-                                        {isResComplete && progress.records?.[resource.id]?.timeSpent && (
+                                        {isResComplete && (progress.records?.[resource.id]?.timeSpent || 0) > 0 && (
                                           <span className="text-[9px] font-extrabold text-rose-500 uppercase tracking-widest bg-rose-500/10 px-2 py-0.5 rounded-md border border-rose-500/20 shadow-inner">
                                             {formatTime(progress.records[resource.id].timeSpent || 0)}
                                           </span>
@@ -575,9 +580,9 @@ const Academy: React.FC = () => {
               <button 
                 onClick={() => {
                   if (reflectionText.trim()) handleSaveReflection();
-                  if (!progress.completedLessons.includes(activeResource.id)) {
-                    toggleResourceCompletion(activeResource.id, timerSeconds);
-                  }
+                  // Always call toggleResourceCompletion with forceCompleted=true to ensure time is registered even if already completed
+                  toggleResourceCompletion(activeResource.id, timerSeconds, true);
+                  
                   setActiveResourceId(null);
                   setSelectedLesson(null);
                   setIsTimerRunning(false);
