@@ -439,7 +439,7 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
                     toggleResourceCompletion(readingResource.planId, readingResource.resource.id, timerSeconds);
                     closeReader();
                   }}
-                  className="w-full md:w-auto px-10 py-4 bg-brand text-white rounded-3xl font-extrabold uppercase tracking-widest text-xs hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 shadow-lg shadow-brand/20"
+                  className="w-full md:w-auto px-10 py-4 accent-gradient text-white rounded-3xl font-extrabold uppercase tracking-widest text-xs hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 shadow-lg shadow-brand-accent/20 accent-gradient-hover"
                 >
                   CONCLUIR LEITURA <CheckCircle2 size={18} />
                 </button>
@@ -454,16 +454,16 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
   // ─── GALLERY VIEW ────────────────────────────────────────────────────────────
   return (
     <div className="flex flex-col pt-24 md:pt-0 animate-in fade-in duration-500 pb-20">
-      <div className="bg-gradient-to-br from-brand/20 via-brand/5 to-transparent p-10 md:p-14 rounded-[48px] border border-brand/10 mb-10 relative overflow-hidden group">
+      <div className="bg-gradient-to-br from-brand-accent/10 via-brand/10 to-transparent p-10 md:p-14 rounded-[48px] border border-brand-accent/10 mb-10 relative overflow-hidden group">
         <div className="absolute top-0 right-0 p-12 opacity-10 blur-xl">
-          <Sparkles size={200} className="text-brand" />
+          <Sparkles size={200} className="text-brand-accent" />
         </div>
         <div className="relative z-10 max-w-2xl">
-          <div className="flex items-center gap-3 text-brand font-extrabold uppercase text-[10px] tracking-[0.4em] mb-6 animate-pulse">
+          <div className="flex items-center gap-3 text-brand-accent font-extrabold uppercase text-[10px] tracking-[0.4em] mb-6 animate-pulse">
             <Sparkles size={16} /> NOVIDADE: MENTOR ESPIRITUAL
           </div>
           <h1 className="text-3xl md:text-5xl font-extrabold text-white uppercase tracking-tighter mb-4 leading-none">
-            O que o seu coração <span className="text-brand">busca hoje?</span>
+            O que o seu coração <span className="text-brand-accent">busca hoje?</span>
           </h1>
           <p className="text-c-text-secondary text-lg font-medium mb-8 leading-relaxed">
             Crie uma jornada personalizada de leitura e oração baseada nas suas necessidades.
@@ -526,7 +526,7 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
                       <span className="text-[10px] font-extrabold text-brand">{pp}%</span>
                     </div>
                     <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                      <div className={`h-full transition-all duration-1000 ${done ? 'bg-emerald-500' : 'bg-brand'}`} style={{ width: `${pp}%` }} />
+                      <div className={`h-full transition-all duration-1000 rounded-full ${done ? 'bg-emerald-500' : 'accent-gradient'}`} style={{ width: `${pp}%` }} />
                     </div>
                   </div>
                   <div className="flex items-center justify-between text-[8px] font-extrabold text-c-text-muted uppercase tracking-widest">
