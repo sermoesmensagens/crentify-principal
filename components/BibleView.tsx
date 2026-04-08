@@ -491,7 +491,7 @@ const BibleView: React.FC = () => {
                     className={`group relative overflow-hidden px-6 py-3 rounded-xl font-extrabold uppercase text-[9px] tracking-widest transition-all duration-500 active:scale-95 shadow-lg ${
                       (progress.completedChapters[selectedBook.name] || []).includes(selectedChapterIndex + 1)
                         ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 shadow-emerald-500/10'
-                        : 'bg-brand text-white shadow-lg shadow-brand/30 hover:scale-105'
+                        : 'bg-brand text-white shadow-lg shadow-brand-accent/30 hover:scale-105'
                     }`}
                   >
                     <div className="relative z-10 flex items-center gap-2">
@@ -527,7 +527,7 @@ const BibleView: React.FC = () => {
                     <ArrowLeft size={28} />
                   </button>
 
-                  <div className="px-6 py-2 bg-brand text-white rounded-2xl flex flex-col items-center justify-center min-w-[100px] shadow-lg shadow-brand/20">
+                  <div className="px-6 py-2 accent-gradient text-white rounded-2xl flex flex-col items-center justify-center min-w-[100px] shadow-lg shadow-brand/20">
                     <span className="text-[8px] font-extrabold uppercase tracking-widest opacity-60">Capítulo</span>
                     <span className="text-xl font-extrabold tracking-tighter">{selectedChapterIndex + 1}</span>
                   </div>
@@ -537,7 +537,7 @@ const BibleView: React.FC = () => {
                     onClick={() => {
                       setSelectedChapterIndex(prev => prev + 1);
                     }}
-                    className="w-20 h-20 rounded-2xl bg-brand text-white flex items-center justify-center shadow-2xl shadow-brand/40 active:scale-95 disabled:opacity-20 transition-all border-2 border-white/10"
+                    className="w-20 h-20 rounded-2xl accent-gradient text-white accent-gradient-hover flex items-center justify-center shadow-2xl shadow-brand/40 active:scale-95 disabled:opacity-20 transition-all border-2 border-white/10"
                   >
                     <ArrowRight size={36} />
                   </button>
@@ -637,7 +637,7 @@ const BibleView: React.FC = () => {
                 </button>
                 <button
                   onClick={handleSaveNote}
-                  className="flex-[2] bg-brand text-white py-5 rounded-2xl font-extrabold text-[10px] uppercase tracking-widest shadow-lg shadow-brand/30 hover:scale-[1.02] active:scale-95 transition-all"
+                  className="flex-[2] bg-brand text-white py-5 rounded-2xl font-extrabold text-[10px] uppercase tracking-widest shadow-lg shadow-brand-accent/30 hover:scale-[1.02] active:scale-95 transition-all"
                 >
                   {editingNoteId ? 'ATUALIZAR INSIGHT' : 'SALVAR INSIGHT'}
                 </button>
@@ -782,7 +782,7 @@ const BibleView: React.FC = () => {
               </button>
               <button
                 onClick={handleConfirmMultiMark}
-                className="flex-[2] bg-brand text-white py-5 rounded-2xl font-extrabold text-[10px] uppercase tracking-widest shadow-lg shadow-brand/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+                className="flex-[2] bg-brand text-white py-5 rounded-2xl font-extrabold text-[10px] uppercase tracking-widest shadow-lg shadow-brand-accent/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
               >
                 <Check size={18} /> Confirmar Seleção
               </button>

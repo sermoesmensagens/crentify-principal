@@ -100,7 +100,7 @@ const MentorAI: React.FC = () => {
           <button
             onClick={handleSend}
             disabled={loading || !input.trim()}
-            className="bg-brand text-white w-16 h-16 rounded-2xl flex items-center justify-center hover:scale-105 active:scale-95 disabled:opacity-30 transition-all shadow-xl shadow-brand/30"
+            className="accent-gradient text-white w-16 h-16 rounded-2xl accent-gradient-hover flex items-center justify-center hover:scale-105 active:scale-95 disabled:opacity-30 transition-all shadow-xl shadow-brand/30"
           >
             <Send size={24} strokeWidth={3} />
           </button>

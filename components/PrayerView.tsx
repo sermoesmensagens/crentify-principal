@@ -397,7 +397,7 @@ const PrayerView: React.FC = () => {
                   />
                   <button
                     onClick={addPersonalPrayer}
-                    className="px-10 py-6 bg-brand text-white rounded-2xl font-extrabold text-[12px] uppercase tracking-[0.2em] shadow-xl shadow-brand/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
+                    className="px-10 py-6 accent-gradient text-white rounded-2xl font-extrabold accent-gradient-hover text-[12px] uppercase tracking-[0.2em] shadow-xl shadow-brand-accent/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
                   >
                     <Plus size={20} /> ADICIONAR
                   </button>
@@ -535,7 +535,7 @@ const PrayerView: React.FC = () => {
                          PAUSAR
                        </button>
                      ) : (
-                       <button onClick={() => setIsTimerRunning(true)} className="px-12 py-5 bg-brand text-white rounded-2xl font-extrabold text-[12px] uppercase tracking-widest shadow-2xl shadow-brand/20 hover:scale-105 transition-all">
+                       <button onClick={() => setIsTimerRunning(true)} className="px-12 py-5 accent-gradient text-white accent-gradient-hover rounded-2xl font-extrabold text-[12px] uppercase tracking-widest shadow-2xl shadow-brand-accent/20 hover:scale-105 transition-all">
                          {timerSeconds > 0 ? 'RETOMAR ORAÇÃO' : 'INICIAR ORAÇÃO'}
                        </button>
                      )}

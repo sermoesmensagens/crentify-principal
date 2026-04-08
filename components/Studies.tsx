@@ -609,7 +609,7 @@ const Studies: React.FC = () => {
             </div>
             <button
               onClick={() => { resetBuilderForm(); setShowCourseForm(true); }}
-              className="bg-brand hover:scale-105 active:scale-95 text-white font-extrabold px-8 py-4 rounded-2xl flex items-center gap-3 shadow-lg shadow-brand/20 transition-all text-xs tracking-widest uppercase"
+              className="accent-gradient hover:scale-105 active:scale-95 text-white font-extrabold px-8 py-4 accent-gradient-hover rounded-2xl flex items-center gap-3 shadow-lg shadow-brand/20 transition-all text-xs tracking-widest uppercase"
             >
               <Plus size={18} /> Criar Curso
             </button>
@@ -674,7 +674,7 @@ const Studies: React.FC = () => {
                       }
                       resetBuilderForm();
                     }}
-                    className="w-full bg-brand text-white font-extrabold py-5 rounded-2xl uppercase tracking-widest shadow-lg shadow-brand/20 hover:scale-[1.01] transition-all"
+                    className="w-full accent-gradient text-white font-extrabold py-5 rounded-2xl uppercase tracking-widest shadow-lg shadow-brand-accent/20 hover:scale-[1.01] accent-gradient-hover transition-all"
                   >
                     {editingCourseId ? 'Salvar Alterações' : 'Salvar Curso'}
                   </button>
@@ -730,7 +730,7 @@ const Studies: React.FC = () => {
                             </div>
                             <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
                               <div 
-                                className="h-full bg-brand transition-all duration-500"
+                                className="h-full accent-gradient transition-all duration-500"
                                 style={{
                                   width: `${(() => {
                                     const courseLessons = userLessons.filter(l => l.courseId === course.id);
@@ -794,7 +794,7 @@ const Studies: React.FC = () => {
                     </div>
                     <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
                       <div 
-                        className="h-full bg-brand transition-all duration-500"
+                        className="h-full accent-gradient transition-all duration-500"
                         style={{
                           width: `${(() => {
                             const courseLessons = userLessons.filter(l => l.courseId === selectedCourseForLessons);
@@ -1014,7 +1014,7 @@ const Studies: React.FC = () => {
                             }
                             setShowLessonForm(false);
                           }}
-                          className="w-full bg-brand text-white font-extrabold py-5 rounded-2xl uppercase tracking-widest shadow-lg shadow-brand/20 hover:scale-[1.01] transition-all"
+                          className="w-full accent-gradient text-white font-extrabold py-5 rounded-2xl uppercase tracking-widest shadow-lg shadow-brand-accent/20 hover:scale-[1.01] accent-gradient-hover transition-all"
                         >
                           {editingLessonId ? 'Salvar Aula' : 'Criar Aula'}
                         </button>
@@ -1118,7 +1118,7 @@ const Studies: React.FC = () => {
                         <h2 className="text-3xl font-extrabold text-white uppercase tracking-tighter mb-4">{activeResource.title}</h2>
                         <p className="text-c-text-secondary max-w-sm font-medium">Este é um recurso externo. Clique no botão abaixo para abrir em uma nova guia.</p>
                       </div>
-                      <a href={activeResource.url} target="_blank" rel="noopener noreferrer" className="bg-brand text-white px-10 py-5 rounded-2xl font-extrabold uppercase tracking-[0.2em] shadow-xl shadow-brand/20 hover:scale-105 transition-all">
+                      <a href={activeResource.url} target="_blank" rel="noopener noreferrer" className="accent-gradient text-white px-10 py-5 rounded-2xl accent-gradient-hover font-extrabold uppercase tracking-[0.2em] shadow-xl shadow-brand-accent/20 hover:scale-105 transition-all">
                         ABRIR LINK EXTERNO
                       </a>
                     </div>

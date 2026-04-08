@@ -219,7 +219,7 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
                     setPlans([newAiPlan, ...plans]);
                     setPlanContent([...planContent, ...newContent]);
                     setIsGenerating(false); setShowQuiz(false); setQuizStep(0); setSelectedPlan(newAiPlan);
-                  }} className="w-full bg-brand text-white py-6 rounded-2xl font-extrabold uppercase tracking-[0.3em] hover:scale-[1.02] transition-all">
+                  }} className="w-full accent-gradient text-white py-6 rounded-2xl font-extrabold accent-gradient-hover uppercase tracking-[0.3em] hover:scale-[1.02] transition-all">
                     Gerar Meu Plano Agora
                   </button>
                 </div>
@@ -276,7 +276,7 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
               <p className="text-xl font-extrabold text-brand">{progressPct}%</p>
             </div>
             <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
-              <div className="h-full bg-brand transition-all duration-1000" style={{ width: `${progressPct}%` }} />
+              <div className="h-full accent-gradient transition-all duration-1000" style={{ width: `${progressPct}%` }} />
             </div>
             <p className="text-[8px] font-extrabold text-c-text-muted uppercase tracking-widest mt-2">
               {progress[selectedPlan.id]?.completedResources.length || 0} de {planDays.reduce((a, b) => a + (b.resources?.length || 0), 0)} Concluídas
@@ -469,7 +469,7 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
             Crie uma jornada personalizada de leitura e oração baseada nas suas necessidades.
           </p>
           <button onClick={() => setShowQuiz(true)}
-            className="bg-brand text-white px-10 py-5 rounded-2xl font-extrabold uppercase tracking-[0.3em] text-xs shadow-xl shadow-brand/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-3">
+            className="accent-gradient text-white px-10 py-5 rounded-2xl accent-gradient-hover font-extrabold uppercase tracking-[0.3em] text-xs shadow-xl shadow-brand-accent/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-3">
             GERAR PLANO COM IA <ChevronRight size={18} />
           </button>
         </div>

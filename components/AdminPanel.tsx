@@ -849,7 +849,7 @@ const AdminPanel: React.FC = () => {
                 </div>
               </div>
 
-              <button onClick={handleAddOrUpdateCourse} className="w-full bg-brand text-white py-6 rounded-2xl font-extrabold uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
+              <button onClick={handleAddOrUpdateCourse} className="w-full accent-gradient text-white py-6 rounded-2xl font-extrabold accent-gradient-hover uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
                 {editingCourseId ? <CheckCircle2 size={24} /> : <Plus size={24} strokeWidth={3} />}
                 {editingCourseId ? 'SALVAR CURSO' : 'CRIAR CURSO'}
               </button>
@@ -999,7 +999,7 @@ const AdminPanel: React.FC = () => {
                 </div>
               </div>
 
-              <button onClick={handleAddOrUpdateModule} className="w-full bg-brand text-white py-6 rounded-2xl font-extrabold uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
+              <button onClick={handleAddOrUpdateModule} className="w-full accent-gradient text-white py-6 rounded-2xl font-extrabold accent-gradient-hover uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
                 {editingModuleId ? <CheckCircle2 size={24} /> : <Zap size={24} strokeWidth={3} />}
                 {editingModuleId ? 'SALVAR AULA' : 'PUBLICAR AULA'}
               </button>
@@ -1063,7 +1063,7 @@ const AdminPanel: React.FC = () => {
                 </div>
               </div>
 
-              <button onClick={handleAddOrUpdatePrayerTheme} className="w-full bg-brand text-white py-6 rounded-2xl font-extrabold uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
+              <button onClick={handleAddOrUpdatePrayerTheme} className="w-full accent-gradient text-white py-6 rounded-2xl font-extrabold accent-gradient-hover uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
                 {editingPrayerThemeId ? <CheckCircle2 size={24} /> : <Plus size={24} strokeWidth={3} />}
                 {editingPrayerThemeId ? 'SALVAR TEMA ORAÇÃO' : 'CRIAR TEMA ORAÇÃO'}
               </button>
@@ -1214,7 +1214,7 @@ const AdminPanel: React.FC = () => {
                 </div>
               </div>
 
-              <button onClick={handleAddOrUpdatePrayerContent} className="w-full bg-brand text-white py-6 rounded-2xl font-extrabold uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
+              <button onClick={handleAddOrUpdatePrayerContent} className="w-full accent-gradient text-white py-6 rounded-2xl font-extrabold accent-gradient-hover uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
                 {editingPrayerContentId ? <CheckCircle2 size={24} /> : <CheckCircle2 size={24} strokeWidth={3} />}
                 {editingPrayerContentId ? 'SALVAR CONTEÚDO' : 'PUBLICAR CONTEÚDO'}
               </button>
@@ -1270,7 +1270,7 @@ const AdminPanel: React.FC = () => {
                   </div>
                 </div>
 
-                <button onClick={handleAddOrUpdatePlan} className="w-full bg-brand text-white py-6 rounded-2xl font-extrabold uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
+                <button onClick={handleAddOrUpdatePlan} className="w-full accent-gradient text-white py-6 rounded-2xl font-extrabold accent-gradient-hover uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
                   {editingPlanId ? <CheckCircle2 size={24} /> : <Plus size={24} strokeWidth={3} />}
                   {editingPlanId ? 'SALVAR PLANO' : 'CRIAR PLANO'}
                 </button>
@@ -2057,7 +2057,7 @@ const AdminPanel: React.FC = () => {
                   <button 
                     onClick={handleSmartImport}
                     disabled={isProcessingSmartImport || !smartImportText.trim()}
-                    className="w-full bg-brand text-white py-6 rounded-2xl font-extrabold uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4 disabled:opacity-50"
+                    className="w-full accent-gradient text-white py-6 rounded-2xl font-extrabold accent-gradient-hover uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4 disabled:opacity-50"
                   >
                     {isProcessingSmartImport ? (
                       <>

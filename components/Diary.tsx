@@ -300,7 +300,7 @@ const Diary: React.FC = () => {
                 <button
                   onClick={handleSave}
                   disabled={!newEntry.title || !newEntry.content}
-                  className="bg-brand text-white px-12 py-5 rounded-2xl font-extrabold uppercase tracking-widest shadow-xl shadow-brand/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-3 disabled:opacity-30"
+                  className="accent-gradient text-white px-12 py-5 rounded-2xl accent-gradient-hover font-extrabold uppercase tracking-widest shadow-xl shadow-brand-accent/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-3 disabled:opacity-30"
                 >
                   <Sparkles size={18} />
                   {editingId ? 'ATUALIZAR NOTA' : 'SALVAR NOTA'}
@@ -352,7 +352,7 @@ const Diary: React.FC = () => {
                 <button
                   onClick={handleSaveBibleNote}
                   disabled={!editingBibleNote.content.trim()}
-                  className="bg-brand text-white px-12 py-5 rounded-2xl font-extrabold uppercase tracking-widest shadow-xl shadow-brand/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-3 disabled:opacity-30"
+                  className="accent-gradient text-white px-12 py-5 rounded-2xl accent-gradient-hover font-extrabold uppercase tracking-widest shadow-xl shadow-brand-accent/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-3 disabled:opacity-30"
                 >
                   <Sparkles size={18} />
                   ATUALIZAR INSIGHT

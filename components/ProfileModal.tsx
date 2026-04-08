@@ -247,7 +247,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ onClose, bibleNotes = [] })
         <div className="p-6 border-t border-white/5 bg-black/20 flex justify-end flex-shrink-0">
           <button
             onClick={onClose}
-            className="bg-brand text-white px-10 py-4 rounded-xl font-extrabold uppercase tracking-widest shadow-lg shadow-brand/20 hover:scale-105 active:scale-95 transition-all text-[10px]"
+            className="accent-gradient text-white px-10 py-4 accent-gradient-hover rounded-xl font-extrabold uppercase tracking-widest shadow-lg shadow-brand-accent/20 hover:scale-105 active:scale-95 transition-all text-[10px]"
           >
             Voltar
           </button>

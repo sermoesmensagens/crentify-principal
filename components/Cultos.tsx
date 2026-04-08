@@ -360,7 +360,7 @@ const Cultos: React.FC = () => {
         <button
           onClick={handleCreateDetail}
           disabled={!newDetail.eventId || (newDetail.frequencies?.length || 0) === 0}
-          className="flex-1 bg-brand text-white font-extrabold py-6 rounded-2xl transition-all uppercase tracking-[0.2em] shadow-2xl shadow-brand/30 flex items-center justify-center gap-3 disabled:opacity-30 relative z-10 hover:scale-[1.02] active:scale-95"
+          className="flex-1 accent-gradient text-white font-extrabold py-6 rounded-2xl accent-gradient-hover transition-all uppercase tracking-[0.2em] shadow-2xl shadow-brand/30 flex items-center justify-center gap-3 disabled:opacity-30 relative z-10 hover:scale-[1.02] active:scale-95"
         >
           <Check size={20} strokeWidth={3} /> {isContextual ? 'Publicar Agora' : 'Publicar Programação'}
         </button>
@@ -750,7 +750,7 @@ const Cultos: React.FC = () => {
             <button
               onClick={handleCreateEvent}
               disabled={!newEvent.title}
-              className="bg-brand text-white font-extrabold py-4 px-10 rounded-2xl transition-all uppercase text-[10px] tracking-widest shadow-xl shadow-brand/20 hover:scale-105 active:scale-95 disabled:opacity-30"
+              className="accent-gradient text-white font-extrabold py-4 px-10 accent-gradient-hover rounded-2xl transition-all uppercase text-[10px] tracking-widest shadow-xl shadow-brand-accent/20 hover:scale-105 active:scale-95 disabled:opacity-30"
             >
               Confirmar Atividade
             </button>
