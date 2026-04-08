@@ -1728,9 +1728,22 @@ const AdminPanel: React.FC = () => {
             </div>
           ) : activeTab === 'lessons' ? (
             <div className="bg-brand-card p-10 rounded-[48px] border border-white/5 shadow-2xl">
-              <h3 className="text-[10px] font-extrabold text-brand uppercase tracking-[0.3em] mb-8">Aulas Ativas ({academyContent.length})</h3>
+              <div className="flex justify-between items-center mb-8">
+                <h3 className="text-[10px] font-extrabold text-brand uppercase tracking-[0.3em]">
+                  {newModule.courseId ? `Aulas deste Curso (${academyContent.filter(c => c.courseId === newModule.courseId).length})` : `Todas as Aulas (${academyContent.length})`}
+                </h3>
+                {newModule.courseId && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-[8px] bg-brand/20 text-brand px-3 py-1 rounded-full font-extrabold uppercase">FILTRADO</span>
+                    <button onClick={() => setNewModule({ ...newModule, courseId: '' })} className="text-[8px] text-c-text-muted hover:text-white uppercase font-bold underline transition-all">Limpar</button>
+                  </div>
+                )}
+              </div>
               <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
-                {academyContent.map(item => (
+                {(newModule.courseId 
+                  ? academyContent.filter(item => item.courseId === newModule.courseId)
+                  : academyContent
+                ).map(item => (
                   <div key={item.id} className={`flex items-center justify-between p-6 rounded-2xl border transition-all group ${editingModuleId === item.id ? 'bg-brand/10 border-brand' : 'bg-brand-bg/50 border-white/5 hover:border-brand/30'}`}>
                     <div className="flex items-center gap-4 overflow-hidden">
                       <div className="w-10 h-10 bg-brand/10 text-brand rounded-xl flex items-center justify-center border border-brand/20 flex-shrink-0">
@@ -1755,6 +1768,12 @@ const AdminPanel: React.FC = () => {
                     </div>
                   </div>
                 ))}
+
+                {newModule.courseId && academyContent.filter(c => c.courseId === newModule.courseId).length === 0 && (
+                  <div className="py-10 text-center border border-dashed border-white/5 rounded-3xl">
+                    <p className="text-[9px] font-extrabold text-c-text-muted uppercase tracking-widest">Nenhuma aula vinculada a este curso ainda.</p>
+                  </div>
+                )}
               </div>
             </div>
           ) : activeTab === 'prayerThemes' ? (
@@ -1803,9 +1822,22 @@ const AdminPanel: React.FC = () => {
             </div>
           ) : activeTab === 'prayerContent' ? (
             <div className="bg-brand-card p-10 rounded-[48px] border border-white/5 shadow-2xl">
-              <h3 className="text-[10px] font-extrabold text-brand uppercase tracking-[0.3em] mb-8">Conteúdos de Oração ({prayerContent.length})</h3>
+              <div className="flex justify-between items-center mb-8">
+                <h3 className="text-[10px] font-extrabold text-brand uppercase tracking-[0.3em]">
+                  {newPrayerContent.themeId ? `Conteúdos deste Tema (${prayerContent.filter(c => c.themeId === newPrayerContent.themeId).length})` : `Conteúdos de Oração (${prayerContent.length})`}
+                </h3>
+                {newPrayerContent.themeId && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-[8px] bg-brand/20 text-brand px-3 py-1 rounded-full font-extrabold uppercase">FILTRADO</span>
+                    <button onClick={() => setNewPrayerContent({ ...newPrayerContent, themeId: '' })} className="text-[8px] text-c-text-muted hover:text-white uppercase font-bold underline transition-all">Limpar</button>
+                  </div>
+                )}
+              </div>
               <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
-                {prayerContent.map(item => (
+                {(newPrayerContent.themeId 
+                  ? prayerContent.filter(item => item.themeId === newPrayerContent.themeId)
+                  : prayerContent
+                ).map(item => (
                   <div key={item.id} className={`flex items-center justify-between p-6 rounded-2xl border transition-all group ${editingPrayerContentId === item.id ? 'bg-brand/10 border-brand' : 'bg-brand-bg/50 border-white/5 hover:border-brand/30'}`}>
                     <div className="flex items-center gap-4 overflow-hidden">
                       <div className="w-10 h-10 bg-emerald-500/10 text-emerald-500 rounded-xl flex items-center justify-center border border-emerald-500/20 flex-shrink-0">
@@ -1833,6 +1865,12 @@ const AdminPanel: React.FC = () => {
                     </div>
                   </div>
                 ))}
+                
+                {newPrayerContent.themeId && prayerContent.filter(c => c.themeId === newPrayerContent.themeId).length === 0 && (
+                  <div className="py-10 text-center border border-dashed border-white/5 rounded-3xl">
+                    <p className="text-[9px] font-extrabold text-c-text-muted uppercase tracking-widest">Nenhum conteúdo vinculado a este tema ainda.</p>
+                  </div>
+                )}
               </div>
             </div>
           ) : activeTab === 'plans' ? (
