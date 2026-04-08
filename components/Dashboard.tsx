@@ -120,21 +120,21 @@ const Dashboard: React.FC = () => {
       {/* ========== HERO SECTION ========== */}
       <section className="relative bg-gradient-to-br from-brand-card to-brand-bg rounded-3xl p-10 md:p-12 overflow-hidden min-h-[280px] flex flex-col justify-center">
         {/* Background decorations */}
-        <div className="absolute top-0 right-0 w-80 h-80 bg-brand/10 rounded-full -mr-20 -mt-20 blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-60 h-60 bg-brand-accent/5 rounded-full -ml-10 -mb-10 blur-3xl"></div>
+        <div className="absolute top-0 right-0 w-80 h-80 bg-brand-accent/8 rounded-full -mr-20 -mt-20 blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-60 h-60 bg-brand/8 rounded-full -ml-10 -mb-10 blur-3xl"></div>
         
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
           <div className="flex-1 space-y-5">
             {/* Label */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-brand/10 border border-brand/20 rounded-full">
-              <Zap size={12} className="text-brand-light fill-brand-light" />
-              <span className="text-brand-light text-[12px] font-semibold uppercase tracking-[1px]">Novidade: Mentor Espiritual</span>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-brand-accent/10 border border-brand-accent/20 rounded-full">
+              <Zap size={12} className="text-brand-accent fill-brand-accent" />
+              <span className="text-brand-accent text-[12px] font-semibold uppercase tracking-[1px]">Novidade: Mentor Espiritual</span>
             </div>
             
             {/* Title - Sora Bold 42px */}
             <h1 className="text-3xl md:text-[42px] font-bold text-white leading-[1.1] tracking-tight">
               O que o seu coração <br className="hidden md:block" />
-              <span className="text-brand-light">busca hoje?</span>
+              <span className="bg-gradient-to-r from-brand-accent to-brand-accent-hot bg-clip-text text-transparent">busca hoje?</span>
             </h1>
             
             {/* Subtitle */}
