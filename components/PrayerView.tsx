@@ -473,7 +473,7 @@ const PrayerView: React.FC = () => {
                           />
                           <div className="flex justify-end gap-3">
                             <button onClick={() => setEditingPrayerId(null)} className="px-6 py-3 text-[10px] font-extrabold text-c-text-muted uppercase hover:text-white">CANCELAR</button>
-                            <button onClick={() => savePrayerResponse(prayer.id, editingResponse)} className="px-8 py-3 bg-amber-500 text-[#0b0e14] border border-amber-400 rounded-xl font-extrabold text-[10px] uppercase shadow-xl shadow-amber-500/20 hover:scale-105 transition-all">SALVAR TESTEMUNHO</button>
+                            <button onClick={() => savePrayerResponse(prayer.id, editingResponse)} className="px-8 py-3 bg-amber-500 text-brand-bg border border-amber-400 rounded-xl font-extrabold text-[10px] uppercase shadow-xl shadow-amber-500/20 hover:scale-105 transition-all">SALVAR TESTEMUNHO</button>
                           </div>
                         </div>
                       ) : (
