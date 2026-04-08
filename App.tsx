@@ -51,14 +51,14 @@ const App: React.FC = () => {
 
   if (loading || (session && isInitialLoading)) {
     return (
-      <div className="min-h-screen bg-[#0b0e14] flex flex-col items-center justify-center gap-6">
+      <div className="min-h-screen bg-brand-bg flex flex-col items-center justify-center gap-6">
         <div className="relative">
           <div className="absolute -inset-4 bg-brand/20 rounded-full blur-2xl animate-pulse"></div>
           <Loader2 className="h-16 w-16 text-brand animate-spin" />
         </div>
         <div className="text-center space-y-2">
-          <p className="text-white font-black uppercase tracking-[0.3em] text-[10px] animate-pulse">CRENTIFY</p>
-          <p className="text-gray-500 font-bold uppercase tracking-widest text-[8px]">Sincronizando sua jornada...</p>
+          <p className="text-white font-extrabold uppercase tracking-[0.3em] text-[10px] animate-pulse">CRENTIFY</p>
+          <p className="text-c-text-secondary font-semibold uppercase tracking-widest text-[8px]">Sincronizando sua jornada...</p>
         </div>
       </div>
     );
