@@ -34,7 +34,7 @@ class ErrorBoundary extends Component<Props, State> {
                     </pre>
                     <button
                         onClick={() => window.location.reload()}
-                        className="mt-6 px-6 py-2 bg-[#6C3BFF] rounded-lg hover:bg-[#6C3BFF]/80 transition-colors"
+                        className="mt-6 px-6 py-2 bg-brand rounded-lg hover:bg-brand/80 transition-colors"
                     >
                         Recarregar
                     </button>
