@@ -60,12 +60,12 @@ const Auth: React.FC = () => {
         <div className="h-[100dvh] bg-brand-bg flex justify-center p-4 relative overflow-y-auto">
             {/* Background Elements */}
             <div className="fixed top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
-                <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-brand-primary/20 rounded-full blur-[120px]" />
-                <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full blur-[120px]" />
+                <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-brand/15 rounded-full blur-[120px]" />
+                <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-brand-accent/10 rounded-full blur-[120px]" />
             </div>
 
             <div className="w-full max-w-md z-10 my-auto py-10">
-                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl">
+                <div className="bg-brand-card/50 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl">
                     {/* Banner de Aviso Crentify Hábitos */}
                     <div className="bg-[#4D9DE0]/10 border border-[#4D9DE0]/30 p-4 rounded-xl mb-8 text-center relative overflow-hidden group">
                         <div className="absolute inset-0 bg-[#4D9DE0]/5 group-hover:bg-[#4D9DE0]/10 transition-colors" />
@@ -90,7 +90,6 @@ const Auth: React.FC = () => {
                                     src={logoUrl}
                                     alt="CRENTIFY Logo"
                                     className="relative w-20 h-20 object-contain rounded-xl"
-                                    style={{ filter: 'saturate(1.5) brightness(1.15) hue-rotate(-10deg)' }}
                                     onError={(e) => { e.currentTarget.src = '/favicon.png'; }}
                                 />
                             ) : (
@@ -102,10 +101,10 @@ const Auth: React.FC = () => {
                     </div>
 
                     <div className="text-center mb-8">
-                        <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent mb-2">
+                        <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-c-text-secondary bg-clip-text text-transparent mb-2">
                             {isLogin ? 'Bem-vindo de volta' : 'Crie sua conta'}
                         </h1>
-                        <p className="text-gray-400">
+                        <p className="text-c-text-secondary">
                             {isLogin
                                 ? 'Entre para acessar seu devocional'
                                 : 'Comece sua jornada espiritual hoje'}
@@ -116,13 +115,13 @@ const Auth: React.FC = () => {
                         <div className="space-y-4">
                             <div className="relative group">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Mail className="h-5 w-5 text-gray-500 group-focus-within:text-brand-primary transition-colors" />
+                                    <Mail className="h-5 w-5 text-c-text-muted group-focus-within:text-brand transition-colors" />
                                 </div>
                                 <input
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all"
+                                    className="w-full pl-10 pr-4 py-3 bg-brand-surface border border-white/10 rounded-xl text-white placeholder-c-text-muted focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition-all"
                                     placeholder="Seu email"
                                     required
                                 />
@@ -130,13 +129,13 @@ const Auth: React.FC = () => {
 
                             <div className="relative group">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Lock className="h-5 w-5 text-gray-500 group-focus-within:text-brand-primary transition-colors" />
+                                    <Lock className="h-5 w-5 text-c-text-muted group-focus-within:text-brand transition-colors" />
                                 </div>
                                 <input
                                     type="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all"
+                                    className="w-full pl-10 pr-4 py-3 bg-brand-surface border border-white/10 rounded-xl text-white placeholder-c-text-muted focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition-all"
                                     placeholder="Sua senha"
                                     required
                                 />
@@ -158,7 +157,7 @@ const Auth: React.FC = () => {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full py-3 px-4 bg-brand-primary hover:bg-brand-primary/90 text-white font-medium rounded-xl transition-all duration-200 transform hover:scale-[1.02] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-brand-primary/20"
+                            className="w-full py-3.5 px-4 accent-gradient text-white font-semibold rounded-2xl transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg accent-gradient-hover"
                         >
                             {isLoading ? (
                                 <Loader2 className="h-5 w-5 animate-spin" />
@@ -172,12 +171,12 @@ const Auth: React.FC = () => {
                     </form>
 
                     <div className="mt-6 text-center">
-                        <p className="text-gray-400 text-sm">
+                        <p className="text-c-text-secondary text-sm">
                             {isLogin ? 'Não tem uma conta?' : 'Já tem uma conta?'}
                             <button
                                 type="button"
                                 onClick={() => setIsLogin(!isLogin)}
-                                className="ml-2 text-brand-primary hover:text-brand-primary/80 font-medium transition-colors"
+                                className="ml-2 text-brand-light hover:text-brand font-semibold transition-colors"
                                 disabled={isLoading}
                             >
                                 {isLogin ? 'Cadastre-se' : 'Faça login'}
