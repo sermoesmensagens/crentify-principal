@@ -96,21 +96,21 @@ const BibleView: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="h-full flex flex-col items-center justify-center bg-[#161b22] rounded-[56px] border border-white/5">
+      <div className="h-full flex flex-col items-center justify-center bg-brand-card rounded-3xl border border-white/5">
         <Loader2 className="animate-spin text-brand mb-6" size={64} />
-        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-brand">Acessando os Arquivos Celestiais...</p>
+        <p className="text-[10px] font-extrabold uppercase tracking-[0.4em] text-brand">Acessando os Arquivos Celestiais...</p>
       </div>
     );
   }
 
   if (!bibleData || !bibleData.books || bibleData.books.length === 0) {
     return (
-      <div className="h-full flex flex-col items-center justify-center text-center p-20 bg-[#161b22] rounded-[56px] border border-white/5 shadow-2xl animate-in zoom-in duration-500">
-        <div className="w-24 h-24 bg-brand/10 text-brand rounded-full flex items-center justify-center mb-8 border border-brand/20 shadow-[0_0_30px_rgba(135,67,242,0.1)]">
+      <div className="h-full flex flex-col items-center justify-center text-center p-20 bg-brand-card rounded-3xl border border-white/5 shadow-2xl animate-in zoom-in duration-500">
+        <div className="w-24 h-24 bg-brand/10 text-brand rounded-full flex items-center justify-center mb-8 border border-brand/20 shadow-[0_0_30px_rgba(108,59,255,0.1)]">
           <BookOpen size={48} />
         </div>
-        <h2 className="text-3xl font-black text-white uppercase tracking-tighter mb-4">Santuário Silencioso</h2>
-        <p className="text-gray-500 max-w-md mx-auto leading-relaxed">Nenhuma Bíblia encontrada no banco de dados local. Vá até a aba Admin e importe o arquivo JSON das Escrituras.</p>
+        <h2 className="text-3xl font-extrabold text-white uppercase tracking-tighter mb-4">Santuário Silencioso</h2>
+        <p className="text-c-text-secondary max-w-md mx-auto leading-relaxed">Nenhuma Bíblia encontrada no banco de dados local. Vá até a aba Admin e importe o arquivo JSON das Escrituras.</p>
       </div>
     );
   }
@@ -247,15 +247,15 @@ const BibleView: React.FC = () => {
     <div className="flex flex-col space-y-8 animate-in fade-in duration-700 pb-20">
       <header className="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-white/5 pb-8">
         <div>
-          <h1 className="text-5xl font-black text-white tracking-tighter uppercase neon-text flex items-center gap-4">
+          <h1 className="text-5xl font-extrabold text-white tracking-tighter uppercase neon-text flex items-center gap-4">
             <BookOpen size={42} className="text-brand" />
             Bíblia
           </h1>
-          <p className="text-gray-500 mt-2 font-medium">As Sagradas Escrituras.</p>
+          <p className="text-c-text-secondary mt-2 font-medium">As Sagradas Escrituras.</p>
         </div>
         <button
           onClick={() => setShowJournal(!showJournal)}
-          className={`px-10 py-5 rounded-[22px] font-black uppercase tracking-widest text-[10px] transition-all flex items-center gap-3 shadow-xl ${showJournal ? 'bg-brand text-white shadow-brand/30' : 'bg-[#161b22] text-gray-400 border border-white/5 hover:border-brand/30'
+          className={`px-10 py-5 rounded-2xl font-extrabold uppercase tracking-widest text-[10px] transition-all flex items-center gap-3 shadow-xl ${showJournal ? 'bg-brand text-white shadow-brand/30' : 'bg-brand-card text-c-text-secondary border border-white/5 hover:border-brand/30'
             }`}
         >
           <Bookmark size={18} /> DIÁRIO BÍBLICO
@@ -263,23 +263,23 @@ const BibleView: React.FC = () => {
       </header>
 
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0">
-        <aside className="hidden lg:flex lg:col-span-3 bg-[#161b22] rounded-[32px] border border-white/5 flex-col shadow-2xl">
+        <aside className="hidden lg:flex lg:col-span-3 bg-brand-card rounded-2xl border border-white/5 flex-col shadow-2xl">
           <div className="p-5 border-b border-white/5 bg-black/20 flex items-center justify-between">
-            <h3 className="font-black text-brand text-[9px] uppercase tracking-[0.3em]">
+            <h3 className="font-extrabold text-brand text-[9px] uppercase tracking-[0.3em]">
               {testamentFilter ? (testamentFilter === 'old' ? 'Antigo Testamento' : 'Novo Testamento') : 'Cânon'}
             </h3>
             {testamentFilter ? (
               <button
                 onClick={() => setTestamentFilter(null)}
-                className="text-[8px] font-black text-brand hover:text-white transition-colors uppercase tracking-widest bg-brand/10 px-2 py-1 rounded-lg border border-brand/20"
+                className="text-[8px] font-extrabold text-brand hover:text-white transition-colors uppercase tracking-widest bg-brand/10 px-2 py-1 rounded-lg border border-brand/20"
               >
                 Voltar
               </button>
             ) : (
-              <Search size={14} className="text-gray-700" />
+              <Search size={14} className="text-c-text-muted" />
             )}
           </div>
-          <div className="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-1 bg-[#0b0e14]/30">
+          <div className="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-1 bg-brand-bg/30">
             {!testamentFilter ? (
               <div className="grid grid-cols-1 gap-3 p-2">
                 <button
@@ -287,9 +287,9 @@ const BibleView: React.FC = () => {
                   className="group relative overflow-hidden p-6 rounded-2xl bg-gradient-to-br from-brand/20 to-transparent border border-brand/20 hover:border-brand/50 transition-all text-left"
                 >
                   <div className="relative z-10">
-                    <p className="text-[10px] font-black text-brand uppercase tracking-[0.2em] mb-1">Cânon</p>
-                    <p className="text-lg font-black text-white uppercase tracking-tighter">Antigo<br />Testamento</p>
-                    <p className="text-[9px] font-bold text-gray-500 mt-2">39 LIVROS</p>
+                    <p className="text-[10px] font-extrabold text-brand uppercase tracking-[0.2em] mb-1">Cânon</p>
+                    <p className="text-lg font-extrabold text-white uppercase tracking-tighter">Antigo<br />Testamento</p>
+                    <p className="text-[9px] font-bold text-c-text-secondary mt-2">39 LIVROS</p>
                   </div>
                   <div className="absolute -right-4 -bottom-4 text-brand/5 group-hover:text-brand/10 transition-colors">
                     <BookOpen size={80} />
@@ -300,9 +300,9 @@ const BibleView: React.FC = () => {
                   className="group relative overflow-hidden p-6 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-transparent border border-emerald-500/20 hover:border-emerald-500/50 transition-all text-left"
                 >
                   <div className="relative z-10">
-                    <p className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.2em] mb-1">Cânon</p>
-                    <p className="text-lg font-black text-white uppercase tracking-tighter">Novo<br />Testamento</p>
-                    <p className="text-[9px] font-bold text-gray-500 mt-2">27 LIVROS</p>
+                    <p className="text-[10px] font-extrabold text-emerald-500 uppercase tracking-[0.2em] mb-1">Cânon</p>
+                    <p className="text-lg font-extrabold text-white uppercase tracking-tighter">Novo<br />Testamento</p>
+                    <p className="text-[9px] font-bold text-c-text-secondary mt-2">27 LIVROS</p>
                   </div>
                   <div className="absolute -right-4 -bottom-4 text-emerald-500/5 group-hover:text-emerald-500/10 transition-colors">
                     <BookOpen size={80} />
@@ -323,11 +323,11 @@ const BibleView: React.FC = () => {
                   <button
                     key={book.name}
                     onClick={() => { setSelectedBookIndex(idx); setSelectedChapterIndex(0); }}
-                    className={`w-full text-left px-4 py-3 rounded-xl transition-all flex items-center justify-between group ${selectedBookIndex === idx ? 'bg-brand text-white shadow-lg' : 'text-gray-600 hover:bg-white/5 hover:text-gray-300'
+                    className={`w-full text-left px-4 py-3 rounded-xl transition-all flex items-center justify-between group ${selectedBookIndex === idx ? 'bg-brand text-white shadow-lg' : 'text-c-text-muted hover:bg-white/5 hover:text-gray-300'
                       }`}
                   >
-                    <span className="font-black uppercase text-[10px] tracking-tight truncate mr-2">{book.name}</span>
-                    <span className="text-[8px] font-black opacity-30">{pct}%</span>
+                    <span className="font-extrabold uppercase text-[10px] tracking-tight truncate mr-2">{book.name}</span>
+                    <span className="text-[8px] font-extrabold opacity-30">{pct}%</span>
                   </button>
                 );
               })
@@ -338,34 +338,34 @@ const BibleView: React.FC = () => {
         {/* Área Principal */}
         <div className="lg:col-span-9 flex flex-col gap-6">
           {/* Mobile Navigator / Breadcrumb */}
-          <div className="lg:hidden flex items-center justify-between bg-[#161b22] p-5 rounded-[28px] border border-white/5 shadow-xl">
+          <div className="lg:hidden flex items-center justify-between bg-brand-card p-5 rounded-2xl border border-white/5 shadow-xl">
             <button
               onClick={() => setShowBookSelector(true)}
-              className="flex items-center gap-3 bg-brand/10 text-brand px-5 py-3 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] border border-brand/20 active:scale-95 transition-all shadow-lg"
+              className="flex items-center gap-3 bg-brand/10 text-brand px-5 py-3 rounded-2xl font-extrabold uppercase text-[10px] tracking-[0.2em] border border-brand/20 active:scale-95 transition-all shadow-lg"
             >
               <ArrowLeft size={16} />
               Livros
             </button>
             <div className="flex flex-col items-end">
-              <span className="text-[10px] font-black text-white uppercase tracking-tight">{selectedBook?.name || 'Escolher Livro'}</span>
-              <span className="text-[8px] font-bold text-gray-500 uppercase tracking-widest">
+              <span className="text-[10px] font-extrabold text-white uppercase tracking-tight">{selectedBook?.name || 'Escolher Livro'}</span>
+              <span className="text-[8px] font-bold text-c-text-secondary uppercase tracking-widest">
                 {selectedBook?.chapters?.length || 0} capítulos
               </span>
             </div>
           </div>
           {/* Leitor */}
-          <section className="flex flex-col bg-[#161b22] rounded-[40px] shadow-2xl border border-white/5 overflow-hidden relative min-h-[500px]">
+          <section className="flex flex-col bg-brand-card rounded-3xl shadow-2xl border border-white/5 overflow-hidden relative min-h-[500px]">
             {selectedBook ? (
               <>
                 <div className="p-6 border-b border-white/5 flex flex-col md:flex-row items-start md:items-center justify-between bg-black/20 backdrop-blur-xl z-20 gap-4">
                   <div className="flex items-center gap-4 w-full md:w-auto">
-                    <h2 className="text-xl md:text-2xl font-black text-white uppercase tracking-tighter truncate md:max-w-[150px]">{selectedBook.name}</h2>
+                    <h2 className="text-xl md:text-2xl font-extrabold text-white uppercase tracking-tighter truncate md:max-w-[150px]">{selectedBook.name}</h2>
                     
                     {/* Botão Anterior Discreto */}
                     <button 
                       disabled={selectedChapterIndex === 0}
                       onClick={() => setSelectedChapterIndex(prev => prev - 1)}
-                      className="p-3 rounded-lg bg-white/5 text-gray-500 hover:text-brand hover:bg-brand/10 disabled:opacity-10 transition-all border border-transparent hover:border-brand/20 hidden md:flex"
+                      className="p-3 rounded-lg bg-white/5 text-c-text-secondary hover:text-brand hover:bg-brand/10 disabled:opacity-10 transition-all border border-transparent hover:border-brand/20 hidden md:flex"
                     >
                       <ArrowLeft size={16} />
                     </button>
@@ -374,7 +374,7 @@ const BibleView: React.FC = () => {
                       <select
                         value={selectedChapterIndex}
                         onChange={(e) => setSelectedChapterIndex(Number(e.target.value))}
-                        className="w-full bg-[#0b0e14] border border-white/10 rounded-xl px-4 md:px-6 py-3 text-[10px] font-black text-white outline-none focus:ring-4 focus:ring-brand/20 appearance-none cursor-pointer pr-10 md:pr-12"
+                        className="w-full bg-brand-bg border border-white/10 rounded-xl px-4 md:px-6 py-3 text-[10px] font-extrabold text-white outline-none focus:ring-4 focus:ring-brand/20 appearance-none cursor-pointer pr-10 md:pr-12"
                       >
                         {selectedBook.chapters?.map((_, i) => (
                           <option key={i} value={i}>Cap. {i + 1}</option>
@@ -387,16 +387,16 @@ const BibleView: React.FC = () => {
                     <button 
                       disabled={selectedChapterIndex === (selectedBook.chapters?.length || 1) - 1}
                       onClick={() => setSelectedChapterIndex(prev => prev + 1)}
-                      className="p-3 rounded-lg bg-white/5 text-gray-500 hover:text-brand hover:bg-brand/10 disabled:opacity-10 transition-all border border-transparent hover:border-brand/20 hidden md:flex"
+                      className="p-3 rounded-lg bg-white/5 text-c-text-secondary hover:text-brand hover:bg-brand/10 disabled:opacity-10 transition-all border border-transparent hover:border-brand/20 hidden md:flex"
                     >
                       <ArrowRight size={16} />
                     </button>
                   </div>
 
-                  <div className="flex items-center gap-4 bg-[#0b0e14]/50 px-4 py-2 rounded-2xl border border-white/5 shadow-inner">
+                  <div className="flex items-center gap-4 bg-brand-bg/50 px-4 py-2 rounded-2xl border border-white/5 shadow-inner">
                     <div className="flex flex-col items-center">
-                      <p className="text-[7px] font-black text-gray-600 uppercase tracking-widest leading-none mb-1">Tempo de Leitura</p>
-                      <div className={`text-xl font-black tabular-nums tracking-tighter ${isTimerRunning ? 'text-brand' : 'text-gray-600'}`}>
+                      <p className="text-[7px] font-extrabold text-c-text-muted uppercase tracking-widest leading-none mb-1">Tempo de Leitura</p>
+                      <div className={`text-xl font-extrabold tabular-nums tracking-tighter ${isTimerRunning ? 'text-brand' : 'text-c-text-muted'}`}>
                         {formatTime(timerSeconds)}
                       </div>
                     </div>
@@ -412,14 +412,14 @@ const BibleView: React.FC = () => {
                   <div className="flex items-center gap-2 w-full md:w-auto">
                     <button
                       onClick={openSelectionModal}
-                      className="hidden xl:flex items-center gap-2 px-4 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest bg-white/5 text-gray-500 border border-white/5 hover:border-brand/30 hover:text-brand transition-all"
+                      className="hidden xl:flex items-center gap-2 px-4 py-3 rounded-xl text-[9px] font-extrabold uppercase tracking-widest bg-white/5 text-c-text-secondary border border-white/5 hover:border-brand/30 hover:text-brand transition-all"
                     >
                       <ListChecks size={16} /> LISTAR CAPÍTULOS
                     </button>
 
                     <button
                       onClick={() => toggleChapter(selectedBook.name, selectedChapterIndex + 1)}
-                      className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${(progress.completedChapters[selectedBook.name] || []).includes(selectedChapterIndex + 1)
+                      className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-[9px] font-extrabold uppercase tracking-widest transition-all ${(progress.completedChapters[selectedBook.name] || []).includes(selectedChapterIndex + 1)
                         ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20'
                         : 'bg-brand text-white shadow-lg shadow-brand/20'
                         }`}
@@ -432,14 +432,14 @@ const BibleView: React.FC = () => {
 
                 <div 
                   ref={readerRef}
-                  className="p-8 md:p-12 lg:px-24 space-y-6 bg-[#0b0e14]/50 reader-container relative"
+                  className="p-8 md:p-12 lg:px-24 space-y-6 bg-brand-bg/50 reader-container relative"
                 >
                   {/* Floating Navigation Arrows - Acompanham o scroll */}
                   <div className="absolute left-6 inset-y-0 hidden md:flex items-center z-10 pointer-events-none">
                     <button 
                       disabled={selectedChapterIndex === 0}
                       onClick={() => setSelectedChapterIndex(prev => prev - 1)}
-                      className="sticky top-[45vh] p-4 rounded-full bg-[#161b22] text-gray-500 hover:text-brand border border-white/10 hover:border-brand/40 transition-all pointer-events-auto disabled:opacity-0 shadow-2xl active:scale-90"
+                      className="sticky top-[45vh] p-4 rounded-full bg-brand-card text-c-text-secondary hover:text-brand border border-white/10 hover:border-brand/40 transition-all pointer-events-auto disabled:opacity-0 shadow-2xl active:scale-90"
                       title="Anterior"
                     >
                       <ArrowLeft size={24} />
@@ -450,7 +450,7 @@ const BibleView: React.FC = () => {
                     <button 
                       disabled={selectedChapterIndex === (selectedBook.chapters?.length || 1) - 1}
                       onClick={() => setSelectedChapterIndex(prev => prev + 1)}
-                      className="sticky top-[45vh] p-4 rounded-full bg-[#161b22] text-gray-500 hover:text-brand border border-white/10 hover:border-brand/40 transition-all pointer-events-auto disabled:opacity-0 shadow-2xl active:scale-90"
+                      className="sticky top-[45vh] p-4 rounded-full bg-brand-card text-c-text-secondary hover:text-brand border border-white/10 hover:border-brand/40 transition-all pointer-events-auto disabled:opacity-0 shadow-2xl active:scale-90"
                       title="Próximo"
                     >
                       <ArrowRight size={24} />
@@ -459,16 +459,16 @@ const BibleView: React.FC = () => {
                   {selectedChapter?.verses?.map((v) => (
                     <div key={v.number} className="group relative">
                       <div className="flex gap-8">
-                        <span className="text-brand/20 font-black text-xl mt-1 flex-shrink-0 w-10 text-right italic font-serif">{v.number}</span>
+                        <span className="text-brand/20 font-extrabold text-xl mt-1 flex-shrink-0 w-10 text-right italic font-serif">{v.number}</span>
                         <div className="flex-1">
                           <p className="text-gray-300 leading-relaxed text-xl font-serif italic selection:bg-brand/30">
                             {v.text}
                           </p>
                           <div className="mt-4 flex gap-6 opacity-0 group-hover:opacity-100 transition-all">
-                            <button onClick={() => setActiveNoteVerse(v)} className="flex items-center gap-2 text-[10px] font-black uppercase text-brand">
+                            <button onClick={() => setActiveNoteVerse(v)} className="flex items-center gap-2 text-[10px] font-extrabold uppercase text-brand">
                               <Edit3 size={14} /> Anotar
                             </button>
-                            <button onClick={() => window.open(`https://wa.me/?text=${encodeURIComponent(`"${v.text}" - ${selectedBook.name} ${selectedChapterIndex + 1}:${v.number}`)}`, '_blank')} className="flex items-center gap-2 text-[10px] font-black uppercase text-gray-600">
+                            <button onClick={() => window.open(`https://wa.me/?text=${encodeURIComponent(`"${v.text}" - ${selectedBook.name} ${selectedChapterIndex + 1}:${v.number}`)}`, '_blank')} className="flex items-center gap-2 text-[10px] font-extrabold uppercase text-c-text-muted">
                               <Share2 size={14} /> Share
                             </button>
                           </div>
@@ -482,13 +482,13 @@ const BibleView: React.FC = () => {
 
 
                 <div className="p-6 border-t border-white/5 flex items-center justify-between bg-black/20">
-                  <button disabled={selectedChapterIndex === 0} onClick={() => setSelectedChapterIndex(prev => prev - 1)} className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white/5 text-[9px] font-black uppercase tracking-widest text-gray-500 hover:text-brand disabled:opacity-10 transition-all border border-transparent hover:border-brand/20">
+                  <button disabled={selectedChapterIndex === 0} onClick={() => setSelectedChapterIndex(prev => prev - 1)} className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white/5 text-[9px] font-extrabold uppercase tracking-widest text-c-text-secondary hover:text-brand disabled:opacity-10 transition-all border border-transparent hover:border-brand/20">
                     <ArrowLeft size={14} /> Anterior
                   </button>
 
                   <button
                     onClick={() => toggleChapter(selectedBook.name, selectedChapterIndex + 1)}
-                    className={`group relative overflow-hidden px-6 py-3 rounded-xl font-black uppercase text-[9px] tracking-widest transition-all duration-500 active:scale-95 shadow-lg ${
+                    className={`group relative overflow-hidden px-6 py-3 rounded-xl font-extrabold uppercase text-[9px] tracking-widest transition-all duration-500 active:scale-95 shadow-lg ${
                       (progress.completedChapters[selectedBook.name] || []).includes(selectedChapterIndex + 1)
                         ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 shadow-emerald-500/10'
                         : 'bg-brand text-white shadow-lg shadow-brand/30 hover:scale-105'
@@ -510,26 +510,26 @@ const BibleView: React.FC = () => {
                     <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:animate-shimmer" />
                   </button>
 
-                  <button disabled={selectedChapterIndex === (selectedBook.chapters?.length || 1) - 1} onClick={() => setSelectedChapterIndex(prev => prev + 1)} className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white/5 text-[9px] font-black uppercase tracking-widest text-gray-500 hover:text-brand disabled:opacity-10 transition-all border border-transparent hover:border-brand/20">
+                  <button disabled={selectedChapterIndex === (selectedBook.chapters?.length || 1) - 1} onClick={() => setSelectedChapterIndex(prev => prev + 1)} className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white/5 text-[9px] font-extrabold uppercase tracking-widest text-c-text-secondary hover:text-brand disabled:opacity-10 transition-all border border-transparent hover:border-brand/20">
                     Próximo <ArrowRight size={14} />
                   </button>
                 </div>
 
                 {/* Floating Navigation Bar (Mobile/Tablet Focused) */}
-                <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-2 bg-[#161b22]/90 backdrop-blur-2xl p-2.5 rounded-[32px] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in slide-in-from-bottom duration-500 lg:hidden">
+                <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-2 bg-brand-card/90 backdrop-blur-2xl p-2.5 rounded-2xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in slide-in-from-bottom duration-500 lg:hidden">
                   <button
                     disabled={selectedChapterIndex === 0}
                     onClick={() => {
                       setSelectedChapterIndex(prev => prev - 1);
                     }}
-                    className="w-16 h-16 rounded-[24px] bg-white/5 text-gray-400 flex items-center justify-center border border-white/5 active:bg-brand active:text-white disabled:opacity-20 transition-all shadow-xl"
+                    className="w-16 h-16 rounded-2xl bg-white/5 text-c-text-secondary flex items-center justify-center border border-white/5 active:bg-brand active:text-white disabled:opacity-20 transition-all shadow-xl"
                   >
                     <ArrowLeft size={28} />
                   </button>
 
                   <div className="px-6 py-2 bg-brand text-white rounded-2xl flex flex-col items-center justify-center min-w-[100px] shadow-lg shadow-brand/20">
-                    <span className="text-[8px] font-black uppercase tracking-widest opacity-60">Capítulo</span>
-                    <span className="text-xl font-black tracking-tighter">{selectedChapterIndex + 1}</span>
+                    <span className="text-[8px] font-extrabold uppercase tracking-widest opacity-60">Capítulo</span>
+                    <span className="text-xl font-extrabold tracking-tighter">{selectedChapterIndex + 1}</span>
                   </div>
 
                   <button
@@ -537,7 +537,7 @@ const BibleView: React.FC = () => {
                     onClick={() => {
                       setSelectedChapterIndex(prev => prev + 1);
                     }}
-                    className="w-20 h-20 rounded-[24px] bg-brand text-white flex items-center justify-center shadow-2xl shadow-brand/40 active:scale-95 disabled:opacity-20 transition-all border-2 border-white/10"
+                    className="w-20 h-20 rounded-2xl bg-brand text-white flex items-center justify-center shadow-2xl shadow-brand/40 active:scale-95 disabled:opacity-20 transition-all border-2 border-white/10"
                   >
                     <ArrowRight size={36} />
                   </button>
@@ -546,31 +546,31 @@ const BibleView: React.FC = () => {
             ) : (
               <div className="flex-1 flex flex-col items-center justify-center p-20 text-center opacity-10">
                 <BookOpen size={100} className="mb-8" />
-                <h3 className="font-black text-3xl uppercase tracking-tighter">Selecione um Livro</h3>
+                <h3 className="font-extrabold text-3xl uppercase tracking-tighter">Selecione um Livro</h3>
               </div>
             )}
           </section>
 
           {/* Journal Section Embaixo */}
           {showJournal && (
-            <aside ref={journalRef} className="bg-[#161b22] rounded-[40px] border border-white/5 flex flex-col shadow-2xl animate-in slide-in-from-bottom duration-500 overflow-hidden scroll-mt-6">
+            <aside ref={journalRef} className="bg-brand-card rounded-3xl border border-white/5 flex flex-col shadow-2xl animate-in slide-in-from-bottom duration-500 overflow-hidden scroll-mt-6">
               <div className="p-6 border-b border-white/5 flex justify-between items-center bg-black/20">
                 <div className="flex items-center gap-3">
                   <Bookmark size={20} className="text-brand" />
-                  <h3 className="font-black text-white text-lg uppercase tracking-tighter">Insights do Capítulo</h3>
+                  <h3 className="font-extrabold text-white text-lg uppercase tracking-tighter">Insights do Capítulo</h3>
                 </div>
-                <button onClick={() => setShowJournal(false)} className="text-gray-500 hover:text-white transition-colors p-2"><X size={20} /></button>
+                <button onClick={() => setShowJournal(false)} className="text-c-text-secondary hover:text-white transition-colors p-2"><X size={20} /></button>
               </div>
               <div className="p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-y-auto custom-scrollbar max-h-[400px]">
                 {currentNotes.length === 0 ? (
                   <div className="col-span-full text-center py-10 opacity-30">
-                    <p className="text-[10px] font-black uppercase tracking-widest">Nenhuma anotação neste capítulo</p>
+                    <p className="text-[10px] font-extrabold uppercase tracking-widest">Nenhuma anotação neste capítulo</p>
                   </div>
                 ) : (
                   currentNotes.map(note => (
-                    <div key={note.id} className="bg-[#0b0e14]/50 p-6 rounded-3xl border border-white/5 hover:border-brand/40 transition-all relative group">
+                    <div key={note.id} className="bg-brand-bg/50 p-6 rounded-3xl border border-white/5 hover:border-brand/40 transition-all relative group">
                       <div className="flex items-center justify-between mb-3">
-                        <p className="text-[9px] font-black text-brand uppercase">Versículo {note.verse}</p>
+                        <p className="text-[9px] font-extrabold text-brand uppercase">Versículo {note.verse}</p>
                         <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
                           <button 
                             onClick={() => startEditExistingNote(note)}
@@ -599,24 +599,24 @@ const BibleView: React.FC = () => {
       {/* Overlay de Anotação do Versículo */}
       {activeNoteVerse && (
         <div className="fixed inset-0 z-[250] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl animate-in fade-in duration-300">
-          <div className="bg-[#161b22] w-full max-w-xl rounded-[40px] border border-white/10 shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-300">
+          <div className="bg-brand-card w-full max-w-xl rounded-3xl border border-white/10 shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-300">
             <div className="p-8 flex justify-between items-center bg-black/20">
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 bg-brand/10 rounded-xl flex items-center justify-center text-brand border border-brand/20">
                   <Edit3 size={20} />
                 </div>
                 <div>
-                  <h4 className="text-xl font-black text-white uppercase tracking-tighter">V{activeNoteVerse.number}</h4>
-                  <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest">{selectedBook?.name} {selectedChapterIndex + 1}</p>
+                  <h4 className="text-xl font-extrabold text-white uppercase tracking-tighter">V{activeNoteVerse.number}</h4>
+                  <p className="text-[9px] font-extrabold text-c-text-secondary uppercase tracking-widest">{selectedBook?.name} {selectedChapterIndex + 1}</p>
                 </div>
               </div>
-              <button onClick={() => setActiveNoteVerse(null)} className="text-gray-500 hover:text-white p-2">
+              <button onClick={() => setActiveNoteVerse(null)} className="text-c-text-secondary hover:text-white p-2">
                 <X size={24} />
               </button>
             </div>
 
             <div className="p-8 space-y-6">
-              <div className="bg-[#0b0e14] p-6 rounded-2xl border border-white/5 italic text-gray-400 text-sm font-serif">
+              <div className="bg-brand-bg p-6 rounded-2xl border border-white/5 italic text-c-text-secondary text-sm font-serif">
                 "{activeNoteVerse.text}"
               </div>
 
@@ -625,19 +625,19 @@ const BibleView: React.FC = () => {
                 value={noteInput}
                 onChange={e => setNoteInput(e.target.value)}
                 placeholder="O que o Espírito revelou sobre este versículo?"
-                className="w-full bg-[#0b0e14] border border-white/10 rounded-2xl p-6 text-white text-sm outline-none placeholder:text-gray-800 h-40 resize-none font-medium focus:ring-2 focus:ring-brand/30 transition-all"
+                className="w-full bg-brand-bg border border-white/10 rounded-2xl p-6 text-white text-sm outline-none placeholder:text-gray-800 h-40 resize-none font-medium focus:ring-2 focus:ring-brand/30 transition-all"
               />
 
               <div className="flex gap-4">
                 <button
                   onClick={() => setActiveNoteVerse(null)}
-                  className="flex-1 bg-white/5 text-gray-400 py-5 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all"
+                  className="flex-1 bg-white/5 text-c-text-secondary py-5 rounded-2xl font-extrabold text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all"
                 >
                   CANCELAR
                 </button>
                 <button
                   onClick={handleSaveNote}
-                  className="flex-[2] bg-brand text-white py-5 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-brand/30 hover:scale-[1.02] active:scale-95 transition-all"
+                  className="flex-[2] bg-brand text-white py-5 rounded-2xl font-extrabold text-[10px] uppercase tracking-widest shadow-lg shadow-brand/30 hover:scale-[1.02] active:scale-95 transition-all"
                 >
                   {editingNoteId ? 'ATUALIZAR INSIGHT' : 'SALVAR INSIGHT'}
                 </button>
@@ -651,19 +651,19 @@ const BibleView: React.FC = () => {
       {showBookSelector && (
         <div className="fixed inset-0 z-[300] bg-black/95 backdrop-blur-xl p-6 lg:hidden animate-in fade-in duration-300 overflow-y-auto">
           <div className="flex justify-between items-center mb-8">
-            <h3 className="text-2xl font-black text-white uppercase tracking-tighter">
+            <h3 className="text-2xl font-extrabold text-white uppercase tracking-tighter">
               {testamentFilter ? (testamentFilter === 'old' ? 'Antigo Testamento' : 'Novo Testamento') : 'Escolha o Testamento'}
             </h3>
             <div className="flex items-center gap-3">
               {testamentFilter && (
                 <button
                   onClick={() => setTestamentFilter(null)}
-                  className="px-4 py-3 bg-white/5 text-brand rounded-xl font-black text-[10px] uppercase tracking-widest border border-white/5"
+                  className="px-4 py-3 bg-white/5 text-brand rounded-xl font-extrabold text-[10px] uppercase tracking-widest border border-white/5"
                 >
                   Voltar
                 </button>
               )}
-              <button onClick={() => setShowBookSelector(false)} className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center text-gray-500 shadow-xl">
+              <button onClick={() => setShowBookSelector(false)} className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center text-c-text-secondary shadow-xl">
                 <X size={24} />
               </button>
             </div>
@@ -673,20 +673,20 @@ const BibleView: React.FC = () => {
             <div className="grid grid-cols-1 gap-4">
               <button
                 onClick={() => setTestamentFilter('old')}
-                className="relative overflow-hidden p-8 rounded-[32px] bg-gradient-to-br from-brand/20 to-brand/5 border border-brand/20 text-left"
+                className="relative overflow-hidden p-8 rounded-2xl bg-gradient-to-br from-brand/20 to-brand/5 border border-brand/20 text-left"
               >
-                <p className="text-[10px] font-black text-brand uppercase tracking-[0.2em] mb-2">Cânon</p>
-                <p className="text-3xl font-black text-white uppercase tracking-tighter">Antigo<br />Testamento</p>
+                <p className="text-[10px] font-extrabold text-brand uppercase tracking-[0.2em] mb-2">Cânon</p>
+                <p className="text-3xl font-extrabold text-white uppercase tracking-tighter">Antigo<br />Testamento</p>
                 <div className="absolute -right-6 -bottom-6 text-brand/10">
                   <BookOpen size={120} />
                 </div>
               </button>
               <button
                 onClick={() => setTestamentFilter('new')}
-                className="relative overflow-hidden p-8 rounded-[32px] bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 border border-emerald-500/20 text-left"
+                className="relative overflow-hidden p-8 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 border border-emerald-500/20 text-left"
               >
-                <p className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.2em] mb-2">Cânon</p>
-                <p className="text-3xl font-black text-white uppercase tracking-tighter">Novo<br />Testamento</p>
+                <p className="text-[10px] font-extrabold text-emerald-500 uppercase tracking-[0.2em] mb-2">Cânon</p>
+                <p className="text-3xl font-extrabold text-white uppercase tracking-tighter">Novo<br />Testamento</p>
                 <div className="absolute -right-6 -bottom-6 text-emerald-500/10">
                   <BookOpen size={120} />
                 </div>
@@ -706,9 +706,9 @@ const BibleView: React.FC = () => {
                   <button
                     key={book.name}
                     onClick={() => { setSelectedBookIndex(idx); setSelectedChapterIndex(0); setShowBookSelector(false); }}
-                    className={`p-5 rounded-2xl text-left transition-all border ${selectedBookIndex === idx ? 'bg-brand text-white border-brand' : 'bg-[#161b22] text-gray-500 border-white/5'}`}
+                    className={`p-5 rounded-2xl text-left transition-all border ${selectedBookIndex === idx ? 'bg-brand text-white border-brand' : 'bg-brand-card text-c-text-secondary border-white/5'}`}
                   >
-                    <p className="font-black uppercase text-[10px] tracking-tight truncate">{book.name}</p>
+                    <p className="font-extrabold uppercase text-[10px] tracking-tight truncate">{book.name}</p>
                     <p className="text-[8px] font-bold mt-1 opacity-40">{pct}% Concluído</p>
                   </button>
                 );
@@ -721,18 +721,18 @@ const BibleView: React.FC = () => {
       {/* Modal Marcar Vários Capítulos */}
       {showSelectionModal && selectedBook && (
         <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl animate-in fade-in duration-300">
-          <div className="bg-[#161b22] w-full max-w-2xl rounded-[40px] border border-white/10 shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-300 max-h-[90vh]">
+          <div className="bg-brand-card w-full max-w-2xl rounded-3xl border border-white/10 shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-300 max-h-[90vh]">
             <div className="p-8 flex justify-between items-center bg-black/20 border-b border-white/5">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-brand/10 rounded-xl flex items-center justify-center text-brand border border-brand/20">
                   <ListChecks size={24} />
                 </div>
                 <div>
-                  <h4 className="text-2xl font-black text-white uppercase tracking-tighter">{selectedBook.name}</h4>
-                  <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Marcar Capítulos Lidos</p>
+                  <h4 className="text-2xl font-extrabold text-white uppercase tracking-tighter">{selectedBook.name}</h4>
+                  <p className="text-[9px] font-extrabold text-c-text-secondary uppercase tracking-widest">Marcar Capítulos Lidos</p>
                 </div>
               </div>
-              <button onClick={() => setShowSelectionModal(false)} className="text-gray-500 hover:text-white p-2 transition-colors">
+              <button onClick={() => setShowSelectionModal(false)} className="text-c-text-secondary hover:text-white p-2 transition-colors">
                 <X size={24} />
               </button>
             </div>
@@ -740,13 +740,13 @@ const BibleView: React.FC = () => {
             <div className="p-8 flex gap-3 border-b border-white/5 bg-black/10">
               <button
                 onClick={markAllTemp}
-                className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-xl text-[9px] font-black uppercase tracking-widest bg-brand/10 text-brand border border-brand/20 hover:bg-brand/20 transition-all"
+                className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-xl text-[9px] font-extrabold uppercase tracking-widest bg-brand/10 text-brand border border-brand/20 hover:bg-brand/20 transition-all"
               >
                 <CheckCircle2 size={16} /> Marcar Todos
               </button>
               <button
                 onClick={clearTemp}
-                className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-xl text-[9px] font-black uppercase tracking-widest bg-white/5 text-gray-400 border border-white/5 hover:bg-white/10 transition-all"
+                className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-xl text-[9px] font-extrabold uppercase tracking-widest bg-white/5 text-c-text-secondary border border-white/5 hover:bg-white/10 transition-all"
               >
                 <Circle size={16} /> Limpar Todos
               </button>
@@ -761,9 +761,9 @@ const BibleView: React.FC = () => {
                     <button
                       key={chapterNum}
                       onClick={() => toggleTempChapter(chapterNum)}
-                      className={`aspect-square rounded-xl text-sm font-black transition-all border ${isSelected
+                      className={`aspect-square rounded-xl text-sm font-extrabold transition-all border ${isSelected
                         ? 'bg-emerald-500/20 text-emerald-500 border-emerald-500/40 shadow-lg'
-                        : 'bg-white/5 text-gray-500 border-white/5 hover:border-brand/30 hover:text-brand'
+                        : 'bg-white/5 text-c-text-secondary border-white/5 hover:border-brand/30 hover:text-brand'
                         }`}
                     >
                       {chapterNum}
@@ -776,13 +776,13 @@ const BibleView: React.FC = () => {
             <div className="p-8 flex gap-4 border-t border-white/5 bg-black/20">
               <button
                 onClick={() => setShowSelectionModal(false)}
-                className="flex-1 bg-white/5 text-gray-400 py-5 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all"
+                className="flex-1 bg-white/5 text-c-text-secondary py-5 rounded-2xl font-extrabold text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleConfirmMultiMark}
-                className="flex-[2] bg-brand text-white py-5 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-brand/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+                className="flex-[2] bg-brand text-white py-5 rounded-2xl font-extrabold text-[10px] uppercase tracking-widest shadow-lg shadow-brand/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
               >
                 <Check size={18} /> Confirmar Seleção
               </button>
@@ -793,7 +793,7 @@ const BibleView: React.FC = () => {
 
       <style>{`
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(135, 67, 242, 0.2); border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(108, 59, 255, 0.2); border-radius: 10px; }
       `}</style>
     </div>
   );

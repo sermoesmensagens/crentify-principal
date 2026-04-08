@@ -46,10 +46,10 @@ export function UpdateNotification() {
           </div>
           <div>
             <h3 className="text-white font-bold text-sm tracking-wide">Nova Versão Disponível</h3>
-            <p className="text-gray-400 text-xs mt-1">Atualizamos o Crentify para você!</p>
+            <p className="text-c-text-secondary text-xs mt-1">Atualizamos o Crentify para você!</p>
           </div>
         </div>
-        <button onClick={handleClose} className="text-gray-500 hover:text-white transition-colors">
+        <button onClick={handleClose} className="text-c-text-secondary hover:text-white transition-colors">
           <X className="h-4 w-4" />
         </button>
       </div>

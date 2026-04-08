@@ -44,15 +44,15 @@ const MentorAI: React.FC = () => {
     <div className="h-full flex flex-col space-y-8 animate-in fade-in duration-700 pb-10">
       <header className="flex flex-col md:flex-row justify-between items-end gap-4 border-b border-white/5 pb-8">
         <div>
-          <h1 className="text-5xl font-black text-white tracking-tighter uppercase neon-text flex items-center gap-4">
+          <h1 className="text-5xl font-extrabold text-white tracking-tighter uppercase neon-text flex items-center gap-4">
             <Bot size={42} className="text-brand" />
             Mentor IA
           </h1>
-          <p className="text-gray-500 mt-2 font-medium">Conselhamento teológico e estratégico com base bíblica.</p>
+          <p className="text-c-text-secondary mt-2 font-medium">Conselhamento teológico e estratégico com base bíblica.</p>
         </div>
       </header>
 
-      <div className="flex-1 bg-[#161b22] rounded-[48px] border border-white/5 shadow-2xl flex flex-col overflow-hidden relative">
+      <div className="flex-1 bg-brand-card rounded-[48px] border border-white/5 shadow-2xl flex flex-col overflow-hidden relative">
         <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none">
           <Sparkles size={200} className="text-brand" />
         </div>
@@ -62,14 +62,14 @@ const MentorAI: React.FC = () => {
             <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               <div className={`max-w-[85%] flex gap-5 ${m.role === 'user' ? 'flex-row-reverse' : ''}`}>
                 <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg border transition-all ${
-                  m.role === 'user' ? 'bg-brand border-brand text-white' : 'bg-[#0b0e14] border-white/10 text-brand'
+                  m.role === 'user' ? 'bg-brand border-brand text-white' : 'bg-brand-bg border-white/10 text-brand'
                 }`}>
                   {m.role === 'user' ? <User size={20} strokeWidth={3} /> : <Bot size={20} strokeWidth={3} />}
                 </div>
-                <div className={`p-7 rounded-[32px] text-base leading-relaxed shadow-xl border ${
+                <div className={`p-7 rounded-2xl text-base leading-relaxed shadow-xl border ${
                   m.role === 'user' 
                     ? 'bg-brand/20 border-brand/30 text-white rounded-tr-none' 
-                    : 'bg-[#0b0e14]/50 border-white/5 text-gray-300 rounded-tl-none font-medium'
+                    : 'bg-brand-bg/50 border-white/5 text-gray-300 rounded-tl-none font-medium'
                 }`}>
                   {m.content.split('\n').map((line, idx) => (
                     <p key={idx} className={idx > 0 ? 'mt-4' : ''}>{line}</p>
@@ -82,7 +82,7 @@ const MentorAI: React.FC = () => {
             <div className="flex justify-start animate-pulse">
               <div className="bg-brand/5 border border-brand/20 p-5 rounded-3xl flex items-center gap-3 text-brand">
                 <Loader2 className="animate-spin" size={20} />
-                <span className="text-[10px] font-black uppercase tracking-widest">Buscando sabedoria nas escrituras...</span>
+                <span className="text-[10px] font-extrabold uppercase tracking-widest">Buscando sabedoria nas escrituras...</span>
               </div>
             </div>
           )}
@@ -95,12 +95,12 @@ const MentorAI: React.FC = () => {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
             placeholder="Digite sua dúvida teológica ou profissional..."
-            className="flex-1 bg-[#0b0e14] border border-white/5 text-white rounded-[24px] px-8 py-5 focus:outline-none focus:ring-2 focus:ring-brand/30 font-bold placeholder:text-gray-700 transition-all shadow-inner"
+            className="flex-1 bg-brand-bg border border-white/5 text-white rounded-2xl px-8 py-5 focus:outline-none focus:ring-2 focus:ring-brand/30 font-bold placeholder:text-c-text-muted transition-all shadow-inner"
           />
           <button
             onClick={handleSend}
             disabled={loading || !input.trim()}
-            className="bg-brand text-white w-16 h-16 rounded-[24px] flex items-center justify-center hover:scale-105 active:scale-95 disabled:opacity-30 transition-all shadow-xl shadow-brand/30"
+            className="bg-brand text-white w-16 h-16 rounded-2xl flex items-center justify-center hover:scale-105 active:scale-95 disabled:opacity-30 transition-all shadow-xl shadow-brand/30"
           >
             <Send size={24} strokeWidth={3} />
           </button>

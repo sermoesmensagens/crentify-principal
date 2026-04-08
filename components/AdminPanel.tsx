@@ -709,18 +709,18 @@ const AdminPanel: React.FC = () => {
     <div className="flex flex-col space-y-10 animate-in fade-in duration-700 pb-24">
       <header className="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-white/5 pb-8">
         <div>
-          <h1 className="text-5xl font-black text-white tracking-tighter uppercase neon-text flex items-center gap-4">
+          <h1 className="text-5xl font-extrabold text-white tracking-tighter uppercase neon-text flex items-center gap-4">
             <Settings size={42} className="text-brand" />
             Admin
           </h1>
-          <p className="text-gray-500 mt-2 font-medium">Controle de Dados e Infraestrutura.</p>
+          <p className="text-c-text-secondary mt-2 font-medium">Controle de Dados e Infraestrutura.</p>
         </div>
-        <div className="flex bg-[#161b22] p-1.5 rounded-2xl border border-white/5 shadow-2xl overflow-x-auto custom-scrollbar">
+        <div className="flex bg-brand-card p-1.5 rounded-2xl border border-white/5 shadow-2xl overflow-x-auto custom-scrollbar">
           {(['bible', 'courses', 'lessons', 'prayerThemes', 'prayerContent', 'plans', 'users', 'config'] as const).map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-6 md:px-10 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${activeTab === tab ? 'bg-brand text-white shadow-lg shadow-brand/20' : 'text-gray-600 hover:text-gray-300'}`}
+              className={`px-6 md:px-10 py-3 rounded-xl text-[10px] font-extrabold uppercase tracking-widest transition-all whitespace-nowrap ${activeTab === tab ? 'bg-brand text-white shadow-lg shadow-brand/20' : 'text-c-text-muted hover:text-gray-300'}`}
             >
               {tab === 'bible' ? 'Escrituras' : 
                tab === 'courses' ? 'Cursos Academy' : 
@@ -736,7 +736,7 @@ const AdminPanel: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
         {/* Lado Esquerdo: Formulários */}
-        <div className={`lg:col-span-12 xl:col-span-7 bg-[#161b22] p-10 rounded-[56px] border shadow-2xl space-y-10 relative overflow-hidden group transition-all duration-500 ${(editingModuleId || editingCourseId) ? 'border-brand/40 ring-1 ring-brand/20' : 'border-white/5'}`}>
+        <div className={`lg:col-span-12 xl:col-span-7 bg-brand-card p-10 rounded-3xl border shadow-2xl space-y-10 relative overflow-hidden group transition-all duration-500 ${(editingModuleId || editingCourseId) ? 'border-brand/40 ring-1 ring-brand/20' : 'border-white/5'}`}>
           <div className="absolute top-0 right-0 p-16 opacity-[0.03] group-hover:scale-110 transition-transform pointer-events-none select-none">
             {activeTab === 'bible' ? <Database size={180} className="text-brand" /> : activeTab === 'courses' ? <LayoutGrid size={180} className="text-brand" /> : <GraduationCap size={180} className="text-brand" />}
           </div>
@@ -744,18 +744,18 @@ const AdminPanel: React.FC = () => {
           {activeTab === 'bible' && (
             <div className="space-y-10 animate-in slide-in-from-left duration-500">
               <div className="flex items-center gap-6">
-                <div className="w-20 h-20 bg-brand/10 text-brand rounded-[28px] flex items-center justify-center border border-brand/20 shadow-xl">
+                <div className="w-20 h-20 bg-brand/10 text-brand rounded-2xl flex items-center justify-center border border-brand/20 shadow-xl">
                   <Database size={36} />
                 </div>
                 <div>
-                  <h2 className="text-3xl font-black text-white uppercase tracking-tighter">Bíblia Digital</h2>
+                  <h2 className="text-3xl font-extrabold text-white uppercase tracking-tighter">Bíblia Digital</h2>
                   <div className="flex flex-col gap-1">
-                    <p className="text-xs text-gray-500 font-bold uppercase tracking-[0.2em]">
+                    <p className="text-xs text-c-text-secondary font-bold uppercase tracking-[0.2em]">
                       {bibleData ? `${bibleData.books.length} Livros em Memória Local` : 'Aguardando Importação JSON'}
                     </p>
                     <div className="flex items-center gap-2">
                       <div className={`w-1.5 h-1.5 rounded-full ${cloudSyncStatus['crentify_bible_data'] ? 'bg-emerald-500' : 'bg-rose-500'}`}></div>
-                      <span className={`text-[8px] font-black uppercase tracking-widest ${cloudSyncStatus['crentify_bible_data'] ? 'text-emerald-500/80' : 'text-rose-500/80'}`}>
+                      <span className={`text-[8px] font-extrabold uppercase tracking-widest ${cloudSyncStatus['crentify_bible_data'] ? 'text-emerald-500/80' : 'text-rose-500/80'}`}>
                         {cloudSyncStatus['crentify_bible_data'] ? 'Sincronizado na Nuvem' : 'Não Detectado na Nuvem'}
                       </span>
                     </div>
@@ -773,19 +773,19 @@ const AdminPanel: React.FC = () => {
                 </div>
               )}
 
-              <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-white/10 rounded-[40px] cursor-pointer bg-black/20 hover:border-brand/40 hover:bg-brand/5 transition-all group/upload relative">
+              <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-white/10 rounded-3xl cursor-pointer bg-black/20 hover:border-brand/40 hover:bg-brand/5 transition-all group/upload relative">
                 {isProcessing ? (
                   <div className="flex flex-col items-center gap-4">
                     <Loader2 className="animate-spin text-brand" size={48} />
-                    <span className="text-[10px] font-black uppercase tracking-widest text-brand animate-pulse text-center">
+                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-brand animate-pulse text-center">
                       Gravando Dados Localmente...<br />
                       <span className="text-[8px] opacity-50 mt-1 block">A sincronização com a nuvem continuará em segundo plano</span>
                     </span>
                   </div>
                 ) : (
                   <>
-                    <Upload className="text-gray-700 mb-4 group-hover/upload:text-brand transition-all" size={48} />
-                    <p className="text-[11px] font-black uppercase text-gray-500 tracking-[0.3em] text-center max-w-xs px-10">Importar Arquivo JSON (NVI, Almeida, etc)</p>
+                    <Upload className="text-c-text-muted mb-4 group-hover/upload:text-brand transition-all" size={48} />
+                    <p className="text-[11px] font-extrabold uppercase text-c-text-secondary tracking-[0.3em] text-center max-w-xs px-10">Importar Arquivo JSON (NVI, Almeida, etc)</p>
                     <input type="file" className="hidden" accept=".json" onChange={handleBibleUpload} />
                   </>
                 )}
@@ -798,14 +798,14 @@ const AdminPanel: React.FC = () => {
             <div className="space-y-10 animate-in slide-in-from-right duration-500">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-6">
-                  <div className="w-20 h-20 bg-brand/10 text-brand rounded-[28px] flex items-center justify-center border border-brand/20 shadow-xl">
+                  <div className="w-20 h-20 bg-brand/10 text-brand rounded-2xl flex items-center justify-center border border-brand/20 shadow-xl">
                     <LayoutGrid size={36} />
                   </div>
                   <div>
-                    <h2 className="text-3xl font-black text-white uppercase tracking-tighter">
+                    <h2 className="text-3xl font-extrabold text-white uppercase tracking-tighter">
                       {editingCourseId ? 'Editar Curso' : 'Novo Curso Academy'}
                     </h2>
-                    <p className="text-xs text-gray-500 font-bold uppercase tracking-[0.2em]">Gerencie trilhas de conhecimento</p>
+                    <p className="text-xs text-c-text-secondary font-bold uppercase tracking-[0.2em]">Gerencie trilhas de conhecimento</p>
                   </div>
                 </div>
                 {editingCourseId && (
@@ -815,28 +815,28 @@ const AdminPanel: React.FC = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Título do Curso</label>
-                  <input type="text" placeholder="Ex: Teologia Sistemática" value={newCourse.title} onChange={e => setNewCourse({ ...newCourse, title: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
+                  <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Título do Curso</label>
+                  <input type="text" placeholder="Ex: Teologia Sistemática" value={newCourse.title} onChange={e => setNewCourse({ ...newCourse, title: e.target.value })} className="w-full bg-brand-bg border border-white/5 rounded-2xl px-8 py-5 text-white font-extrabold outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Capa (URL)</label>
+                  <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Capa (URL)</label>
                   <div className="relative">
-                    <ImageIcon size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-700" />
-                    <input type="text" placeholder="https://..." value={newCourse.thumbnailUrl} onChange={e => setNewCourse({ ...newCourse, thumbnailUrl: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] pl-14 pr-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
+                    <ImageIcon size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-c-text-muted" />
+                    <input type="text" placeholder="https://..." value={newCourse.thumbnailUrl} onChange={e => setNewCourse({ ...newCourse, thumbnailUrl: e.target.value })} className="w-full bg-brand-bg border border-white/5 rounded-2xl pl-14 pr-8 py-5 text-white font-extrabold outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Categoria</label>
+                  <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Categoria</label>
                   <div className="relative">
-                    <select value={newCourse.categoryId} onChange={e => setNewCourse({ ...newCourse, categoryId: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none cursor-pointer hover:border-brand/30 transition-all">
+                    <select value={newCourse.categoryId} onChange={e => setNewCourse({ ...newCourse, categoryId: e.target.value })} className="w-full bg-brand-bg border border-white/5 text-white rounded-2xl px-8 py-5 font-extrabold outline-none cursor-pointer hover:border-brand/30 transition-all">
                       {academyCategories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                     </select>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Visibilidade</label>
+                  <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Visibilidade</label>
                   <div className="relative">
-                    <select value={newCourse.visibility} onChange={e => setNewCourse({ ...newCourse, visibility: e.target.value as AcademyVisibility })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none cursor-pointer hover:border-brand/30 transition-all">
+                    <select value={newCourse.visibility} onChange={e => setNewCourse({ ...newCourse, visibility: e.target.value as AcademyVisibility })} className="w-full bg-brand-bg border border-white/5 text-white rounded-2xl px-8 py-5 font-extrabold outline-none cursor-pointer hover:border-brand/30 transition-all">
                       <option value="público">Público</option>
                       <option value="não listado">Não Listado</option>
                       <option value="privado">Privado</option>
@@ -844,12 +844,12 @@ const AdminPanel: React.FC = () => {
                   </div>
                 </div>
                 <div className="md:col-span-2 space-y-2">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Descrição</label>
-                  <textarea placeholder="Objetivo do curso..." value={newCourse.description} onChange={e => setNewCourse({ ...newCourse, description: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[32px] px-8 py-5 font-medium outline-none focus:ring-2 focus:ring-brand/30 h-32 resize-none" />
+                  <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Descrição</label>
+                  <textarea placeholder="Objetivo do curso..." value={newCourse.description} onChange={e => setNewCourse({ ...newCourse, description: e.target.value })} className="w-full bg-brand-bg border border-white/5 text-white rounded-2xl px-8 py-5 font-medium outline-none focus:ring-2 focus:ring-brand/30 h-32 resize-none" />
                 </div>
               </div>
 
-              <button onClick={handleAddOrUpdateCourse} className="w-full bg-brand text-white py-6 rounded-[28px] font-black uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
+              <button onClick={handleAddOrUpdateCourse} className="w-full bg-brand text-white py-6 rounded-2xl font-extrabold uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
                 {editingCourseId ? <CheckCircle2 size={24} /> : <Plus size={24} strokeWidth={3} />}
                 {editingCourseId ? 'SALVAR CURSO' : 'CRIAR CURSO'}
               </button>
@@ -860,14 +860,14 @@ const AdminPanel: React.FC = () => {
             <div className="space-y-10 animate-in slide-in-from-right duration-500">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-6">
-                  <div className="w-20 h-20 bg-brand/10 text-brand rounded-[28px] flex items-center justify-center border border-brand/20 shadow-xl">
+                  <div className="w-20 h-20 bg-brand/10 text-brand rounded-2xl flex items-center justify-center border border-brand/20 shadow-xl">
                     <GraduationCap size={36} />
                   </div>
                   <div>
-                    <h2 className="text-3xl font-black text-white uppercase tracking-tighter">
+                    <h2 className="text-3xl font-extrabold text-white uppercase tracking-tighter">
                       {editingModuleId ? 'Editar Aula' : 'Nova Aula'}
                     </h2>
-                    <p className="text-xs text-gray-500 font-bold uppercase tracking-[0.2em]">Adicione conteúdos e recursos</p>
+                    <p className="text-xs text-c-text-secondary font-bold uppercase tracking-[0.2em]">Adicione conteúdos e recursos</p>
                   </div>
                 </div>
                 {editingModuleId && (
@@ -877,16 +877,16 @@ const AdminPanel: React.FC = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Título do Bloco (Dia)</label>
-                  <input type="text" placeholder="Ex: Estudo, Descanso..." value={newModule.title} onChange={e => setNewModule({ ...newModule, title: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
+                  <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Título do Bloco (Dia)</label>
+                  <input type="text" placeholder="Ex: Estudo, Descanso..." value={newModule.title} onChange={e => setNewModule({ ...newModule, title: e.target.value })} className="w-full bg-brand-bg border border-white/5 rounded-2xl px-8 py-5 text-white font-extrabold outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Pertence ao Curso</label>
+                  <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Pertence ao Curso</label>
                   <div className="relative">
                     <select value={newModule.courseId} onChange={e => {
                       const course = academyCourses.find(c => c.id === e.target.value);
                       setNewModule({ ...newModule, courseId: e.target.value, categoryId: course?.categoryId });
-                    }} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none cursor-pointer hover:border-brand/30 transition-all">
+                    }} className="w-full bg-brand-bg border border-white/5 text-white rounded-2xl px-8 py-5 font-extrabold outline-none cursor-pointer hover:border-brand/30 transition-all">
                       <option value="">Selecione um curso...</option>
                       {academyCourses.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}
                     </select>
@@ -894,13 +894,13 @@ const AdminPanel: React.FC = () => {
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between mb-1">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Semana (Grupo)</label>
-                    <button onClick={() => setCategoryToManage('weeks')} className="text-[9px] font-black text-brand hover:underline uppercase tracking-tighter transition-all">Gerenciar</button>
+                    <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Semana (Grupo)</label>
+                    <button onClick={() => setCategoryToManage('weeks')} className="text-[9px] font-extrabold text-brand hover:underline uppercase tracking-tighter transition-all">Gerenciar</button>
                   </div>
                   <select 
                     value={newModule.week || ''} 
                     onChange={e => setNewModule({ ...newModule, week: e.target.value })} 
-                    className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none cursor-pointer hover:border-brand/30 transition-all appearance-none"
+                    className="w-full bg-brand-bg border border-white/5 text-white rounded-2xl px-8 py-5 font-extrabold outline-none cursor-pointer hover:border-brand/30 transition-all appearance-none"
                   >
                     <option value="">Selecione a Semana...</option>
                     {weekCategories.map(w => <option key={w.id} value={w.name}>{w.name}</option>)}
@@ -908,13 +908,13 @@ const AdminPanel: React.FC = () => {
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between mb-1">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Dia da Semana</label>
-                    <button onClick={() => setCategoryToManage('days')} className="text-[9px] font-black text-brand hover:underline uppercase tracking-tighter transition-all">Gerenciar</button>
+                    <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Dia da Semana</label>
+                    <button onClick={() => setCategoryToManage('days')} className="text-[9px] font-extrabold text-brand hover:underline uppercase tracking-tighter transition-all">Gerenciar</button>
                   </div>
                   <select 
                     value={newModule.day || ''} 
                     onChange={e => setNewModule({ ...newModule, day: e.target.value })} 
-                    className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none cursor-pointer hover:border-brand/30 transition-all appearance-none"
+                    className="w-full bg-brand-bg border border-white/5 text-white rounded-2xl px-8 py-5 font-extrabold outline-none cursor-pointer hover:border-brand/30 transition-all appearance-none"
                   >
                     <option value="">Selecione o Dia...</option>
                     {dayCategories.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
@@ -924,12 +924,12 @@ const AdminPanel: React.FC = () => {
 
               {/* Gerenciamento de Recursos */}
               <div className="space-y-6 pt-6 border-t border-white/5">
-                <h3 className="text-xs font-black text-white uppercase tracking-[0.2em]">Recursos da Aula</h3>
+                <h3 className="text-xs font-extrabold text-white uppercase tracking-[0.2em]">Recursos da Aula</h3>
 
-                <div className="bg-black/20 p-8 rounded-[40px] border border-white/5 space-y-6">
+                <div className="bg-black/20 p-8 rounded-3xl border border-white/5 space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
                     <div className="md:col-span-3">
-                      <select value={resourceForm.type} onChange={e => setResourceForm({ ...resourceForm, type: e.target.value as any })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-xl px-4 py-3 text-[10px] font-black outline-none">
+                      <select value={resourceForm.type} onChange={e => setResourceForm({ ...resourceForm, type: e.target.value as any })} className="w-full bg-brand-bg border border-white/5 text-white rounded-xl px-4 py-3 text-[10px] font-extrabold outline-none">
                         <option value="leitura">Leitura Bíblica</option>
                         <option value="video">Vídeo (YT)</option>
                         <option value="link">Link Externo</option>
@@ -937,31 +937,31 @@ const AdminPanel: React.FC = () => {
                       </select>
                     </div>
                     <div className="md:col-span-6">
-                      <input type="text" placeholder="Nome da Tarefa (ex: Leitura de Êxodo 20)" value={resourceForm.title} onChange={e => setResourceForm({ ...resourceForm, title: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-xl px-6 py-3 text-white text-[10px] font-black outline-none" />
+                      <input type="text" placeholder="Nome da Tarefa (ex: Leitura de Êxodo 20)" value={resourceForm.title} onChange={e => setResourceForm({ ...resourceForm, title: e.target.value })} className="w-full bg-brand-bg border border-white/5 rounded-xl px-6 py-3 text-white text-[10px] font-extrabold outline-none" />
                     </div>
                     <div className="md:col-span-3">
-                      <input type="text" placeholder="Tempo (ex: 15 min)" value={resourceForm.duration || ''} onChange={e => setResourceForm({ ...resourceForm, duration: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-xl px-6 py-3 text-white text-[10px] font-black outline-none" />
+                      <input type="text" placeholder="Tempo (ex: 15 min)" value={resourceForm.duration || ''} onChange={e => setResourceForm({ ...resourceForm, duration: e.target.value })} className="w-full bg-brand-bg border border-white/5 rounded-xl px-6 py-3 text-white text-[10px] font-extrabold outline-none" />
                     </div>
                   </div>
 
                   <div className="relative">
-                    <textarea placeholder="Como Fazer (Instruções da Tarefa)..." value={resourceForm.instruction || ''} onChange={e => setResourceForm({ ...resourceForm, instruction: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-xs font-medium outline-none h-20 resize-none custom-scrollbar" />
+                    <textarea placeholder="Como Fazer (Instruções da Tarefa)..." value={resourceForm.instruction || ''} onChange={e => setResourceForm({ ...resourceForm, instruction: e.target.value })} className="w-full bg-brand-bg border border-white/5 rounded-2xl px-6 py-4 text-xs font-medium outline-none h-20 resize-none custom-scrollbar" />
                   </div>
 
                   {resourceForm.type !== 'text' && resourceForm.type !== 'leitura' ? (
                     <div className="relative">
-                      <Link size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
-                      <input type="text" placeholder="URL do Vídeo / Link Externo" value={resourceForm.url} onChange={e => setResourceForm({ ...resourceForm, url: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-xl pl-12 pr-6 py-3 text-white text-[10px] font-medium outline-none" />
+                      <Link size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-c-text-secondary" />
+                      <input type="text" placeholder="URL do Vídeo / Link Externo" value={resourceForm.url} onChange={e => setResourceForm({ ...resourceForm, url: e.target.value })} className="w-full bg-brand-bg border border-white/5 rounded-xl pl-12 pr-6 py-3 text-white text-[10px] font-medium outline-none" />
                     </div>
                   ) : (
                     <div className="space-y-2">
-                      <textarea placeholder="Conteúdo (Se for texto livre ou versículos de leitura)..." value={resourceForm.content} onChange={e => setResourceForm({ ...resourceForm, content: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-2xl px-6 py-4 text-xs font-medium outline-none h-32 resize-none custom-scrollbar" />
-                      <p className="text-[8px] text-gray-500 uppercase font-bold text-right">Limite sugerido: ~3000 caracteres por recurso</p>
+                      <textarea placeholder="Conteúdo (Se for texto livre ou versículos de leitura)..." value={resourceForm.content} onChange={e => setResourceForm({ ...resourceForm, content: e.target.value })} className="w-full bg-brand-bg border border-white/5 text-white rounded-2xl px-6 py-4 text-xs font-medium outline-none h-32 resize-none custom-scrollbar" />
+                      <p className="text-[8px] text-c-text-secondary uppercase font-bold text-right">Limite sugerido: ~3000 caracteres por recurso</p>
                     </div>
                   )}
 
                   <div className="flex gap-2">
-                    <button onClick={addResource} className="flex-1 bg-white/5 border border-white/10 text-white py-3 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-brand hover:border-brand transition-all flex items-center justify-center gap-2">
+                    <button onClick={addResource} className="flex-1 bg-white/5 border border-white/10 text-white py-3 rounded-xl text-[9px] font-extrabold uppercase tracking-widest hover:bg-brand hover:border-brand transition-all flex items-center justify-center gap-2">
                       {editingResourceId ? <CheckCircle2 size={14} /> : <Plus size={14} />}
                       {editingResourceId ? 'ATUALIZAR RECURSO' : 'ADICIONAR RECURSO'}
                     </button>
@@ -976,21 +976,21 @@ const AdminPanel: React.FC = () => {
                 {/* Lista de Recursos Adicionados */}
                 <div className="space-y-3">
                   {newModule.resources?.map(r => (
-                    <div key={r.id} className="flex items-center justify-between p-4 bg-[#0b0e14]/50 rounded-2xl border border-white/5 group">
+                    <div key={r.id} className="flex items-center justify-between p-4 bg-brand-bg/50 rounded-2xl border border-white/5 group">
                       <div className="flex items-center gap-4">
-                        <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-500 group-hover:text-brand transition-colors">
+                        <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-c-text-secondary group-hover:text-brand transition-colors">
                           {r.type === 'video' ? <Youtube size={14} /> : r.type === 'text' ? <FileText size={14} /> : <Link size={14} />}
                         </div>
                         <div>
-                          <p className="text-[10px] font-black text-white uppercase tracking-tight">{r.title}</p>
-                          <span className="text-[8px] text-gray-500 font-bold uppercase">{r.type}</span>
+                          <p className="text-[10px] font-extrabold text-white uppercase tracking-tight">{r.title}</p>
+                          <span className="text-[8px] text-c-text-secondary font-bold uppercase">{r.type}</span>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <button onClick={() => { setEditingResourceId(r.id); setResourceForm(r); }} className="text-gray-700 hover:text-brand transition-colors p-1">
+                        <button onClick={() => { setEditingResourceId(r.id); setResourceForm(r); }} className="text-c-text-muted hover:text-brand transition-colors p-1">
                           <Edit2 size={16} />
                         </button>
-                        <button onClick={() => removeResource(r.id)} className="text-gray-700 hover:text-rose-500 transition-colors p-1">
+                        <button onClick={() => removeResource(r.id)} className="text-c-text-muted hover:text-rose-500 transition-colors p-1">
                           <Trash2 size={16} />
                         </button>
                       </div>
@@ -999,7 +999,7 @@ const AdminPanel: React.FC = () => {
                 </div>
               </div>
 
-              <button onClick={handleAddOrUpdateModule} className="w-full bg-brand text-white py-6 rounded-[28px] font-black uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
+              <button onClick={handleAddOrUpdateModule} className="w-full bg-brand text-white py-6 rounded-2xl font-extrabold uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
                 {editingModuleId ? <CheckCircle2 size={24} /> : <Zap size={24} strokeWidth={3} />}
                 {editingModuleId ? 'SALVAR AULA' : 'PUBLICAR AULA'}
               </button>
@@ -1010,17 +1010,17 @@ const AdminPanel: React.FC = () => {
             <div className="space-y-10 animate-in slide-in-from-right duration-500">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-6">
-                  <div className="w-20 h-20 bg-emerald-500/10 text-emerald-500 rounded-[28px] flex items-center justify-center border border-emerald-500/20 shadow-xl">
+                  <div className="w-20 h-20 bg-emerald-500/10 text-emerald-500 rounded-2xl flex items-center justify-center border border-emerald-500/20 shadow-xl">
                     <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M12 2C9.5 5.5 8 9.5 8 13v6a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-6c0-3.5-1.5-7.5-4-11Z" />
                       <path d="M12 2v19" />
                     </svg>
                   </div>
                   <div>
-                    <h2 className="text-3xl font-black text-white uppercase tracking-tighter">
+                    <h2 className="text-3xl font-extrabold text-white uppercase tracking-tighter">
                       {editingPrayerThemeId ? 'Editar Tema' : 'Novo Tema de Oração'}
                     </h2>
-                    <p className="text-xs text-gray-500 font-bold uppercase tracking-[0.2em]">Crie trilhas de oração guiada</p>
+                    <p className="text-xs text-c-text-secondary font-bold uppercase tracking-[0.2em]">Crie trilhas de oração guiada</p>
                   </div>
                 </div>
                 {editingPrayerThemeId && (
@@ -1030,40 +1030,40 @@ const AdminPanel: React.FC = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Título do Tema de Oração</label>
-                  <input type="text" placeholder="Ex: Soberania de Deus" value={newPrayerTheme.title} onChange={e => setNewPrayerTheme({ ...newPrayerTheme, title: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
+                  <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Título do Tema de Oração</label>
+                  <input type="text" placeholder="Ex: Soberania de Deus" value={newPrayerTheme.title} onChange={e => setNewPrayerTheme({ ...newPrayerTheme, title: e.target.value })} className="w-full bg-brand-bg border border-white/5 rounded-2xl px-8 py-5 text-white font-extrabold outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Capa (URL)</label>
+                  <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Capa (URL)</label>
                   <div className="relative">
-                    <ImageIcon size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-700" />
-                    <input type="text" placeholder="https://..." value={newPrayerTheme.thumbnailUrl} onChange={e => setNewPrayerTheme({ ...newPrayerTheme, thumbnailUrl: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] pl-14 pr-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
+                    <ImageIcon size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-c-text-muted" />
+                    <input type="text" placeholder="https://..." value={newPrayerTheme.thumbnailUrl} onChange={e => setNewPrayerTheme({ ...newPrayerTheme, thumbnailUrl: e.target.value })} className="w-full bg-brand-bg border border-white/5 rounded-2xl pl-14 pr-8 py-5 text-white font-extrabold outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between mb-1">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Categoria de Oração</label>
-                    <button onClick={() => setCategoryToManage('prayerCategories')} className="text-[9px] font-black text-brand hover:underline uppercase tracking-tighter transition-all">Gerenciar</button>
+                    <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Categoria de Oração</label>
+                    <button onClick={() => setCategoryToManage('prayerCategories')} className="text-[9px] font-extrabold text-brand hover:underline uppercase tracking-tighter transition-all">Gerenciar</button>
                   </div>
-                  <select value={newPrayerTheme.categoryId} onChange={e => setNewPrayerTheme({ ...newPrayerTheme, categoryId: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none cursor-pointer hover:border-brand/30 transition-all">
+                  <select value={newPrayerTheme.categoryId} onChange={e => setNewPrayerTheme({ ...newPrayerTheme, categoryId: e.target.value })} className="w-full bg-brand-bg border border-white/5 text-white rounded-2xl px-8 py-5 font-extrabold outline-none cursor-pointer hover:border-brand/30 transition-all">
                     {prayerCategories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Visibilidade</label>
-                  <select value={newPrayerTheme.visibility} onChange={e => setNewPrayerTheme({ ...newPrayerTheme, visibility: e.target.value as AcademyVisibility })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none cursor-pointer hover:border-brand/30 transition-all">
+                  <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Visibilidade</label>
+                  <select value={newPrayerTheme.visibility} onChange={e => setNewPrayerTheme({ ...newPrayerTheme, visibility: e.target.value as AcademyVisibility })} className="w-full bg-brand-bg border border-white/5 text-white rounded-2xl px-8 py-5 font-extrabold outline-none cursor-pointer hover:border-brand/30 transition-all">
                     <option value="público">Público</option>
                     <option value="não listado">Não Listado</option>
                     <option value="privado">Privado</option>
                   </select>
                 </div>
                 <div className="md:col-span-2 space-y-2">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Descrição</label>
-                  <textarea placeholder="Propósito deste tema de oração..." value={newPrayerTheme.description} onChange={e => setNewPrayerTheme({ ...newPrayerTheme, description: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[32px] px-8 py-5 font-medium outline-none focus:ring-2 focus:ring-brand/30 h-32 resize-none" />
+                  <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Descrição</label>
+                  <textarea placeholder="Propósito deste tema de oração..." value={newPrayerTheme.description} onChange={e => setNewPrayerTheme({ ...newPrayerTheme, description: e.target.value })} className="w-full bg-brand-bg border border-white/5 text-white rounded-2xl px-8 py-5 font-medium outline-none focus:ring-2 focus:ring-brand/30 h-32 resize-none" />
                 </div>
               </div>
 
-              <button onClick={handleAddOrUpdatePrayerTheme} className="w-full bg-brand text-white py-6 rounded-[28px] font-black uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
+              <button onClick={handleAddOrUpdatePrayerTheme} className="w-full bg-brand text-white py-6 rounded-2xl font-extrabold uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
                 {editingPrayerThemeId ? <CheckCircle2 size={24} /> : <Plus size={24} strokeWidth={3} />}
                 {editingPrayerThemeId ? 'SALVAR TEMA ORAÇÃO' : 'CRIAR TEMA ORAÇÃO'}
               </button>
@@ -1074,17 +1074,17 @@ const AdminPanel: React.FC = () => {
             <div className="space-y-10 animate-in slide-in-from-right duration-500">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-6">
-                  <div className="w-20 h-20 bg-emerald-500/10 text-emerald-500 rounded-[28px] flex items-center justify-center border border-emerald-500/20 shadow-xl">
+                  <div className="w-20 h-20 bg-emerald-500/10 text-emerald-500 rounded-2xl flex items-center justify-center border border-emerald-500/20 shadow-xl">
                     <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M12 2C9.5 5.5 8 9.5 8 13v6a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-6c0-3.5-1.5-7.5-4-11Z" />
                       <path d="M12 2v19" />
                     </svg>
                   </div>
                   <div>
-                    <h2 className="text-3xl font-black text-white uppercase tracking-tighter">
+                    <h2 className="text-3xl font-extrabold text-white uppercase tracking-tighter">
                       {editingPrayerContentId ? 'Editar Conteúdo' : 'Novo Conteúdo de Oração'}
                     </h2>
-                    <p className="text-xs text-gray-500 font-bold uppercase tracking-[0.2em]">Adicione vídeos e guias de oração</p>
+                    <p className="text-xs text-c-text-secondary font-bold uppercase tracking-[0.2em]">Adicione vídeos e guias de oração</p>
                   </div>
                 </div>
                 {editingPrayerContentId && (
@@ -1094,16 +1094,16 @@ const AdminPanel: React.FC = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Título do Conteúdo</label>
-                  <input type="text" placeholder="Ex: Adoração Início" value={newPrayerContent.title} onChange={e => setNewPrayerContent({ ...newPrayerContent, title: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
+                  <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Título do Conteúdo</label>
+                  <input type="text" placeholder="Ex: Adoração Início" value={newPrayerContent.title} onChange={e => setNewPrayerContent({ ...newPrayerContent, title: e.target.value })} className="w-full bg-brand-bg border border-white/5 rounded-2xl px-8 py-5 text-white font-extrabold outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Pertence ao Tema (Oração)</label>
+                  <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Pertence ao Tema (Oração)</label>
                   <div className="relative">
                     <select value={newPrayerContent.themeId} onChange={e => {
                       const theme = prayerThemes.find(t => t.id === e.target.value);
                       setNewPrayerContent({ ...newPrayerContent, themeId: e.target.value, categoryId: theme?.categoryId });
-                    }} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none cursor-pointer hover:border-brand/30 transition-all">
+                    }} className="w-full bg-brand-bg border border-white/5 text-white rounded-2xl px-8 py-5 font-extrabold outline-none cursor-pointer hover:border-brand/30 transition-all">
                       <option value="">Selecione um tema de oração...</option>
                       {prayerThemes.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}
                     </select>
@@ -1111,13 +1111,13 @@ const AdminPanel: React.FC = () => {
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between mb-1">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Cronograma (Semanas/Meses)</label>
-                    <button onClick={() => setCategoryToManage('prayerWeeks')} className="text-[9px] font-black text-brand hover:underline uppercase tracking-tighter transition-all">Gerenciar</button>
+                    <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Cronograma (Semanas/Meses)</label>
+                    <button onClick={() => setCategoryToManage('prayerWeeks')} className="text-[9px] font-extrabold text-brand hover:underline uppercase tracking-tighter transition-all">Gerenciar</button>
                   </div>
                   <select 
                     value={newPrayerContent.week || ''} 
                     onChange={e => setNewPrayerContent({ ...newPrayerContent, week: e.target.value })} 
-                    className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none cursor-pointer hover:border-brand/30 transition-all"
+                    className="w-full bg-brand-bg border border-white/5 text-white rounded-2xl px-8 py-5 font-extrabold outline-none cursor-pointer hover:border-brand/30 transition-all"
                   >
                     <option value="">Selecione o Bloco...</option>
                     {prayerWeekCategories.map(w => <option key={w.id} value={w.name}>{w.name}</option>)}
@@ -1125,13 +1125,13 @@ const AdminPanel: React.FC = () => {
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between mb-1">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Dia da Jornada</label>
-                    <button onClick={() => setCategoryToManage('prayerDays')} className="text-[9px] font-black text-brand hover:underline uppercase tracking-tighter transition-all">Gerenciar</button>
+                    <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Dia da Jornada</label>
+                    <button onClick={() => setCategoryToManage('prayerDays')} className="text-[9px] font-extrabold text-brand hover:underline uppercase tracking-tighter transition-all">Gerenciar</button>
                   </div>
                   <select 
                     value={newPrayerContent.day || ''} 
                     onChange={e => setNewPrayerContent({ ...newPrayerContent, day: e.target.value })} 
-                    className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none cursor-pointer hover:border-brand/30 transition-all"
+                    className="w-full bg-brand-bg border border-white/5 text-white rounded-2xl px-8 py-5 font-extrabold outline-none cursor-pointer hover:border-brand/30 transition-all"
                   >
                     <option value="">Selecione o Dia...</option>
                     {prayerDayCategories.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
@@ -1141,42 +1141,42 @@ const AdminPanel: React.FC = () => {
 
                {/* Gerenciamento de Recursos de Oração */}
                <div className="space-y-6 pt-6 border-t border-white/5">
-                <h3 className="text-xs font-black text-white uppercase tracking-[0.2em]">Guia de Oração</h3>
+                <h3 className="text-xs font-extrabold text-white uppercase tracking-[0.2em]">Guia de Oração</h3>
 
-                <div className="bg-black/20 p-8 rounded-[40px] border border-white/5 space-y-6">
+                <div className="bg-black/20 p-8 rounded-3xl border border-white/5 space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
                     <div className="md:col-span-3">
-                      <select value={resourceForm.type} onChange={e => setResourceForm({ ...resourceForm, type: e.target.value as any })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-xl px-4 py-3 text-[10px] font-black outline-none">
+                      <select value={resourceForm.type} onChange={e => setResourceForm({ ...resourceForm, type: e.target.value as any })} className="w-full bg-brand-bg border border-white/5 text-white rounded-xl px-4 py-3 text-[10px] font-extrabold outline-none">
                         <option value="video">Vídeo Guiado</option>
                         <option value="text">Instrução Texto</option>
                         <option value="leitura">Base Bíblica</option>
                       </select>
                     </div>
                     <div className="md:col-span-6">
-                      <input type="text" placeholder="Nome do Passo de Oração" value={resourceForm.title} onChange={e => setResourceForm({ ...resourceForm, title: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-xl px-6 py-3 text-white text-[10px] font-black outline-none" />
+                      <input type="text" placeholder="Nome do Passo de Oração" value={resourceForm.title} onChange={e => setResourceForm({ ...resourceForm, title: e.target.value })} className="w-full bg-brand-bg border border-white/5 rounded-xl px-6 py-3 text-white text-[10px] font-extrabold outline-none" />
                     </div>
                     <div className="md:col-span-3">
-                      <input type="text" placeholder="Timer (ex: 5 min)" value={resourceForm.duration || ''} onChange={e => setResourceForm({ ...resourceForm, duration: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-xl px-6 py-3 text-white text-[10px] font-black outline-none" />
+                      <input type="text" placeholder="Timer (ex: 5 min)" value={resourceForm.duration || ''} onChange={e => setResourceForm({ ...resourceForm, duration: e.target.value })} className="w-full bg-brand-bg border border-white/5 rounded-xl px-6 py-3 text-white text-[10px] font-extrabold outline-none" />
                     </div>
                   </div>
 
                   <div className="relative">
-                    <textarea placeholder="Instrução detalhada de como orar este tópico..." value={resourceForm.instruction || ''} onChange={e => setResourceForm({ ...resourceForm, instruction: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-xs font-medium outline-none h-20 resize-none custom-scrollbar" />
+                    <textarea placeholder="Instrução detalhada de como orar este tópico..." value={resourceForm.instruction || ''} onChange={e => setResourceForm({ ...resourceForm, instruction: e.target.value })} className="w-full bg-brand-bg border border-white/5 rounded-2xl px-6 py-4 text-xs font-medium outline-none h-20 resize-none custom-scrollbar" />
                   </div>
 
                   {resourceForm.type === 'video' ? (
                     <div className="relative">
-                      <Link size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
-                      <input type="text" placeholder="URL do YouTube" value={resourceForm.url} onChange={e => setResourceForm({ ...resourceForm, url: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-xl pl-12 pr-6 py-3 text-white text-[10px] font-medium outline-none" />
+                      <Link size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-c-text-secondary" />
+                      <input type="text" placeholder="URL do YouTube" value={resourceForm.url} onChange={e => setResourceForm({ ...resourceForm, url: e.target.value })} className="w-full bg-brand-bg border border-white/5 rounded-xl pl-12 pr-6 py-3 text-white text-[10px] font-medium outline-none" />
                     </div>
                   ) : (
                     <div className="space-y-2">
-                       <textarea placeholder="Conteúdo textual..." value={resourceForm.content} onChange={e => setResourceForm({ ...resourceForm, content: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-2xl px-6 py-4 text-xs font-medium outline-none h-32 resize-none custom-scrollbar" />
+                       <textarea placeholder="Conteúdo textual..." value={resourceForm.content} onChange={e => setResourceForm({ ...resourceForm, content: e.target.value })} className="w-full bg-brand-bg border border-white/5 text-white rounded-2xl px-6 py-4 text-xs font-medium outline-none h-32 resize-none custom-scrollbar" />
                     </div>
                   )}
 
                   <div className="flex gap-2">
-                    <button onClick={addPrayerResource} className="flex-1 bg-white/5 border border-white/10 text-white py-3 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-brand hover:border-brand transition-all flex items-center justify-center gap-2">
+                    <button onClick={addPrayerResource} className="flex-1 bg-white/5 border border-white/10 text-white py-3 rounded-xl text-[9px] font-extrabold uppercase tracking-widest hover:bg-brand hover:border-brand transition-all flex items-center justify-center gap-2">
                       {editingResourceId ? <CheckCircle2 size={14} /> : <Plus size={14} />}
                       {editingResourceId ? 'ATUALIZAR PASSO' : 'ADICIONAR PASSO'}
                     </button>
@@ -1191,21 +1191,21 @@ const AdminPanel: React.FC = () => {
                 {/* Lista de Recursos Adicionados */}
                 <div className="space-y-3">
                   {(newPrayerContent.resources || []).map(r => (
-                    <div key={r.id} className="flex items-center justify-between p-4 bg-[#0b0e14]/50 rounded-2xl border border-white/5 group">
+                    <div key={r.id} className="flex items-center justify-between p-4 bg-brand-bg/50 rounded-2xl border border-white/5 group">
                       <div className="flex items-center gap-4">
-                        <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-500 group-hover:text-brand transition-colors">
+                        <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-c-text-secondary group-hover:text-brand transition-colors">
                           {r.type === 'video' ? <Youtube size={14} /> : <FileText size={14} />}
                         </div>
                         <div>
-                          <p className="text-[10px] font-black text-white uppercase tracking-tight">{r.title}</p>
-                          <span className="text-[8px] text-gray-500 font-bold uppercase">{r.type} • {r.duration || 'Livre'}</span>
+                          <p className="text-[10px] font-extrabold text-white uppercase tracking-tight">{r.title}</p>
+                          <span className="text-[8px] text-c-text-secondary font-bold uppercase">{r.type} • {r.duration || 'Livre'}</span>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <button onClick={() => { setEditingResourceId(r.id); setResourceForm(r); }} className="text-gray-700 hover:text-brand transition-colors p-1">
+                        <button onClick={() => { setEditingResourceId(r.id); setResourceForm(r); }} className="text-c-text-muted hover:text-brand transition-colors p-1">
                           <Edit2 size={16} />
                         </button>
-                        <button onClick={() => removePrayerResource(r.id)} className="text-gray-700 hover:text-rose-500 transition-colors p-1">
+                        <button onClick={() => removePrayerResource(r.id)} className="text-c-text-muted hover:text-rose-500 transition-colors p-1">
                           <Trash2 size={16} />
                         </button>
                       </div>
@@ -1214,7 +1214,7 @@ const AdminPanel: React.FC = () => {
                 </div>
               </div>
 
-              <button onClick={handleAddOrUpdatePrayerContent} className="w-full bg-brand text-white py-6 rounded-[28px] font-black uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
+              <button onClick={handleAddOrUpdatePrayerContent} className="w-full bg-brand text-white py-6 rounded-2xl font-extrabold uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
                 {editingPrayerContentId ? <CheckCircle2 size={24} /> : <CheckCircle2 size={24} strokeWidth={3} />}
                 {editingPrayerContentId ? 'SALVAR CONTEÚDO' : 'PUBLICAR CONTEÚDO'}
               </button>
@@ -1227,14 +1227,14 @@ const AdminPanel: React.FC = () => {
               <section className="space-y-10">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-6">
-                    <div className="w-20 h-20 bg-brand/10 text-brand rounded-[28px] flex items-center justify-center border border-brand/20 shadow-xl">
+                    <div className="w-20 h-20 bg-brand/10 text-brand rounded-2xl flex items-center justify-center border border-brand/20 shadow-xl">
                       <ReadingPlanIcon size={36} />
                     </div>
                     <div>
-                      <h2 className="text-3xl font-black text-white uppercase tracking-tighter">
+                      <h2 className="text-3xl font-extrabold text-white uppercase tracking-tighter">
                         {editingPlanId ? 'Editar Plano' : 'Novo Plano de Leitura'}
                       </h2>
-                      <p className="text-xs text-gray-500 font-bold uppercase tracking-[0.2em]">Crie trilhas de leitura bíblica</p>
+                      <p className="text-xs text-c-text-secondary font-bold uppercase tracking-[0.2em]">Crie trilhas de leitura bíblica</p>
                     </div>
                   </div>
                   {editingPlanId && (
@@ -1244,33 +1244,33 @@ const AdminPanel: React.FC = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Título do Plano</label>
-                    <input type="text" placeholder="Ex: Vida de José" value={newPlan.title} onChange={e => setNewPlan({ ...newPlan, title: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
+                    <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Título do Plano</label>
+                    <input type="text" placeholder="Ex: Vida de José" value={newPlan.title} onChange={e => setNewPlan({ ...newPlan, title: e.target.value })} className="w-full bg-brand-bg border border-white/5 rounded-2xl px-8 py-5 text-white font-extrabold outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Capa (URL)</label>
-                    <input type="text" placeholder="https://..." value={newPlan.thumbnailUrl} onChange={e => setNewPlan({ ...newPlan, thumbnailUrl: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
+                    <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Capa (URL)</label>
+                    <input type="text" placeholder="https://..." value={newPlan.thumbnailUrl} onChange={e => setNewPlan({ ...newPlan, thumbnailUrl: e.target.value })} className="w-full bg-brand-bg border border-white/5 rounded-2xl px-8 py-5 text-white font-extrabold outline-none focus:ring-2 focus:ring-brand/30 transition-all" />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Duração (Dias)</label>
-                    <input type="number" value={newPlan.durationDays} onChange={e => setNewPlan({ ...newPlan, durationDays: Number(e.target.value) })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none" />
+                    <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Duração (Dias)</label>
+                    <input type="number" value={newPlan.durationDays} onChange={e => setNewPlan({ ...newPlan, durationDays: Number(e.target.value) })} className="w-full bg-brand-bg border border-white/5 text-white rounded-2xl px-8 py-5 font-extrabold outline-none" />
                   </div>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between mb-1">
-                      <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Categoria</label>
-                      <button onClick={() => setCategoryToManage('plans')} className="text-[9px] font-black text-brand hover:underline uppercase tracking-tighter transition-all">Gerenciar</button>
+                      <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Categoria</label>
+                      <button onClick={() => setCategoryToManage('plans')} className="text-[9px] font-extrabold text-brand hover:underline uppercase tracking-tighter transition-all">Gerenciar</button>
                     </div>
-                    <select value={newPlan.categoryId} onChange={e => setNewPlan({ ...newPlan, categoryId: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none hover:border-brand/30 transition-all">
+                    <select value={newPlan.categoryId} onChange={e => setNewPlan({ ...newPlan, categoryId: e.target.value })} className="w-full bg-brand-bg border border-white/5 text-white rounded-2xl px-8 py-5 font-extrabold outline-none hover:border-brand/30 transition-all">
                       {readingPlanCategories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                     </select>
                   </div>
                   <div className="md:col-span-2 space-y-2">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Descrição</label>
-                    <textarea placeholder="O que o usuário aprenderá..." value={newPlan.description} onChange={e => setNewPlan({ ...newPlan, description: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[32px] px-8 py-5 font-medium outline-none h-24 resize-none" />
+                    <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Descrição</label>
+                    <textarea placeholder="O que o usuário aprenderá..." value={newPlan.description} onChange={e => setNewPlan({ ...newPlan, description: e.target.value })} className="w-full bg-brand-bg border border-white/5 text-white rounded-2xl px-8 py-5 font-medium outline-none h-24 resize-none" />
                   </div>
                 </div>
 
-                <button onClick={handleAddOrUpdatePlan} className="w-full bg-brand text-white py-6 rounded-[28px] font-black uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
+                <button onClick={handleAddOrUpdatePlan} className="w-full bg-brand text-white py-6 rounded-2xl font-extrabold uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
                   {editingPlanId ? <CheckCircle2 size={24} /> : <Plus size={24} strokeWidth={3} />}
                   {editingPlanId ? 'SALVAR PLANO' : 'CRIAR PLANO'}
                 </button>
@@ -1279,18 +1279,18 @@ const AdminPanel: React.FC = () => {
               {/* --- GESTÃO DE CONTEÚDO (DIAS/LEITURAS) --- */}
               <section className="space-y-10 pt-12 border-t border-white/5">
                 <div className="flex items-center gap-6">
-                  <div className="w-20 h-20 bg-blue-500/10 text-blue-500 rounded-[28px] flex items-center justify-center border border-blue-500/20 shadow-xl">
+                  <div className="w-20 h-20 bg-blue-500/10 text-blue-500 rounded-2xl flex items-center justify-center border border-blue-500/20 shadow-xl">
                     <List size={36} />
                   </div>
                   <div>
-                    <h2 className="text-3xl font-black text-white uppercase tracking-tighter">
+                    <h2 className="text-3xl font-extrabold text-white uppercase tracking-tighter">
                       {editingPlanContentId ? 'Editar Detalhe' : 'Novo Detalhe de Leitura'}
                     </h2>
                     <div className="flex items-center gap-4">
-                      <p className="text-xs text-gray-500 font-bold uppercase tracking-[0.2em]">Vincule versículos a dias específicos</p>
+                      <p className="text-xs text-c-text-secondary font-bold uppercase tracking-[0.2em]">Vincule versículos a dias específicos</p>
                       <button 
                         onClick={() => setIsSmartImportOpen(true)}
-                        className="bg-brand/10 text-brand border border-brand/20 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest hover:bg-brand hover:text-white transition-all flex items-center gap-2"
+                        className="bg-brand/10 text-brand border border-brand/20 px-4 py-1.5 rounded-full text-[9px] font-extrabold uppercase tracking-widest hover:bg-brand hover:text-white transition-all flex items-center gap-2"
                       >
                          <Sparkles size={12} /> Importação Inteligente (IA)
                       </button>
@@ -1300,23 +1300,23 @@ const AdminPanel: React.FC = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="md:col-span-2 space-y-2">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Pertence ao Plano</label>
-                    <select value={newPlanContent.planId} onChange={e => setNewPlanContent({ ...newPlanContent, planId: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-[22px] px-8 py-5 font-black outline-none hover:border-brand/30 transition-all">
+                    <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Pertence ao Plano</label>
+                    <select value={newPlanContent.planId} onChange={e => setNewPlanContent({ ...newPlanContent, planId: e.target.value })} className="w-full bg-brand-bg border border-white/5 text-white rounded-2xl px-8 py-5 font-extrabold outline-none hover:border-brand/30 transition-all">
                       <option value="">Selecione um plano...</option>
                       {readingPlans.map(p => <option key={p.id} value={p.id}>{p.title}</option>)}
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Semana</label>
-                    <input type="text" placeholder="Semana 1" value={newPlanContent.week} onChange={e => setNewPlanContent({ ...newPlanContent, week: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] px-8 py-5 text-white font-black outline-none" />
+                    <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Semana</label>
+                    <input type="text" placeholder="Semana 1" value={newPlanContent.week} onChange={e => setNewPlanContent({ ...newPlanContent, week: e.target.value })} className="w-full bg-brand-bg border border-white/5 rounded-2xl px-8 py-5 text-white font-extrabold outline-none" />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Dia</label>
-                    <input type="text" placeholder="Dia 1" value={newPlanContent.day} onChange={e => setNewPlanContent({ ...newPlanContent, day: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] px-8 py-5 text-white font-black outline-none" />
+                    <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Dia</label>
+                    <input type="text" placeholder="Dia 1" value={newPlanContent.day} onChange={e => setNewPlanContent({ ...newPlanContent, day: e.target.value })} className="w-full bg-brand-bg border border-white/5 rounded-2xl px-8 py-5 text-white font-extrabold outline-none" />
                   </div>
                   <div className="md:col-span-2 space-y-2">
                     <div className="flex items-center justify-between mb-1">
-                      <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Título/Reflexão do Bloco (Tema do Dia)</label>
+                      <label className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest ml-1">Título/Reflexão do Bloco (Tema do Dia)</label>
                       <button 
                         onClick={() => {
                           const verses = newPlanContent.resources?.filter(r => r.type === 'leitura').map(r => r.title).join(', ') || '';
@@ -1326,7 +1326,7 @@ const AdminPanel: React.FC = () => {
                             alert('Adicione primeiro os versículos para gerar uma reflexão.');
                           }
                         }}
-                        className="text-[9px] font-black text-brand hover:underline uppercase tracking-tighter transition-all flex items-center gap-1"
+                        className="text-[9px] font-extrabold text-brand hover:underline uppercase tracking-tighter transition-all flex items-center gap-1"
                       >
                          <Zap size={10} /> Auto-Completar
                       </button>
@@ -1336,26 +1336,26 @@ const AdminPanel: React.FC = () => {
                       placeholder="Ex: Paz que excede entendimento" 
                       value={newPlanContent.title} 
                       onChange={e => setNewPlanContent({ ...newPlanContent, title: e.target.value })} 
-                      className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] px-8 py-5 text-white font-black outline-none focus:ring-2 focus:ring-brand/30 transition-all shadow-inner" 
+                      className="w-full bg-brand-bg border border-white/5 rounded-2xl px-8 py-5 text-white font-extrabold outline-none focus:ring-2 focus:ring-brand/30 transition-all shadow-inner" 
                     />
                   </div>
                 </div>
 
                 {/* Recursos de Leitura */}
-                <div className="bg-black/20 p-8 rounded-[40px] border border-white/5 space-y-6">
-                  <h3 className="text-[10px] font-black text-white uppercase tracking-widest">Adicionar Versículos/Leitura</h3>
+                <div className="bg-black/20 p-8 rounded-3xl border border-white/5 space-y-6">
+                  <h3 className="text-[10px] font-extrabold text-white uppercase tracking-widest">Adicionar Versículos/Leitura</h3>
                   {/* Lista de Versículos sendo adicionados */}
                   {newPlanContent.resources && newPlanContent.resources.length > 0 && (
                     <div className="space-y-2 max-h-[200px] overflow-y-auto custom-scrollbar pr-2 mt-4">
                       {newPlanContent.resources.map(res => (
-                        <div key={res.id} className="bg-[#0b0e14] border border-white/5 rounded-xl p-4 flex justify-between items-center group">
+                        <div key={res.id} className="bg-brand-bg border border-white/5 rounded-xl p-4 flex justify-between items-center group">
                           <div className="flex items-center gap-3">
                             <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center">
                               <BookOpen size={14} />
                             </div>
-                            <span className="text-[10px] font-black text-white uppercase">{res.title}</span>
+                            <span className="text-[10px] font-extrabold text-white uppercase">{res.title}</span>
                           </div>
-                          <button onClick={() => removeReadingResource(res.id)} className="text-gray-600 hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100">
+                          <button onClick={() => removeReadingResource(res.id)} className="text-c-text-muted hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100">
                             <Trash2 size={14} />
                           </button>
                         </div>
@@ -1365,13 +1365,13 @@ const AdminPanel: React.FC = () => {
 
                   <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
                     <div className="md:col-span-8">
-                      <input type="text" placeholder="Referência (Ex: Mateus 5 (1 cap))" value={readingResourceForm.title} onChange={e => setReadingResourceForm({ ...readingResourceForm, title: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-xl px-6 py-4 text-white text-[10px] font-black outline-none" />
+                      <input type="text" placeholder="Referência (Ex: Mateus 5 (1 cap))" value={readingResourceForm.title} onChange={e => setReadingResourceForm({ ...readingResourceForm, title: e.target.value })} className="w-full bg-brand-bg border border-white/5 rounded-xl px-6 py-4 text-white text-[10px] font-extrabold outline-none" />
                     </div>
                     <div className="md:col-span-4">
-                      <input type="text" placeholder="Duração (10 min)" value={readingResourceForm.duration} onChange={e => setReadingResourceForm({ ...readingResourceForm, duration: e.target.value })} className="w-full bg-[#0b0e14] border border-white/5 rounded-xl px-6 py-4 text-white text-[10px] font-black outline-none" />
+                      <input type="text" placeholder="Duração (10 min)" value={readingResourceForm.duration} onChange={e => setReadingResourceForm({ ...readingResourceForm, duration: e.target.value })} className="w-full bg-brand-bg border border-white/5 rounded-xl px-6 py-4 text-white text-[10px] font-extrabold outline-none" />
                     </div>
                     <div className="md:col-span-12">
-                      <button onClick={addReadingResource} className="w-full bg-white/5 border border-white/10 text-white py-4 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-blue-500 hover:border-blue-500 transition-all flex items-center justify-center gap-2">
+                      <button onClick={addReadingResource} className="w-full bg-white/5 border border-white/10 text-white py-4 rounded-xl text-[9px] font-extrabold uppercase tracking-widest hover:bg-blue-500 hover:border-blue-500 transition-all flex items-center justify-center gap-2">
                         <Plus size={16} /> ADICIONAR LEITURA
                       </button>
                     </div>
@@ -1379,15 +1379,15 @@ const AdminPanel: React.FC = () => {
 
                   <div className="space-y-2">
                     {newPlanContent.resources?.map(r => (
-                      <div key={r.id} className="flex items-center justify-between p-4 bg-[#0b0e14] rounded-xl border border-white/5">
-                        <span className="text-[10px] font-black text-white uppercase tracking-tight">{r.title} ({r.duration})</span>
+                      <div key={r.id} className="flex items-center justify-between p-4 bg-brand-bg rounded-xl border border-white/5">
+                        <span className="text-[10px] font-extrabold text-white uppercase tracking-tight">{r.title} ({r.duration})</span>
                         <button onClick={() => setNewPlanContent({ ...newPlanContent, resources: newPlanContent.resources?.filter(res => res.id !== r.id) })} className="text-rose-500 hover:scale-110 transition-all"><Trash2 size={16}/></button>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <button onClick={handleAddOrUpdatePlanContent} className="w-full bg-blue-600 text-white py-6 rounded-[28px] font-black uppercase tracking-[0.3em] shadow-xl shadow-blue-500/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
+                <button onClick={handleAddOrUpdatePlanContent} className="w-full bg-blue-600 text-white py-6 rounded-2xl font-extrabold uppercase tracking-[0.3em] shadow-xl shadow-blue-500/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4">
                   {editingPlanContentId ? <CheckCircle2 size={24} /> : <Zap size={24} strokeWidth={3} />}
                   {editingPlanContentId ? 'SALVAR DETALHE' : 'PUBLICAR DETALHE'}
                 </button>
@@ -1398,18 +1398,18 @@ const AdminPanel: React.FC = () => {
           {activeTab === 'config' && (
             <div className="space-y-10 animate-in slide-in-from-right duration-500">
               <div className="flex items-center gap-6">
-                <div className="w-20 h-20 bg-brand/10 text-brand rounded-[28px] flex items-center justify-center border border-brand/20 shadow-xl">
+                <div className="w-20 h-20 bg-brand/10 text-brand rounded-2xl flex items-center justify-center border border-brand/20 shadow-xl">
                   <ImagePlus size={36} />
                 </div>
                 <div>
-                  <h2 className="text-3xl font-black text-white uppercase tracking-tighter">Logo do App</h2>
-                  <p className="text-xs text-gray-500 font-bold uppercase tracking-[0.2em]">Atualização dinâmica sem precisar de deploy</p>
+                  <h2 className="text-3xl font-extrabold text-white uppercase tracking-tighter">Logo do App</h2>
+                  <p className="text-xs text-c-text-secondary font-bold uppercase tracking-[0.2em]">Atualização dinâmica sem precisar de deploy</p>
                 </div>
               </div>
 
               {/* Preview do Logo Atual */}
-              <div className="flex flex-col items-center gap-6 p-10 bg-[#1a1e26] rounded-[40px] border border-white/5">
-                <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Logo Atual</p>
+              <div className="flex flex-col items-center gap-6 p-10 bg-[#1a1e26] rounded-3xl border border-white/5">
+                <p className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest">Logo Atual</p>
                 <img
                   src={currentLogoUrl}
                   alt="Logo Atual"
@@ -1420,18 +1420,18 @@ const AdminPanel: React.FC = () => {
               </div>
 
               {/* Upload de Novo Logo */}
-              <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-white/10 rounded-[40px] cursor-pointer bg-black/20 hover:border-brand/40 hover:bg-brand/5 transition-all group/upload relative">
+              <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-white/10 rounded-3xl cursor-pointer bg-black/20 hover:border-brand/40 hover:bg-brand/5 transition-all group/upload relative">
                 {isUploadingLogo ? (
                   <div className="flex flex-col items-center gap-4">
                     <Loader2 className="animate-spin text-brand" size={48} />
-                    <span className="text-[10px] font-black uppercase tracking-widest text-brand animate-pulse">
+                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-brand animate-pulse">
                       Fazendo Upload...
                     </span>
                   </div>
                 ) : (
                   <>
-                    <ImagePlus className="text-gray-700 mb-4 group-hover/upload:text-brand transition-all" size={48} />
-                    <p className="text-[11px] font-black uppercase text-gray-500 tracking-[0.3em] text-center max-w-xs px-10">Selecionar Novo Logo (PNG, JPG, WebP)</p>
+                    <ImagePlus className="text-c-text-muted mb-4 group-hover/upload:text-brand transition-all" size={48} />
+                    <p className="text-[11px] font-extrabold uppercase text-c-text-secondary tracking-[0.3em] text-center max-w-xs px-10">Selecionar Novo Logo (PNG, JPG, WebP)</p>
                     <input
                       type="file"
                       ref={logoInputRef}
@@ -1479,18 +1479,18 @@ const AdminPanel: React.FC = () => {
             <div className="space-y-10 animate-in slide-in-from-right duration-500">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-6">
-                  <div className="w-20 h-20 bg-brand/10 text-brand rounded-[28px] flex items-center justify-center border border-brand/20 shadow-xl">
+                  <div className="w-20 h-20 bg-brand/10 text-brand rounded-2xl flex items-center justify-center border border-brand/20 shadow-xl">
                     <ReadingPlanIcon size={36} />
                   </div>
                   <div>
-                    <h2 className="text-3xl font-black text-white uppercase tracking-tighter">Gestão de Usuários</h2>
-                    <p className="text-xs text-gray-500 font-bold uppercase tracking-[0.2em]">{profiles.length} membros na plataforma</p>
+                    <h2 className="text-3xl font-extrabold text-white uppercase tracking-tighter">Gestão de Usuários</h2>
+                    <p className="text-xs text-c-text-secondary font-bold uppercase tracking-[0.2em]">{profiles.length} membros na plataforma</p>
                   </div>
                 </div>
                 <button
                   onClick={fetchProfiles}
                   disabled={isLoadingProfiles}
-                  className="p-3 bg-white/5 border border-white/10 rounded-2xl text-gray-400 hover:text-brand hover:border-brand/30 transition-all"
+                  className="p-3 bg-white/5 border border-white/10 rounded-2xl text-c-text-secondary hover:text-brand hover:border-brand/30 transition-all"
                   title="Recarregar"
                 >
                   {isLoadingProfiles ? <Loader2 size={18} className="animate-spin" /> : <Zap size={18} />}
@@ -1499,22 +1499,22 @@ const AdminPanel: React.FC = () => {
 
               {/* Stats Cards */}
               <div className="grid grid-cols-3 gap-4">
-                <div className="bg-black/30 border border-white/5 rounded-[28px] p-6 text-center">
-                  <p className="text-3xl font-black text-white">{profiles.length}</p>
-                  <p className="text-[8px] font-black text-gray-500 uppercase tracking-widest mt-1">Total</p>
+                <div className="bg-black/30 border border-white/5 rounded-2xl p-6 text-center">
+                  <p className="text-3xl font-extrabold text-white">{profiles.length}</p>
+                  <p className="text-[8px] font-extrabold text-c-text-secondary uppercase tracking-widest mt-1">Total</p>
                 </div>
-                <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-[28px] p-6 text-center">
-                  <p className="text-3xl font-black text-emerald-400">
+                <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-2xl p-6 text-center">
+                  <p className="text-3xl font-extrabold text-emerald-400">
                     {profiles.filter(p => {
                       const d = new Date(p.created_at);
                       const now = new Date();
                       return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
                     }).length}
                   </p>
-                  <p className="text-[8px] font-black text-gray-500 uppercase tracking-widest mt-1">Este mês</p>
+                  <p className="text-[8px] font-extrabold text-c-text-secondary uppercase tracking-widest mt-1">Este mês</p>
                 </div>
-                <div className="bg-brand/5 border border-brand/20 rounded-[28px] p-6 text-center">
-                  <p className="text-3xl font-black text-brand">
+                <div className="bg-brand/5 border border-brand/20 rounded-2xl p-6 text-center">
+                  <p className="text-3xl font-extrabold text-brand">
                     {profiles.filter(p => {
                       const d = new Date(p.created_at);
                       const now = new Date();
@@ -1522,19 +1522,19 @@ const AdminPanel: React.FC = () => {
                       return diff <= 7;
                     }).length}
                   </p>
-                  <p className="text-[8px] font-black text-gray-500 uppercase tracking-widest mt-1">Últimos 7d</p>
+                  <p className="text-[8px] font-extrabold text-c-text-secondary uppercase tracking-widest mt-1">Últimos 7d</p>
                 </div>
               </div>
 
               {/* Search bar */}
               <div className="relative">
-                <Zap size={16} className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-600" />
+                <Zap size={16} className="absolute left-6 top-1/2 -translate-y-1/2 text-c-text-muted" />
                 <input
                   type="text"
                   placeholder="Buscar por e-mail..."
                   value={userSearchQuery}
                   onChange={e => setUserSearchQuery(e.target.value)}
-                  className="w-full bg-[#0b0e14] border border-white/5 rounded-[22px] pl-14 pr-8 py-5 text-white font-bold outline-none focus:ring-2 focus:ring-brand/30 transition-all text-sm"
+                  className="w-full bg-brand-bg border border-white/5 rounded-2xl pl-14 pr-8 py-5 text-white font-bold outline-none focus:ring-2 focus:ring-brand/30 transition-all text-sm"
                 />
               </div>
 
@@ -1543,11 +1543,11 @@ const AdminPanel: React.FC = () => {
                 {isLoadingProfiles ? (
                   <div className="p-10 text-center">
                     <Loader2 size={32} className="animate-spin text-brand mx-auto" />
-                    <p className="text-gray-500 font-black uppercase text-[10px] tracking-widest mt-4">Carregando usuários...</p>
+                    <p className="text-c-text-secondary font-extrabold uppercase text-[10px] tracking-widest mt-4">Carregando usuários...</p>
                   </div>
                 ) : profiles.filter(p => p.email.toLowerCase().includes(userSearchQuery.toLowerCase())).length === 0 ? (
-                  <div className="p-10 text-center bg-black/20 rounded-[40px] border border-white/5">
-                    <p className="text-gray-500 font-black uppercase text-[10px] tracking-widest">
+                  <div className="p-10 text-center bg-black/20 rounded-3xl border border-white/5">
+                    <p className="text-c-text-secondary font-extrabold uppercase text-[10px] tracking-widest">
                       {userSearchQuery ? 'Nenhum usuário encontrado para esta busca.' : 'Nenhum usuário cadastrado ainda.'}
                     </p>
                   </div>
@@ -1555,14 +1555,14 @@ const AdminPanel: React.FC = () => {
                   profiles
                     .filter(p => p.email.toLowerCase().includes(userSearchQuery.toLowerCase()))
                     .map(profile => (
-                      <div key={profile.id} className="flex items-center justify-between p-6 bg-[#0b0e14]/50 rounded-[28px] border border-white/5 hover:border-brand/20 transition-all group">
+                      <div key={profile.id} className="flex items-center justify-between p-6 bg-brand-bg/50 rounded-2xl border border-white/5 hover:border-brand/20 transition-all group">
                         <div className="flex items-center gap-4 overflow-hidden">
-                          <div className="w-11 h-11 bg-gradient-to-br from-brand/30 to-brand/10 rounded-xl flex items-center justify-center text-brand font-black text-sm flex-shrink-0 border border-brand/20">
+                          <div className="w-11 h-11 bg-gradient-to-br from-brand/30 to-brand/10 rounded-xl flex items-center justify-center text-brand font-extrabold text-sm flex-shrink-0 border border-brand/20">
                             {profile.email.charAt(0).toUpperCase()}
                           </div>
                           <div className="truncate">
-                            <p className="text-sm font-black text-white truncate">{profile.email}</p>
-                            <p className="text-[8px] text-gray-600 font-bold uppercase tracking-widest">
+                            <p className="text-sm font-extrabold text-white truncate">{profile.email}</p>
+                            <p className="text-[8px] text-c-text-muted font-bold uppercase tracking-widest">
                               Desde {new Date(profile.created_at).toLocaleDateString('pt-BR')}
                             </p>
                           </div>
@@ -1570,7 +1570,7 @@ const AdminPanel: React.FC = () => {
                         <button
                           onClick={() => handleDeleteUser(profile.id, profile.email)}
                           disabled={isDeletingUserId === profile.id}
-                          className="ml-3 flex-shrink-0 p-2 text-gray-700 hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100"
+                          className="ml-3 flex-shrink-0 p-2 text-c-text-muted hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100"
                           title="Remover usuário"
                         >
                           {isDeletingUserId === profile.id ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
@@ -1583,12 +1583,12 @@ const AdminPanel: React.FC = () => {
           )}
 
           {success && (
-            <div className="p-6 bg-emerald-500/10 border border-emerald-500/30 rounded-[32px] text-emerald-500 text-center font-black uppercase text-[10px] tracking-widest animate-in zoom-in shadow-2xl flex items-center justify-center gap-3">
+            <div className="p-6 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-emerald-500 text-center font-extrabold uppercase text-[10px] tracking-widest animate-in zoom-in shadow-2xl flex items-center justify-center gap-3">
               <CheckCircle2 size={18} /> Operação concluída com êxito!
             </div>
           )}
           {error && (
-            <div className="p-6 bg-rose-500/10 border border-rose-500/30 rounded-[32px] text-rose-500 text-center font-black uppercase text-[10px] tracking-widest flex items-center justify-center gap-3">
+            <div className="p-6 bg-rose-500/10 border border-rose-500/30 rounded-2xl text-rose-500 text-center font-extrabold uppercase text-[10px] tracking-widest flex items-center justify-center gap-3">
               <AlertTriangle size={18} /> Erro: {error}
             </div>
           )}
@@ -1596,10 +1596,10 @@ const AdminPanel: React.FC = () => {
           {/* Modal de Gerenciamento de Categorias (Semanas/Dias) */}
           {categoryToManage && (
             <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-300">
-              <div className="bg-[#161b22] border border-white/10 rounded-[48px] w-full max-w-md overflow-hidden shadow-2xl flex flex-col">
+              <div className="bg-brand-card border border-white/10 rounded-[48px] w-full max-w-md overflow-hidden shadow-2xl flex flex-col">
                 <div className="p-8 border-b border-white/5 flex items-center justify-between">
                   <div>
-                    <h3 className="text-xl font-black text-white uppercase tracking-tighter">
+                    <h3 className="text-xl font-extrabold text-white uppercase tracking-tighter">
                       Gerenciar {
                         categoryToManage === 'weeks' ? 'Semanas' : 
                         categoryToManage === 'plans' ? 'Categorias de Plano' : 
@@ -1609,9 +1609,9 @@ const AdminPanel: React.FC = () => {
                         'Dias'
                       }
                     </h3>
-                    <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Adicione ou exclua opções</p>
+                    <p className="text-[9px] text-c-text-secondary font-bold uppercase tracking-widest">Adicione ou exclua opções</p>
                   </div>
-                  <button onClick={() => { setCategoryToManage(null); setNewCatName(''); }} className="p-2 bg-white/5 rounded-xl text-gray-400 hover:text-white transition-all"><X size={20}/></button>
+                  <button onClick={() => { setCategoryToManage(null); setNewCatName(''); }} className="p-2 bg-white/5 rounded-xl text-c-text-secondary hover:text-white transition-all"><X size={20}/></button>
                 </div>
                 
                 <div className="p-8 space-y-6">
@@ -1629,7 +1629,7 @@ const AdminPanel: React.FC = () => {
                       }
                       value={newCatName}
                       onChange={e => setNewCatName(e.target.value)}
-                      className="flex-1 bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-4 text-white font-bold outline-none focus:ring-2 focus:ring-brand/30"
+                      className="flex-1 bg-brand-bg border border-white/5 rounded-2xl px-6 py-4 text-white font-bold outline-none focus:ring-2 focus:ring-brand/30"
                     />
                     <button 
                       onClick={() => {
@@ -1660,7 +1660,7 @@ const AdminPanel: React.FC = () => {
                       dayCategories
                     ).map(cat => (
                       <div key={cat.id} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl group">
-                        <span className="text-xs font-black text-white uppercase tracking-tight">{cat.name}</span>
+                        <span className="text-xs font-extrabold text-white uppercase tracking-tight">{cat.name}</span>
                         <button 
                           onClick={() => {
                             if (categoryToManage === 'weeks') setWeekCategories(weekCategories.filter(w => w.id !== cat.id));
@@ -1670,7 +1670,7 @@ const AdminPanel: React.FC = () => {
                             else if (categoryToManage === 'prayerDays') setPrayerDayCategories(prayerDayCategories.filter(d => d.id !== cat.id));
                             else setDayCategories(dayCategories.filter(d => d.id !== cat.id));
                           }}
-                          className="text-gray-600 hover:text-rose-500 transition-colors"
+                          className="text-c-text-muted hover:text-rose-500 transition-colors"
                         >
                           <Trash2 size={16} />
                         </button>
@@ -1680,7 +1680,7 @@ const AdminPanel: React.FC = () => {
                 </div>
 
                 <div className="p-8 bg-brand/5 border-t border-white/5">
-                  <button onClick={() => setCategoryToManage(null)} className="w-full py-4 bg-white/5 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest border border-white/10 hover:bg-white/10 transition-all">Fechar</button>
+                  <button onClick={() => setCategoryToManage(null)} className="w-full py-4 bg-white/5 text-white rounded-2xl font-extrabold uppercase text-[10px] tracking-widest border border-white/10 hover:bg-white/10 transition-all">Fechar</button>
                 </div>
               </div>
             </div>
@@ -1690,27 +1690,27 @@ const AdminPanel: React.FC = () => {
         {/* Lado Direito: Listagem */}
         <div className="lg:col-span-12 xl:col-span-5 space-y-8">
           {activeTab === 'courses' ? (
-            <div className="bg-[#161b22] p-10 rounded-[48px] border border-white/5 shadow-2xl">
-              <h3 className="text-[10px] font-black text-brand uppercase tracking-[0.3em] mb-8">Cursos Ativos ({academyCourses.length})</h3>
+            <div className="bg-brand-card p-10 rounded-[48px] border border-white/5 shadow-2xl">
+              <h3 className="text-[10px] font-extrabold text-brand uppercase tracking-[0.3em] mb-8">Cursos Ativos ({academyCourses.length})</h3>
               <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
                 {academyCourses.map(item => (
-                  <div key={item.id} className={`flex items-center justify-between p-6 rounded-[32px] border transition-all group ${editingCourseId === item.id ? 'bg-brand/10 border-brand' : 'bg-[#0b0e14]/50 border-white/5 hover:border-brand/30'}`}>
+                  <div key={item.id} className={`flex items-center justify-between p-6 rounded-2xl border transition-all group ${editingCourseId === item.id ? 'bg-brand/10 border-brand' : 'bg-brand-bg/50 border-white/5 hover:border-brand/30'}`}>
                     <div className="flex items-center gap-4 overflow-hidden">
                       {item.thumbnailUrl && (
                         <img src={item.thumbnailUrl} alt={item.title} className="w-12 h-12 rounded-xl object-cover border border-white/10" />
                       )}
                       <div className="truncate">
                         <div className="flex items-center gap-2">
-                          <p className="text-sm font-black text-white uppercase truncate tracking-tight">{item.title}</p>
+                          <p className="text-sm font-extrabold text-white uppercase truncate tracking-tight">{item.title}</p>
                           {item.visibility === 'privado' && <Lock size={12} className="text-rose-500" />}
                         </div>
-                        <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">
+                        <p className="text-[9px] text-c-text-secondary font-bold uppercase tracking-widest">
                           {academyCategories.find(c => c.id === item.categoryId)?.name}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-                      <button onClick={() => { setEditingCourseId(item.id); setNewCourse(item); setActiveTab('courses'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-gray-500 hover:text-brand transition-colors p-2">
+                      <button onClick={() => { setEditingCourseId(item.id); setNewCourse(item); setActiveTab('courses'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-c-text-secondary hover:text-brand transition-colors p-2">
                         <Edit2 size={18} />
                       </button>
                       <button onClick={() => {
@@ -1718,7 +1718,7 @@ const AdminPanel: React.FC = () => {
                           setAcademyCourses(academyCourses.filter(c => c.id !== item.id));
                           setAcademyContent(academyContent.filter(a => a.courseId !== item.id));
                         }
-                      }} className="text-gray-500 hover:text-rose-500 transition-colors p-2">
+                      }} className="text-c-text-secondary hover:text-rose-500 transition-colors p-2">
                         <Trash2 size={18} />
                       </button>
                     </div>
@@ -1727,29 +1727,29 @@ const AdminPanel: React.FC = () => {
               </div>
             </div>
           ) : activeTab === 'lessons' ? (
-            <div className="bg-[#161b22] p-10 rounded-[48px] border border-white/5 shadow-2xl">
-              <h3 className="text-[10px] font-black text-brand uppercase tracking-[0.3em] mb-8">Aulas Ativas ({academyContent.length})</h3>
+            <div className="bg-brand-card p-10 rounded-[48px] border border-white/5 shadow-2xl">
+              <h3 className="text-[10px] font-extrabold text-brand uppercase tracking-[0.3em] mb-8">Aulas Ativas ({academyContent.length})</h3>
               <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
                 {academyContent.map(item => (
-                  <div key={item.id} className={`flex items-center justify-between p-6 rounded-[32px] border transition-all group ${editingModuleId === item.id ? 'bg-brand/10 border-brand' : 'bg-[#0b0e14]/50 border-white/5 hover:border-brand/30'}`}>
+                  <div key={item.id} className={`flex items-center justify-between p-6 rounded-2xl border transition-all group ${editingModuleId === item.id ? 'bg-brand/10 border-brand' : 'bg-brand-bg/50 border-white/5 hover:border-brand/30'}`}>
                     <div className="flex items-center gap-4 overflow-hidden">
                       <div className="w-10 h-10 bg-brand/10 text-brand rounded-xl flex items-center justify-center border border-brand/20 flex-shrink-0">
                         <List size={20} />
                       </div>
                       <div className="truncate">
                         <div className="flex items-center gap-2">
-                          <p className="text-sm font-black text-white uppercase truncate tracking-tight">{item.title}</p>
+                          <p className="text-sm font-extrabold text-white uppercase truncate tracking-tight">{item.title}</p>
                         </div>
-                        <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">
+                        <p className="text-[9px] text-c-text-secondary font-bold uppercase tracking-widest">
                           {academyCourses.find(c => c.id === item.courseId)?.title || 'Curso não encontrado'}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-                      <button onClick={() => { setEditingModuleId(item.id); setNewModule(item); setActiveTab('lessons'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-gray-500 hover:text-brand transition-colors p-2">
+                      <button onClick={() => { setEditingModuleId(item.id); setNewModule(item); setActiveTab('lessons'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-c-text-secondary hover:text-brand transition-colors p-2">
                         <Edit2 size={18} />
                       </button>
-                      <button onClick={() => { if (confirm('Excluir aula?')) setAcademyContent(academyContent.filter(c => c.id !== item.id)); }} className="text-gray-500 hover:text-rose-500 transition-colors p-2">
+                      <button onClick={() => { if (confirm('Excluir aula?')) setAcademyContent(academyContent.filter(c => c.id !== item.id)); }} className="text-c-text-secondary hover:text-rose-500 transition-colors p-2">
                         <Trash2 size={18} />
                       </button>
                     </div>
@@ -1758,11 +1758,11 @@ const AdminPanel: React.FC = () => {
               </div>
             </div>
           ) : activeTab === 'prayerThemes' ? (
-            <div className="bg-[#161b22] p-10 rounded-[48px] border border-white/5 shadow-2xl">
-              <h3 className="text-[10px] font-black text-brand uppercase tracking-[0.3em] mb-8">Temas de Oração Ativos ({prayerThemes.length})</h3>
+            <div className="bg-brand-card p-10 rounded-[48px] border border-white/5 shadow-2xl">
+              <h3 className="text-[10px] font-extrabold text-brand uppercase tracking-[0.3em] mb-8">Temas de Oração Ativos ({prayerThemes.length})</h3>
               <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
                 {prayerThemes.map(item => (
-                  <div key={item.id} className={`flex items-center justify-between p-6 rounded-[32px] border transition-all group ${editingPrayerThemeId === item.id ? 'bg-brand/10 border-brand' : 'bg-[#0b0e14]/50 border-white/5 hover:border-brand/30'}`}>
+                  <div key={item.id} className={`flex items-center justify-between p-6 rounded-2xl border transition-all group ${editingPrayerThemeId === item.id ? 'bg-brand/10 border-brand' : 'bg-brand-bg/50 border-white/5 hover:border-brand/30'}`}>
                     <div className="flex items-center gap-4 overflow-hidden">
                       {item.thumbnailUrl ? (
                         <img src={item.thumbnailUrl} alt={item.title} className="w-12 h-12 rounded-xl object-cover border border-white/10" />
@@ -1776,16 +1776,16 @@ const AdminPanel: React.FC = () => {
                       )}
                       <div className="truncate">
                         <div className="flex items-center gap-2">
-                          <p className="text-sm font-black text-white uppercase truncate tracking-tight">{item.title}</p>
+                          <p className="text-sm font-extrabold text-white uppercase truncate tracking-tight">{item.title}</p>
                           {item.visibility === 'privado' && <Lock size={12} className="text-rose-500" />}
                         </div>
-                        <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">
+                        <p className="text-[9px] text-c-text-secondary font-bold uppercase tracking-widest">
                           {prayerCategories.find(c => c.id === item.categoryId)?.name || 'Sem Categoria'}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-                      <button onClick={() => { setEditingPrayerThemeId(item.id); setNewPrayerTheme(item); setActiveTab('prayerThemes'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-gray-500 hover:text-brand transition-colors p-2">
+                      <button onClick={() => { setEditingPrayerThemeId(item.id); setNewPrayerTheme(item); setActiveTab('prayerThemes'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-c-text-secondary hover:text-brand transition-colors p-2">
                         <Edit2 size={18} />
                       </button>
                       <button onClick={() => {
@@ -1793,7 +1793,7 @@ const AdminPanel: React.FC = () => {
                           setPrayerThemes(prayerThemes.filter(t => t.id !== item.id));
                           setPrayerContent(prayerContent.filter(c => c.themeId !== item.id));
                         }
-                      }} className="text-gray-500 hover:text-rose-500 transition-colors p-2">
+                      }} className="text-c-text-secondary hover:text-rose-500 transition-colors p-2">
                         <Trash2 size={18} />
                       </button>
                     </div>
@@ -1802,11 +1802,11 @@ const AdminPanel: React.FC = () => {
               </div>
             </div>
           ) : activeTab === 'prayerContent' ? (
-            <div className="bg-[#161b22] p-10 rounded-[48px] border border-white/5 shadow-2xl">
-              <h3 className="text-[10px] font-black text-brand uppercase tracking-[0.3em] mb-8">Conteúdos de Oração ({prayerContent.length})</h3>
+            <div className="bg-brand-card p-10 rounded-[48px] border border-white/5 shadow-2xl">
+              <h3 className="text-[10px] font-extrabold text-brand uppercase tracking-[0.3em] mb-8">Conteúdos de Oração ({prayerContent.length})</h3>
               <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
                 {prayerContent.map(item => (
-                  <div key={item.id} className={`flex items-center justify-between p-6 rounded-[32px] border transition-all group ${editingPrayerContentId === item.id ? 'bg-brand/10 border-brand' : 'bg-[#0b0e14]/50 border-white/5 hover:border-brand/30'}`}>
+                  <div key={item.id} className={`flex items-center justify-between p-6 rounded-2xl border transition-all group ${editingPrayerContentId === item.id ? 'bg-brand/10 border-brand' : 'bg-brand-bg/50 border-white/5 hover:border-brand/30'}`}>
                     <div className="flex items-center gap-4 overflow-hidden">
                       <div className="w-10 h-10 bg-emerald-500/10 text-emerald-500 rounded-xl flex items-center justify-center border border-emerald-500/20 flex-shrink-0">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -1816,18 +1816,18 @@ const AdminPanel: React.FC = () => {
                       </div>
                       <div className="truncate">
                         <div className="flex items-center gap-2">
-                          <p className="text-sm font-black text-white uppercase truncate tracking-tight">{item.title}</p>
+                          <p className="text-sm font-extrabold text-white uppercase truncate tracking-tight">{item.title}</p>
                         </div>
-                        <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">
+                        <p className="text-[9px] text-c-text-secondary font-bold uppercase tracking-widest">
                           {prayerThemes.find(t => t.id === item.themeId)?.title || 'Tema não encontrado'}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-                      <button onClick={() => { setEditingPrayerContentId(item.id); setNewPrayerContent(item); setActiveTab('prayerContent'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-gray-500 hover:text-brand transition-colors p-2">
+                      <button onClick={() => { setEditingPrayerContentId(item.id); setNewPrayerContent(item); setActiveTab('prayerContent'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-c-text-secondary hover:text-brand transition-colors p-2">
                         <Edit2 size={18} />
                       </button>
-                      <button onClick={() => { if (confirm('Excluir este conteúdo?')) setPrayerContent(prayerContent.filter(c => c.id !== item.id)); }} className="text-gray-500 hover:text-rose-500 transition-colors p-2">
+                      <button onClick={() => { if (confirm('Excluir este conteúdo?')) setPrayerContent(prayerContent.filter(c => c.id !== item.id)); }} className="text-c-text-secondary hover:text-rose-500 transition-colors p-2">
                         <Trash2 size={18} />
                       </button>
                     </div>
@@ -1838,16 +1838,16 @@ const AdminPanel: React.FC = () => {
           ) : activeTab === 'plans' ? (
             <div className="space-y-8">
               {/* Lista de Planos */}
-              <div className="bg-[#161b22] p-10 rounded-[48px] border border-white/5 shadow-2xl">
-                <h3 className="text-[10px] font-black text-brand uppercase tracking-[0.3em] mb-8">Planos Existentes ({readingPlans.length})</h3>
+              <div className="bg-brand-card p-10 rounded-[48px] border border-white/5 shadow-2xl">
+                <h3 className="text-[10px] font-extrabold text-brand uppercase tracking-[0.3em] mb-8">Planos Existentes ({readingPlans.length})</h3>
                 <div className="space-y-4 max-h-[300px] overflow-y-auto custom-scrollbar">
                   {readingPlans.map(item => (
-                    <div key={item.id} className={`flex items-center justify-between p-5 rounded-[28px] border transition-all group ${editingPlanId === item.id ? 'bg-brand/10 border-brand' : 'bg-[#0b0e14]/50 border-white/5 hover:border-brand/30'}`}>
+                    <div key={item.id} className={`flex items-center justify-between p-5 rounded-2xl border transition-all group ${editingPlanId === item.id ? 'bg-brand/10 border-brand' : 'bg-brand-bg/50 border-white/5 hover:border-brand/30'}`}>
                       <div className="flex items-center gap-4 truncate">
                          {item.thumbnailUrl && <img src={item.thumbnailUrl} className="w-10 h-10 rounded-xl object-cover" />}
                          <div className="truncate">
-                           <p className="text-sm font-black text-white uppercase truncate tracking-tight">{item.title}</p>
-                           <p className="text-[8px] text-gray-500 font-bold uppercase">{item.durationDays} Dias</p>
+                           <p className="text-sm font-extrabold text-white uppercase truncate tracking-tight">{item.title}</p>
+                           <p className="text-[8px] text-c-text-secondary font-bold uppercase">{item.durationDays} Dias</p>
                          </div>
                       </div>
                       <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
@@ -1855,8 +1855,8 @@ const AdminPanel: React.FC = () => {
                           setEditingPlanId(item.id); 
                           setNewPlan(item); 
                           setNewPlanContent(prev => ({ ...prev, planId: item.id }));
-                        }} className="p-2 text-gray-500 hover:text-brand transition-colors"><Edit2 size={16}/></button>
-                        <button onClick={() => setReadingPlans(readingPlans.filter(p => p.id !== item.id))} className="p-2 text-gray-500 hover:text-rose-500 transition-colors"><Trash2 size={16}/></button>
+                        }} className="p-2 text-c-text-secondary hover:text-brand transition-colors"><Edit2 size={16}/></button>
+                        <button onClick={() => setReadingPlans(readingPlans.filter(p => p.id !== item.id))} className="p-2 text-c-text-secondary hover:text-rose-500 transition-colors"><Trash2 size={16}/></button>
                       </div>
                     </div>
                   ))}
@@ -1864,13 +1864,13 @@ const AdminPanel: React.FC = () => {
               </div>
 
               {/* Lista de Conteúdos do Plano Selecionado */}
-              <div className="bg-[#161b22] p-10 rounded-[48px] border border-white/5 shadow-2xl">
+              <div className="bg-brand-card p-10 rounded-[48px] border border-white/5 shadow-2xl">
                 <div className="flex justify-between items-center mb-8">
-                  <h3 className="text-[10px] font-black text-blue-500 uppercase tracking-[0.3em]">
+                  <h3 className="text-[10px] font-extrabold text-blue-500 uppercase tracking-[0.3em]">
                     {editingPlanId ? `Leituras deste Plano (${readingPlanContent.filter(c => c.planId === editingPlanId).length})` : `Todas as Leituras (${readingPlanContent.length})`}
                   </h3>
                   {editingPlanId && (
-                    <span className="text-[8px] bg-brand/20 text-brand px-3 py-1 rounded-full font-black">FILTRADO</span>
+                    <span className="text-[8px] bg-brand/20 text-brand px-3 py-1 rounded-full font-extrabold">FILTRADO</span>
                   )}
                 </div>
                 
@@ -1879,28 +1879,28 @@ const AdminPanel: React.FC = () => {
                     ? readingPlanContent.filter(c => c.planId === editingPlanId)
                     : readingPlanContent
                   ).map(item => (
-                    <div key={item.id} className={`flex flex-col p-5 rounded-[28px] border transition-all group ${editingPlanContentId === item.id ? 'bg-blue-500/10 border-blue-500' : 'bg-[#0b0e14]/50 border-white/5 hover:border-blue-500/30'}`}>
+                    <div key={item.id} className={`flex flex-col p-5 rounded-2xl border transition-all group ${editingPlanContentId === item.id ? 'bg-blue-500/10 border-blue-500' : 'bg-brand-bg/50 border-white/5 hover:border-blue-500/30'}`}>
                       <div className="flex items-center justify-between mb-3">
                         <div className="min-w-0">
-                          <p className="text-xs font-black text-white uppercase truncate tracking-tight">{item.week} - {item.day}</p>
-                          <p className="text-[8px] text-gray-500 font-bold uppercase truncate">{readingPlans.find(p => p.id === item.planId)?.title || 'Plano não selecionado'}</p>
+                          <p className="text-xs font-extrabold text-white uppercase truncate tracking-tight">{item.week} - {item.day}</p>
+                          <p className="text-[8px] text-c-text-secondary font-bold uppercase truncate">{readingPlans.find(p => p.id === item.planId)?.title || 'Plano não selecionado'}</p>
                         </div>
                         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-                          <button onClick={() => { setEditingPlanContentId(item.id); setNewPlanContent(item); }} className="p-2 text-gray-500 hover:text-blue-500 transition-colors"><Edit2 size={16}/></button>
-                          <button onClick={() => setReadingPlanContent(readingPlanContent.filter(c => c.id !== item.id))} className="p-2 text-gray-500 hover:text-rose-500 transition-colors"><Trash2 size={16}/></button>
+                          <button onClick={() => { setEditingPlanContentId(item.id); setNewPlanContent(item); }} className="p-2 text-c-text-secondary hover:text-blue-500 transition-colors"><Edit2 size={16}/></button>
+                          <button onClick={() => setReadingPlanContent(readingPlanContent.filter(c => c.id !== item.id))} className="p-2 text-c-text-secondary hover:text-rose-500 transition-colors"><Trash2 size={16}/></button>
                         </div>
                       </div>
                       
                       {/* Resumo dos Versículos */}
                       <div className="flex flex-wrap gap-2">
                         {item.resources.slice(0, 3).map(res => (
-                          <span key={res.id} className="text-[7px] bg-white/5 text-gray-400 px-2 py-1 rounded-md border border-white/5 font-bold uppercase">{res.title}</span>
+                          <span key={res.id} className="text-[7px] bg-white/5 text-c-text-secondary px-2 py-1 rounded-md border border-white/5 font-bold uppercase">{res.title}</span>
                         ))}
                         {item.resources.length > 3 && (
-                          <span className="text-[7px] text-gray-600 font-bold">+{item.resources.length - 3}</span>
+                          <span className="text-[7px] text-c-text-muted font-bold">+{item.resources.length - 3}</span>
                         )}
                         {item.resources.length === 0 && (
-                          <span className="text-[7px] text-gray-600 font-black italic">Sem versículos</span>
+                          <span className="text-[7px] text-c-text-muted font-extrabold italic">Sem versículos</span>
                         )}
                       </div>
                     </div>
@@ -1908,8 +1908,8 @@ const AdminPanel: React.FC = () => {
 
                   {editingPlanId && readingPlanContent.filter(c => c.planId === editingPlanId).length === 0 && (
                     <div className="py-10 text-center border border-dashed border-white/5 rounded-3xl">
-                      <p className="text-[9px] font-black text-gray-600 uppercase tracking-widest">Nenhuma leitura vinculada a este plano ainda.</p>
-                      <button onClick={() => setNewPlanContent({ ...newPlanContent, planId: editingPlanId })} className="text-[10px] font-black text-brand uppercase mt-2 hover:underline">Adicionar a primeira leitura</button>
+                      <p className="text-[9px] font-extrabold text-c-text-muted uppercase tracking-widest">Nenhuma leitura vinculada a este plano ainda.</p>
+                      <button onClick={() => setNewPlanContent({ ...newPlanContent, planId: editingPlanId })} className="text-[10px] font-extrabold text-brand uppercase mt-2 hover:underline">Adicionar a primeira leitura</button>
                     </div>
                   )}
                 </div>
@@ -1918,8 +1918,8 @@ const AdminPanel: React.FC = () => {
           ) : activeTab === 'users' ? (
             <div className="space-y-6">
               {/* Header */}
-              <div className="bg-[#161b22] p-8 rounded-[40px] border border-white/5 space-y-6">
-                <h3 className="text-[10px] font-black text-brand uppercase tracking-[0.3em]">Crescimento Mensal</h3>
+              <div className="bg-brand-card p-8 rounded-3xl border border-white/5 space-y-6">
+                <h3 className="text-[10px] font-extrabold text-brand uppercase tracking-[0.3em]">Crescimento Mensal</h3>
                 <div className="space-y-3">
                   {(() => {
                     const months: Record<string, number> = {};
@@ -1931,26 +1931,26 @@ const AdminPanel: React.FC = () => {
                     const max = Math.max(...entries.map(e => e[1]), 1);
                     return entries.map(([month, count]) => (
                       <div key={month} className="flex items-center gap-4">
-                        <span className="text-[9px] font-black text-gray-500 uppercase w-14 flex-shrink-0">{month}</span>
+                        <span className="text-[9px] font-extrabold text-c-text-secondary uppercase w-14 flex-shrink-0">{month}</span>
                         <div className="flex-1 bg-white/5 rounded-full h-2 overflow-hidden">
                           <div
                             className="h-full bg-brand rounded-full transition-all duration-700"
                             style={{ width: `${(count / max) * 100}%` }}
                           />
                         </div>
-                        <span className="text-[10px] font-black text-white w-6 text-right">{count}</span>
+                        <span className="text-[10px] font-extrabold text-white w-6 text-right">{count}</span>
                       </div>
                     ));
                   })()}
                   {profiles.length === 0 && (
-                    <p className="text-[9px] text-gray-600 font-black uppercase text-center py-4">Aguardando dados...</p>
+                    <p className="text-[9px] text-c-text-muted font-extrabold uppercase text-center py-4">Aguardando dados...</p>
                   )}
                 </div>
               </div>
 
               {/* Info card */}
-              <div className="bg-blue-500/5 border border-blue-500/20 p-8 rounded-[40px] space-y-4">
-                <h4 className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Como gerenciar usuários</h4>
+              <div className="bg-blue-500/5 border border-blue-500/20 p-8 rounded-3xl space-y-4">
+                <h4 className="text-[10px] font-extrabold text-blue-400 uppercase tracking-widest">Como gerenciar usuários</h4>
                 <ul className="space-y-3">
                   {[
                     'Use a busca para filtrar por e-mail',
@@ -1959,8 +1959,8 @@ const AdminPanel: React.FC = () => {
                     'Novos usuários aparecem automaticamente após login'
                   ].map((tip, i) => (
                     <li key={i} className="flex items-start gap-3">
-                      <span className="w-5 h-5 bg-blue-500/20 text-blue-400 rounded-lg flex items-center justify-center text-[8px] font-black flex-shrink-0">{i+1}</span>
-                      <p className="text-[10px] text-gray-400 font-bold leading-relaxed">{tip}</p>
+                      <span className="w-5 h-5 bg-blue-500/20 text-blue-400 rounded-lg flex items-center justify-center text-[8px] font-extrabold flex-shrink-0">{i+1}</span>
+                      <p className="text-[10px] text-c-text-secondary font-bold leading-relaxed">{tip}</p>
                     </li>
                   ))}
                 </ul>
@@ -1968,8 +1968,8 @@ const AdminPanel: React.FC = () => {
             </div>
           ) : activeTab === 'config' ? (
             <div className="space-y-6">
-              <div className="bg-[#161b22] p-8 rounded-[40px] border border-white/5 space-y-6">
-                <h3 className="text-[10px] font-black text-brand uppercase tracking-[0.3em]">Especificações do Logo</h3>
+              <div className="bg-brand-card p-8 rounded-3xl border border-white/5 space-y-6">
+                <h3 className="text-[10px] font-extrabold text-brand uppercase tracking-[0.3em]">Especificações do Logo</h3>
                 <ul className="space-y-3">
                   {[
                     { label: 'Formatos aceitos', value: 'PNG, JPG, WebP, SVG' },
@@ -1978,23 +1978,23 @@ const AdminPanel: React.FC = () => {
                     { label: 'Fundo recomendado', value: 'Transparente (PNG)' },
                   ].map(item => (
                     <div key={item.label} className="flex items-center justify-between p-4 bg-white/2 rounded-2xl">
-                      <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest">{item.label}</span>
-                      <span className="text-[10px] font-black text-white">{item.value}</span>
+                      <span className="text-[9px] font-extrabold text-c-text-secondary uppercase tracking-widest">{item.label}</span>
+                      <span className="text-[10px] font-extrabold text-white">{item.value}</span>
                     </div>
                   ))}
                 </ul>
               </div>
-              <div className="bg-amber-500/5 border border-amber-500/20 p-8 rounded-[40px]">
+              <div className="bg-amber-500/5 border border-amber-500/20 p-8 rounded-3xl">
                 <p className="text-[10px] font-bold text-amber-400/80 leading-relaxed uppercase tracking-wide text-center">
                   ⚠️ <span className="text-amber-400">Atenção:</span> O logo é exibido globalmente. Após o upload, a mudança é imediata para todos os usuários conectados.
                 </p>
               </div>
             </div>
           ) : (
-            <div className="bg-brand/5 p-12 rounded-[56px] border border-brand/20 text-center">
+            <div className="bg-brand/5 p-12 rounded-3xl border border-brand/20 text-center">
               <Database className="text-brand mx-auto mb-6" size={48} />
-              <h4 className="text-xl font-black text-white uppercase tracking-tighter mb-4">Banco de Dados Bíblico</h4>
-              <p className="text-xs text-gray-500 font-bold leading-relaxed uppercase tracking-widest">Importe arquivos JSON para atualizar as escrituras em tempo real para todos os usuários.</p>
+              <h4 className="text-xl font-extrabold text-white uppercase tracking-tighter mb-4">Banco de Dados Bíblico</h4>
+              <p className="text-xs text-c-text-secondary font-bold leading-relaxed uppercase tracking-widest">Importe arquivos JSON para atualizar as escrituras em tempo real para todos os usuários.</p>
             </div>
           )}
       </div>
@@ -2002,35 +2002,35 @@ const AdminPanel: React.FC = () => {
       {/* Modal de Importação Inteligente */}
       {isSmartImportOpen && (
         <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-300 overflow-y-auto">
-          <div className="bg-[#161b22] border border-white/10 rounded-[48px] w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-3xl flex flex-col my-auto">
+          <div className="bg-brand-card border border-white/10 rounded-[48px] w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-3xl flex flex-col my-auto">
             <div className="p-10 border-b border-white/5 flex items-center justify-between bg-gradient-to-r from-brand/10 to-transparent">
               <div className="flex items-center gap-6">
                 <div className="w-16 h-16 bg-brand/20 text-brand rounded-3xl flex items-center justify-center shadow-xl">
                   <Sparkles size={32} />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-black text-white uppercase tracking-tighter">Mentor IA: Importação Inteligente</h3>
-                  <p className="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em]">Transforme PDFs e textos brutos em planos estruturados</p>
+                  <h3 className="text-2xl font-extrabold text-white uppercase tracking-tighter">Mentor IA: Importação Inteligente</h3>
+                  <p className="text-[10px] text-c-text-secondary font-bold uppercase tracking-[0.3em]">Transforme PDFs e textos brutos em planos estruturados</p>
                 </div>
               </div>
-              <button onClick={() => setIsSmartImportOpen(false)} className="p-3 bg-white/5 rounded-2xl text-gray-400 hover:text-white transition-all"><X size={24}/></button>
+              <button onClick={() => setIsSmartImportOpen(false)} className="p-3 bg-white/5 rounded-2xl text-c-text-secondary hover:text-white transition-all"><X size={24}/></button>
             </div>
             
             <div className="p-10 overflow-y-auto custom-scrollbar flex-1 space-y-8">
               {smartImportResult.length === 0 ? (
                 <div className="space-y-6">
                   <div className="bg-brand/5 border border-brand/20 p-6 rounded-3xl space-y-4">
-                    <p className="text-xs font-bold text-gray-400 leading-relaxed uppercase tracking-wide">
+                    <p className="text-xs font-bold text-c-text-secondary leading-relaxed uppercase tracking-wide">
                       💡 <span className="text-brand">COMO USAR:</span> Selecione o texto do seu PDF de leitura, copie e cole abaixo. A IA irá identificar as semanas, dias e versículos para você.
                     </p>
                     
                     {/* Seletor de Plano de Backup dentro do Modal */}
                     <div className="space-y-2 border-t border-brand/10 pt-4">
-                      <label className="text-[9px] font-black text-gray-500 uppercase tracking-[0.3em] ml-1">Vincular ao Plano:</label>
+                      <label className="text-[9px] font-extrabold text-c-text-secondary uppercase tracking-[0.3em] ml-1">Vincular ao Plano:</label>
                       <select 
                         value={newPlanContent.planId} 
                         onChange={e => setNewPlanContent({ ...newPlanContent, planId: e.target.value })} 
-                        className="w-full bg-[#0b0e14] border border-white/5 text-white rounded-2xl px-6 py-4 text-xs font-black outline-none hover:border-brand/30 transition-all shadow-inner"
+                        className="w-full bg-brand-bg border border-white/5 text-white rounded-2xl px-6 py-4 text-xs font-extrabold outline-none hover:border-brand/30 transition-all shadow-inner"
                       >
                         <option value="">Selecione um plano...</option>
                         {readingPlans.map(p => <option key={p.id} value={p.id}>{p.title}</option>)}
@@ -2040,7 +2040,7 @@ const AdminPanel: React.FC = () => {
 
                   {/* Alerta de Erro dentro do Modal */}
                   {error && (
-                    <div className="p-5 bg-rose-500/10 border border-rose-500/30 rounded-3xl text-rose-500 text-center font-black uppercase text-[9px] tracking-widest flex items-center justify-center gap-3 animate-in shake">
+                    <div className="p-5 bg-rose-500/10 border border-rose-500/30 rounded-3xl text-rose-500 text-center font-extrabold uppercase text-[9px] tracking-widest flex items-center justify-center gap-3 animate-in shake">
                       <AlertTriangle size={14} /> {error}
                     </div>
                   )}
@@ -2050,14 +2050,14 @@ const AdminPanel: React.FC = () => {
                       placeholder="Cole o texto do plano aqui (Ex: Semana 1, Dia 1 - Gênesis 1-3...)"
                       value={smartImportText}
                       onChange={e => setSmartImportText(e.target.value)}
-                      className="w-full h-80 bg-[#0b0e14] border border-white/5 text-white rounded-[32px] p-8 font-medium outline-none focus:ring-2 focus:ring-brand/30 resize-none custom-scrollbar shadow-inner text-sm leading-relaxed"
+                      className="w-full h-80 bg-brand-bg border border-white/5 text-white rounded-2xl p-8 font-medium outline-none focus:ring-2 focus:ring-brand/30 resize-none custom-scrollbar shadow-inner text-sm leading-relaxed"
                     />
                   </div>
 
                   <button 
                     onClick={handleSmartImport}
                     disabled={isProcessingSmartImport || !smartImportText.trim()}
-                    className="w-full bg-brand text-white py-6 rounded-[28px] font-black uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4 disabled:opacity-50"
+                    className="w-full bg-brand text-white py-6 rounded-2xl font-extrabold uppercase tracking-[0.3em] shadow-xl shadow-brand/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4 disabled:opacity-50"
                   >
                     {isProcessingSmartImport ? (
                       <>
@@ -2078,21 +2078,21 @@ const AdminPanel: React.FC = () => {
               ) : (
                 <div className="space-y-8 animate-in slide-in-from-bottom-4">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.4em]">Extração concluída: {smartImportResult.length} Dias Encontrados</h4>
-                    <button onClick={() => setSmartImportResult([])} className="text-[10px] font-black text-gray-500 hover:text-white uppercase underline underline-offset-4">Limpar e Tentar Novamente</button>
+                    <h4 className="text-[10px] font-extrabold text-emerald-500 uppercase tracking-[0.4em]">Extração concluída: {smartImportResult.length} Dias Encontrados</h4>
+                    <button onClick={() => setSmartImportResult([])} className="text-[10px] font-extrabold text-c-text-secondary hover:text-white uppercase underline underline-offset-4">Limpar e Tentar Novamente</button>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {smartImportResult.map((item, idx) => (
-                      <div key={idx} className="bg-[#0b0e14] border border-white/5 p-6 rounded-3xl space-y-3">
+                      <div key={idx} className="bg-brand-bg border border-white/5 p-6 rounded-3xl space-y-3">
                         <div className="flex justify-between items-start">
-                          <span className="text-[9px] font-black text-brand uppercase tracking-widest">{item.week} • {item.day}</span>
+                          <span className="text-[9px] font-extrabold text-brand uppercase tracking-widest">{item.week} • {item.day}</span>
                           <CheckCircle2 size={14} className="text-emerald-500" />
                         </div>
-                        <p className="text-xs font-black text-white uppercase tracking-tight line-clamp-1">{item.title}</p>
+                        <p className="text-xs font-extrabold text-white uppercase tracking-tight line-clamp-1">{item.title}</p>
                         <div className="flex flex-wrap gap-1">
                           {(item.verses || []).map((v: string) => (
-                            <span key={v} className="text-[8px] bg-white/5 text-gray-400 px-2 py-1 rounded-md border border-white/5 font-bold">{v}</span>
+                            <span key={v} className="text-[8px] bg-white/5 text-c-text-secondary px-2 py-1 rounded-md border border-white/5 font-bold">{v}</span>
                           ))}
                         </div>
                       </div>
@@ -2101,7 +2101,7 @@ const AdminPanel: React.FC = () => {
 
                   <button 
                     onClick={confirmSmartImport}
-                    className="w-full bg-emerald-600 text-white py-6 rounded-[28px] font-black uppercase tracking-[0.3em] shadow-xl shadow-emerald-500/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4"
+                    className="w-full bg-emerald-600 text-white py-6 rounded-2xl font-extrabold uppercase tracking-[0.3em] shadow-xl shadow-emerald-500/30 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4"
                   >
                     <Plus size={24} />
                     CONFIRMAR E IMPORTAR TUDO
@@ -2111,7 +2111,7 @@ const AdminPanel: React.FC = () => {
             </div>
 
             <div className="p-10 bg-brand/5 border-t border-white/5 text-center">
-              <p className="text-[9px] font-bold text-gray-600 uppercase tracking-widest">O Mentor IA processa os dados com 98% de precisão teológica.</p>
+              <p className="text-[9px] font-bold text-c-text-muted uppercase tracking-widest">O Mentor IA processa os dados com 98% de precisão teológica.</p>
             </div>
           </div>
         </div>

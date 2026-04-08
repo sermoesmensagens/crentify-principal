@@ -178,22 +178,22 @@ const Academy: React.FC = () => {
         {selectedCourse ? (
           <div className="flex-1 flex flex-col animate-in fade-in zoom-in-95 duration-300">
             {/* Header da Visão de Curso */}
-            <div className="bg-brand/5 p-6 rounded-[40px] border border-brand/10 mb-4 flex flex-col md:flex-row gap-6 items-center shrink-0">
+            <div className="bg-brand/5 p-6 rounded-3xl border border-brand/10 mb-4 flex flex-col md:flex-row gap-6 items-center shrink-0">
               <button 
                 onClick={() => { setSelectedCourse(null); setExpandedWeeks([]); }} 
-                className="w-12 h-12 bg-[#0b0e14] border border-white/5 rounded-2xl flex items-center justify-center hover:bg-brand/20 hover:text-brand transition-all flex-shrink-0"
+                className="w-12 h-12 bg-brand-bg border border-white/5 rounded-2xl flex items-center justify-center hover:bg-brand/20 hover:text-brand transition-all flex-shrink-0"
               >
                 <X size={20} />
               </button>
-              <img src={getCourseThumbnail(selectedCourse)} className="w-24 h-24 md:w-28 md:h-28 rounded-[32px] object-cover shadow-2xl border border-white/10" alt={selectedCourse.title} />
+              <img src={getCourseThumbnail(selectedCourse)} className="w-24 h-24 md:w-28 md:h-28 rounded-2xl object-cover shadow-2xl border border-white/10" alt={selectedCourse.title} />
               <div className="flex-1 text-center md:text-left">
-                <h2 className="text-2xl font-black text-white uppercase tracking-tighter mb-2">{selectedCourse.title}</h2>
-                <p className="text-gray-500 text-sm max-w-2xl leading-relaxed">{selectedCourse.description}</p>
+                <h2 className="text-2xl font-extrabold text-white uppercase tracking-tighter mb-2">{selectedCourse.title}</h2>
+                <p className="text-c-text-secondary text-sm max-w-2xl leading-relaxed">{selectedCourse.description}</p>
               </div>
               <div className="bg-black/40 p-6 rounded-3xl border border-white/5 text-center min-w-[200px] shadow-inner">
                 <div className="flex justify-between items-center mb-2">
-                  <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Seu Progresso</p>
-                  <p className="text-xl font-black text-brand tracking-tighter shadow-brand/20 drop-shadow-md">
+                  <p className="text-[9px] font-extrabold text-c-text-secondary uppercase tracking-widest">Seu Progresso</p>
+                  <p className="text-xl font-extrabold text-brand tracking-tighter shadow-brand/20 drop-shadow-md">
                     {progressPercent}%
                   </p>
                 </div>
@@ -203,7 +203,7 @@ const Academy: React.FC = () => {
                     style={{ width: `${progressPercent}%` }}
                   />
                 </div>
-                <p className="text-[8px] font-black text-gray-600 uppercase tracking-widest mt-2 hover:text-gray-400 transition-colors">
+                <p className="text-[8px] font-extrabold text-c-text-muted uppercase tracking-widest mt-2 hover:text-c-text-secondary transition-colors">
                   {completedResources} de {totalResources} Concluídas
                 </p>
               </div>
@@ -243,22 +243,22 @@ const Academy: React.FC = () => {
                   const isWeekComplete = (lessons.reduce((acc, l) => acc + (l.resources?.filter(r => progress.completedLessons.includes(r.id)).length || 0), 0) === lessons.reduce((acc, l) => acc + (l.resources?.length || 0), 0)) && lessons.length > 0;
 
                   return (
-                  <div key={weekName} className={`border rounded-[32px] overflow-hidden mb-6 transition-all duration-300 shadow-2xl ${isExpanded ? 'bg-[#161b22] border-brand/20' : 'bg-[#0b0e14] border-white/5 hover:border-white/10'}`}>
+                  <div key={weekName} className={`border rounded-2xl overflow-hidden mb-6 transition-all duration-300 shadow-2xl ${isExpanded ? 'bg-brand-card border-brand/20' : 'bg-brand-bg border-white/5 hover:border-white/10'}`}>
                     <div onClick={() => toggleWeek(weekName)} className="flex items-center justify-between p-6 cursor-pointer hover:bg-white/5 transition-colors group">
                       <div className="flex items-center gap-4">
-                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black shadow-lg transition-colors ${isWeekComplete ? 'bg-emerald-500/10 text-emerald-500' : 'bg-brand/10 text-brand'}`}>
+                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-extrabold shadow-lg transition-colors ${isWeekComplete ? 'bg-emerald-500/10 text-emerald-500' : 'bg-brand/10 text-brand'}`}>
                           {isWeekComplete ? <CheckCircle2 size={24} /> : <GraduationCap size={20} />}
                         </div>
                         <div>
-                          <h3 className={`text-xl font-black uppercase tracking-tighter transition-colors ${isExpanded ? 'text-white' : 'text-gray-300 group-hover:text-white'}`}>{weekName}</h3>
+                          <h3 className={`text-xl font-extrabold uppercase tracking-tighter transition-colors ${isExpanded ? 'text-white' : 'text-gray-300 group-hover:text-white'}`}>{weekName}</h3>
                           {lessons.length > 0 && (
-                            <p className="text-[9px] text-gray-500 uppercase tracking-widest mt-1 font-bold">
+                            <p className="text-[9px] text-c-text-secondary uppercase tracking-widest mt-1 font-bold">
                               {lessons.length} dias • {lessons.reduce((a,b)=>a+(b.resources?.length||0),0)} tarefas
                             </p>
                           )}
                         </div>
                       </div>
-                      <div className={`transition-all duration-300 ${isExpanded ? 'text-white rotate-180' : 'text-gray-500'}`}>
+                      <div className={`transition-all duration-300 ${isExpanded ? 'text-white rotate-180' : 'text-c-text-secondary'}`}>
                         <ChevronDown size={24} />
                       </div>
                     </div>
@@ -266,12 +266,12 @@ const Academy: React.FC = () => {
                     {isExpanded && (
                       <div className="p-6 pt-0 space-y-6 animate-in slide-in-from-top-4 fade-in duration-300">
                         {sortedDayLessons.map(dayBlock => (
-                          <div key={dayBlock.id} className="bg-[#0b0e14]/50 border border-white/5 rounded-[32px] overflow-hidden p-6 hover:border-brand/10 transition-colors shadow-inner">
+                          <div key={dayBlock.id} className="bg-brand-bg/50 border border-white/5 rounded-2xl overflow-hidden p-6 hover:border-brand/10 transition-colors shadow-inner">
                             <div className="flex items-center gap-3 mb-6">
                               <div className="p-2 bg-brand/10 rounded-xl shadow-inner border border-brand/20">
                                 <Calendar className="text-brand" size={16} />
                               </div>
-                              <h4 className="text-[14px] font-black text-white uppercase tracking-tighter">
+                              <h4 className="text-[14px] font-extrabold text-white uppercase tracking-tighter">
                                 {dayBlock.day ? `${dayBlock.day}${dayBlock.title ? ` • ${dayBlock.title}` : ''}` : (dayBlock.title || 'Dia de Estudo')}
                               </h4>
                             </div>
@@ -279,17 +279,17 @@ const Academy: React.FC = () => {
                               {(dayBlock.resources || []).map(resource => {
                                 const isResComplete = progress.completedLessons.includes(resource.id);
                                 return (
-                                  <div key={resource.id} className={`flex items-center justify-between p-4 rounded-[20px] transition-all group cursor-pointer ${isResComplete ? 'bg-white/5 border border-white/5' : 'bg-[#161b22] border border-white/10 hover:border-brand/50 hover:shadow-[0_0_15px_rgba(var(--brand-rgb),0.1)]'}`} onClick={() => toggleResourceCompletion(resource.id)}>
+                                  <div key={resource.id} className={`flex items-center justify-between p-4 rounded-xl transition-all group cursor-pointer ${isResComplete ? 'bg-white/5 border border-white/5' : 'bg-brand-card border border-white/10 hover:border-brand/50 hover:shadow-[0_0_15px_rgba(var(--brand-rgb),0.1)]'}`} onClick={() => toggleResourceCompletion(resource.id)}>
                                     <div className="flex items-center gap-4 flex-1 pr-4">
                                       <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all flex-shrink-0 ${isResComplete ? 'bg-emerald-500 border-emerald-500 text-white shadow-[0_0_10px_rgba(16,185,129,0.3)]' : 'border-gray-600 group-hover:border-brand'}`}>
                                         {isResComplete && <CheckCircle2 size={14} strokeWidth={4} />}
                                       </div>
                                       <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-3">
-                                        <span className={`text-[12px] md:text-[14px] font-black uppercase tracking-tight line-clamp-2 transition-colors ${isResComplete ? 'text-gray-600 line-through' : 'text-gray-200 group-hover:text-white'}`}>
+                                        <span className={`text-[12px] md:text-[14px] font-extrabold uppercase tracking-tight line-clamp-2 transition-colors ${isResComplete ? 'text-c-text-muted line-through' : 'text-gray-200 group-hover:text-white'}`}>
                                           {resource.title}
                                         </span>
                                         {isResComplete && progress.records?.[resource.id]?.timeSpent && (
-                                          <span className="text-[9px] font-black text-rose-500 uppercase tracking-widest bg-rose-500/10 px-2 py-0.5 rounded-md border border-rose-500/20 shadow-inner">
+                                          <span className="text-[9px] font-extrabold text-rose-500 uppercase tracking-widest bg-rose-500/10 px-2 py-0.5 rounded-md border border-rose-500/20 shadow-inner">
                                             {formatTime(progress.records[resource.id].timeSpent || 0)}
                                           </span>
                                         )}
@@ -297,7 +297,7 @@ const Academy: React.FC = () => {
                                     </div>
                                   <div className="flex items-center gap-3 flex-shrink-0">
                                     {resource.duration && (
-                                      <span className="hidden md:flex text-[9px] font-black text-brand uppercase px-4 py-2 rounded-full border border-brand/20 bg-brand/5 whitespace-nowrap shadow-inner">
+                                      <span className="hidden md:flex text-[9px] font-extrabold text-brand uppercase px-4 py-2 rounded-full border border-brand/20 bg-brand/5 whitespace-nowrap shadow-inner">
                                         {resource.duration}
                                       </span>
                                     )}
@@ -309,7 +309,7 @@ const Academy: React.FC = () => {
                                         setTimerSeconds(0); 
                                         setIsTimerRunning(false); 
                                       }} 
-                                      className={`px-6 py-3 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all shadow-lg flex items-center gap-2 ${isResComplete ? 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10' : 'bg-brand text-white hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(var(--brand-rgb),0.3)]'}`}
+                                      className={`px-6 py-3 text-[10px] font-extrabold uppercase tracking-widest rounded-xl transition-all shadow-lg flex items-center gap-2 ${isResComplete ? 'bg-white/5 text-c-text-secondary hover:text-white hover:bg-white/10' : 'bg-brand text-white hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(var(--brand-rgb),0.3)]'}`}
                                     >
                                       <Eye size={14} /> VER
                                     </button>
@@ -317,7 +317,7 @@ const Academy: React.FC = () => {
                                 </div>
                               )})}
                               {(!dayBlock.resources || dayBlock.resources.length === 0) && (
-                                <p className="text-[10px] text-gray-600 font-bold uppercase py-2 text-center bg-white/5 rounded-xl border border-white/5">Nenhuma tarefa cadastrada neste dia.</p>
+                                <p className="text-[10px] text-c-text-muted font-bold uppercase py-2 text-center bg-white/5 rounded-xl border border-white/5">Nenhuma tarefa cadastrada neste dia.</p>
                               )}
                             </div>
                           </div>
@@ -333,20 +333,20 @@ const Academy: React.FC = () => {
         ) : (
           <div className="flex-1 flex flex-col">
             {/* Cabecalho de Boas-vindas (Listagem de Cursos) */}
-            <div className="bg-brand/5 p-8 rounded-[40px] border border-brand/10 mb-8 flex flex-col md:flex-row justify-between items-center gap-6 shrink-0 relative overflow-hidden">
+            <div className="bg-brand/5 p-8 rounded-3xl border border-brand/10 mb-8 flex flex-col md:flex-row justify-between items-center gap-6 shrink-0 relative overflow-hidden">
               <div className="absolute -top-20 -right-20 w-64 h-64 bg-brand/20 rounded-full blur-3xl mix-blend-screen opacity-50 blur-anim" />
               <div className="relative z-10 text-center md:text-left">
-                <h1 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter mb-2">Desperte seu Chamado</h1>
-                <p className="text-gray-400 font-medium">Cursos e treinamentos profundos para Crentify.</p>
+                <h1 className="text-3xl md:text-4xl font-extrabold text-white uppercase tracking-tighter mb-2">Desperte seu Chamado</h1>
+                <p className="text-c-text-secondary font-medium">Cursos e treinamentos profundos para Crentify.</p>
               </div>
-              <div className="relative z-10 w-full md:w-auto flex items-center bg-[#0b0e14] border border-white/10 rounded-[28px] px-6 py-4 shadow-xl">
-                <Search size={20} className="text-gray-500 mr-4 shrink-0" />
+              <div className="relative z-10 w-full md:w-auto flex items-center bg-brand-bg border border-white/10 rounded-2xl px-6 py-4 shadow-xl">
+                <Search size={20} className="text-c-text-secondary mr-4 shrink-0" />
                 <input
                   type="text"
                   placeholder="Explorar cursos..."
                   value={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
-                  className="bg-transparent text-white font-medium outline-none w-full md:w-64 placeholder:text-gray-600"
+                  className="bg-transparent text-white font-medium outline-none w-full md:w-64 placeholder:text-c-text-muted"
                 />
               </div>
             </div>
@@ -364,7 +364,7 @@ const Academy: React.FC = () => {
                       <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${theme.bg} ${theme.text} ${theme.border} shadow-lg`}>
                         <Sparkles size={20} />
                       </div>
-                      <h3 className="text-xl font-black text-white uppercase tracking-tighter">{cat.title}</h3>
+                      <h3 className="text-xl font-extrabold text-white uppercase tracking-tighter">{cat.title}</h3>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -372,16 +372,16 @@ const Academy: React.FC = () => {
                         <div 
                           key={course.id} 
                           onClick={() => setSelectedCourse(course)}
-                          className={`bg-[#0b0e14]/80 border border-white/5 rounded-[32px] p-6 hover:bg-brand/5 hover:border-brand/30 transition-all cursor-pointer group flex flex-col h-full transform hover:-translate-y-2 hover:shadow-[0_15px_30px_rgba(var(--brand-rgb),0.15)] relative overflow-hidden`}
+                          className={`bg-brand-bg/80 border border-white/5 rounded-2xl p-6 hover:bg-brand/5 hover:border-brand/30 transition-all cursor-pointer group flex flex-col h-full transform hover:-translate-y-2 hover:shadow-[0_15px_30px_rgba(var(--brand-rgb),0.15)] relative overflow-hidden`}
                         >
                           {course.visibility === 'privado' && !isCurrentUserAdmin && (
-                            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-20 flex flex-col justify-center items-center rounded-[32px]">
-                              <Lock size={32} className="text-gray-400 mb-2" />
-                              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Em Breve</p>
+                            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-20 flex flex-col justify-center items-center rounded-2xl">
+                              <Lock size={32} className="text-c-text-secondary mb-2" />
+                              <p className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest">Em Breve</p>
                             </div>
                           )}
 
-                          <div className="aspect-[4/3] rounded-[24px] overflow-hidden mb-6 relative shadow-lg">
+                          <div className="aspect-[4/3] rounded-2xl overflow-hidden mb-6 relative shadow-lg">
                             <img src={getCourseThumbnail(course)} alt={course.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
                             <div className="absolute bottom-4 left-4 p-2 bg-black/50 backdrop-blur-md rounded-xl border border-white/10 text-white/90">
@@ -390,8 +390,8 @@ const Academy: React.FC = () => {
                           </div>
                           
                           <div className="flex-1 flex flex-col p-2">
-                            <h4 className="text-xl font-black text-white uppercase tracking-tight mb-2 group-hover:text-brand transition-colors line-clamp-2">{course.title}</h4>
-                            <p className="text-sm text-gray-500 line-clamp-2 mb-6 flex-1">{course.description}</p>
+                            <h4 className="text-xl font-extrabold text-white uppercase tracking-tight mb-2 group-hover:text-brand transition-colors line-clamp-2">{course.title}</h4>
+                            <p className="text-sm text-c-text-secondary line-clamp-2 mb-6 flex-1">{course.description}</p>
                             
                             {/* Course Progress Bar on Card */}
                             {(() => {
@@ -405,8 +405,8 @@ const Academy: React.FC = () => {
                               return (
                                 <div className="mb-6 bg-black/40 p-4 rounded-2xl border border-white/5 shadow-inner">
                                   <div className="flex justify-between items-center mb-2">
-                                    <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest">Progresso</span>
-                                    <span className="text-[10px] font-black text-brand uppercase tracking-tighter">{pct}%</span>
+                                    <span className="text-[8px] font-extrabold text-c-text-secondary uppercase tracking-widest">Progresso</span>
+                                    <span className="text-[10px] font-extrabold text-brand uppercase tracking-tighter">{pct}%</span>
                                   </div>
                                   <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden shadow-inner translate-y-0">
                                     <div 
@@ -414,7 +414,7 @@ const Academy: React.FC = () => {
                                       style={{ width: `${pct}%` }}
                                     />
                                   </div>
-                                  <p className="text-[7px] font-black text-gray-600 uppercase tracking-widest mt-2">
+                                  <p className="text-[7px] font-extrabold text-c-text-muted uppercase tracking-widest mt-2">
                                     {compRes} de {totalRes} Tarefas
                                   </p>
                                 </div>
@@ -422,10 +422,10 @@ const Academy: React.FC = () => {
                             })()}
 
                             <div className="pt-4 border-t border-white/5 flex items-center justify-between mt-auto">
-                              <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest">
+                              <span className="text-[10px] font-extrabold text-c-text-muted uppercase tracking-widest">
                                 {content.filter(l => l.courseId === course.id).reduce((a, b) => a + (b.resources?.length || 0), 0)} Tarefas
                               </span>
-                              <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 group-hover:bg-brand group-hover:text-white group-hover:border-brand transition-all">
+                              <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-c-text-secondary group-hover:bg-brand group-hover:text-white group-hover:border-brand transition-all">
                                 <ChevronDown size={16} className="-rotate-90" />
                               </div>
                             </div>
@@ -438,10 +438,10 @@ const Academy: React.FC = () => {
               })}
               
               {filteredCourses.length === 0 && (
-                <div className="text-center py-20 bg-black/20 rounded-[40px] border border-white/5">
-                  <EyeOff size={48} className="text-gray-700 mx-auto mb-4" />
-                  <h3 className="text-xl font-black text-white uppercase tracking-tighter mb-2">Nenhum curso encontrado</h3>
-                  <p className="text-gray-500">Tente buscar por um tema diferente ou remova o filtro.</p>
+                <div className="text-center py-20 bg-black/20 rounded-3xl border border-white/5">
+                  <EyeOff size={48} className="text-c-text-muted mx-auto mb-4" />
+                  <h3 className="text-xl font-extrabold text-white uppercase tracking-tighter mb-2">Nenhum curso encontrado</h3>
+                  <p className="text-c-text-secondary">Tente buscar por um tema diferente ou remova o filtro.</p>
                 </div>
               )}
             </div>
@@ -452,17 +452,17 @@ const Academy: React.FC = () => {
       {/* MODAL DE TAREFA / RECURSO ("VER") */}
       {selectedLesson && activeResource && (
         <div className="fixed inset-0 z-[120] flex items-center justify-center p-2 md:p-6 bg-black/95 backdrop-blur-2xl animate-in zoom-in-95 fade-in duration-300">
-          <div className="bg-[#161b22] w-full max-w-4xl h-full md:max-h-[90vh] rounded-[40px] md:rounded-[48px] border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden relative">
+          <div className="bg-brand-card w-full max-w-4xl h-full md:max-h-[90vh] rounded-3xl md:rounded-[48px] border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden relative">
             
             {/* Header com tipo de tarefa */}
-            <div className="p-6 md:p-8 flex justify-between items-center border-b border-white/5 bg-gradient-to-r from-[#0b0e14] to-[#161b22] flex-shrink-0">
+            <div className="p-6 md:p-8 flex justify-between items-center border-b border-white/5 bg-gradient-to-r from-brand-bg to-brand-card flex-shrink-0">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-brand/10 rounded-2xl flex items-center justify-center text-brand border border-brand/20 shadow-xl shadow-brand/10">
                   {activeResource.type === 'leitura' ? <FileText size={24} /> : activeResource.type === 'video' ? <Play size={24} fill="currentColor" /> : <Zap size={24} />}
                 </div>
                 <div>
-                  <h3 className="text-xl font-black text-white uppercase tracking-tighter line-clamp-1">{activeResource.title}</h3>
-                  <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">{selectedLesson.week} • {selectedLesson.day || selectedLesson.title}</p>
+                  <h3 className="text-xl font-extrabold text-white uppercase tracking-tighter line-clamp-1">{activeResource.title}</h3>
+                  <p className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest">{selectedLesson.week} • {selectedLesson.day || selectedLesson.title}</p>
                 </div>
               </div>
               <button 
@@ -480,24 +480,24 @@ const Academy: React.FC = () => {
             >
               
               {/* Cronômetro */}
-              <div className="bg-[#0b0e14]/80 border border-white/5 rounded-[40px] p-6 flex flex-col items-center justify-center text-center shadow-inner relative overflow-hidden">
+              <div className="bg-brand-bg/80 border border-white/5 rounded-3xl p-6 flex flex-col items-center justify-center text-center shadow-inner relative overflow-hidden">
                 <div className="absolute inset-0 bg-brand/5 blur-3xl rounded-full translate-y-1/2 pointer-events-none opacity-50"></div>
                 
-                <div className={`text-4xl md:text-5xl font-black tracking-tighter tabular-nums leading-none mb-6 ${isTimerRunning ? 'text-brand drop-shadow-[0_0_15px_rgba(var(--brand-rgb),0.5)]' : 'text-gray-400'} transition-all`}>
+                <div className={`text-4xl md:text-5xl font-extrabold tracking-tighter tabular-nums leading-none mb-6 ${isTimerRunning ? 'text-brand drop-shadow-[0_0_15px_rgba(var(--brand-rgb),0.5)]' : 'text-c-text-secondary'} transition-all`}>
                   {formatTime(timerSeconds)}
                 </div>
                 
                 <div className="flex items-center gap-4 relative z-10">
                   {isTimerRunning ? (
-                    <button onClick={() => setIsTimerRunning(false)} className="px-6 py-3 bg-rose-500/10 text-rose-500 border border-rose-500/30 rounded-2xl font-black text-[9px] tracking-[0.2em] uppercase hover:bg-rose-500 hover:text-white transition-all flex items-center gap-2 shadow-lg shadow-rose-500/20">
+                    <button onClick={() => setIsTimerRunning(false)} className="px-6 py-3 bg-rose-500/10 text-rose-500 border border-rose-500/30 rounded-2xl font-extrabold text-[9px] tracking-[0.2em] uppercase hover:bg-rose-500 hover:text-white transition-all flex items-center gap-2 shadow-lg shadow-rose-500/20">
                       <StopCircle size={14} fill="currentColor"/> PAUSAR
                     </button>
                   ) : (
-                    <button onClick={() => setIsTimerRunning(true)} className="px-6 py-3 bg-brand text-white shadow-[0_0_20px_rgba(var(--brand-rgb),0.4)] rounded-2xl font-black text-[9px] tracking-[0.2em] uppercase hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
+                    <button onClick={() => setIsTimerRunning(true)} className="px-6 py-3 bg-brand text-white shadow-[0_0_20px_rgba(var(--brand-rgb),0.4)] rounded-2xl font-extrabold text-[9px] tracking-[0.2em] uppercase hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
                       <Play size={14} fill="currentColor" /> {timerSeconds > 0 ? 'RETOMAR' : 'INICIAR TEMPO'}
                     </button>
                   )}
-                  <button onClick={() => { setIsTimerRunning(false); setTimerSeconds(0); }} className="w-12 h-12 bg-white/5 text-gray-500 rounded-2xl flex items-center justify-center hover:text-white hover:bg-white/10 transition-colors border border-white/5 group" title="Zerar Cronômetro">
+                  <button onClick={() => { setIsTimerRunning(false); setTimerSeconds(0); }} className="w-12 h-12 bg-white/5 text-c-text-secondary rounded-2xl flex items-center justify-center hover:text-white hover:bg-white/10 transition-colors border border-white/5 group" title="Zerar Cronômetro">
                     <RefreshCw size={18} className="group-hover:-rotate-180 transition-transform duration-500" />
                   </button>
                 </div>
@@ -505,8 +505,8 @@ const Academy: React.FC = () => {
 
               {/* Instruções */}
               {activeResource.instruction && (
-                <div className="bg-gradient-to-br from-brand/10 to-transparent border border-brand/20 p-8 rounded-[32px] shadow-lg">
-                  <h4 className="flex items-center gap-3 text-[11px] font-black text-brand uppercase tracking-[0.3em] mb-4">
+                <div className="bg-gradient-to-br from-brand/10 to-transparent border border-brand/20 p-8 rounded-2xl shadow-lg">
+                  <h4 className="flex items-center gap-3 text-[11px] font-extrabold text-brand uppercase tracking-[0.3em] mb-4">
                     <Info size={18} /> COMO FAZER
                   </h4>
                   <div className="text-gray-200 text-base md:text-lg leading-relaxed font-medium whitespace-pre-wrap">{activeResource.instruction}</div>
@@ -515,7 +515,7 @@ const Academy: React.FC = () => {
 
               {/* Renderização de Mídia / Texto Dinâmico */}
               {(activeResource.type === 'video' || activeResource.type === 'link') && activeResource.url && (
-                <div className="w-full rounded-[32px] overflow-hidden shadow-2xl border border-white/10 bg-black aspect-video relative group">
+                <div className="w-full rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black aspect-video relative group">
                   <div className="absolute inset-0 bg-brand/20 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
                   {activeResource.url.includes('youtube.com') || activeResource.url.includes('youtu.be') ? (
                     <iframe 
@@ -526,17 +526,17 @@ const Academy: React.FC = () => {
                       allowFullScreen
                     ></iframe>
                   ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center gap-4 bg-[#0b0e14] p-10 text-center relative z-10">
+                    <div className="w-full h-full flex flex-col items-center justify-center gap-4 bg-brand-bg p-10 text-center relative z-10">
                       <Zap size={48} className="text-brand animate-pulse" />
-                      <p className="text-white font-black uppercase tracking-widest text-xs">Este conteúdo é um link externo</p>
-                      <a href={activeResource.url} target="_blank" rel="noopener noreferrer" className="bg-brand text-white px-8 py-4 rounded-2xl font-black uppercase tracking-tighter hover:scale-105 transition-all">ABRIR CONTEÚDO</a>
+                      <p className="text-white font-extrabold uppercase tracking-widest text-xs">Este conteúdo é um link externo</p>
+                      <a href={activeResource.url} target="_blank" rel="noopener noreferrer" className="bg-brand text-white px-8 py-4 rounded-2xl font-extrabold uppercase tracking-tighter hover:scale-105 transition-all">ABRIR CONTEÚDO</a>
                     </div>
                   )}
                 </div>
               )}
 
               {(activeResource.type === 'text' || activeResource.type === 'leitura') && activeResource.content && (
-                <div className="bg-[#0b0e14]/60 border border-white/10 rounded-[32px] px-8 py-10 shadow-inner max-w-full">
+                <div className="bg-brand-bg/60 border border-white/10 rounded-2xl px-8 py-10 shadow-inner max-w-full">
                   <div className="text-gray-100 text-lg md:text-xl leading-relaxed font-medium whitespace-pre-wrap">
                     {activeResource.content}
                   </div>
@@ -545,7 +545,7 @@ const Academy: React.FC = () => {
 
               {activeResource.type === 'link' && activeResource.url && (
                 <div className="py-10 flex flex-col items-center justify-center">
-                  <a href={activeResource.url} target="_blank" rel="noopener noreferrer" className="bg-[#0b0e14] border border-white/10 text-white px-12 py-6 rounded-3xl font-black uppercase tracking-[0.3em] hover:bg-brand hover:border-brand hover:text-white transition-all shadow-[0_0_30px_rgba(0,0,0,0.5)] hover:shadow-[0_0_30px_rgba(var(--brand-rgb),0.3)] flex items-center gap-3">
+                  <a href={activeResource.url} target="_blank" rel="noopener noreferrer" className="bg-brand-bg border border-white/10 text-white px-12 py-6 rounded-3xl font-extrabold uppercase tracking-[0.3em] hover:bg-brand hover:border-brand hover:text-white transition-all shadow-[0_0_30px_rgba(0,0,0,0.5)] hover:shadow-[0_0_30px_rgba(var(--brand-rgb),0.3)] flex items-center gap-3">
                     <Zap size={20} className="text-brand group-hover:text-white" />
                     ACESSAR LINK EXTERNO
                   </a>
@@ -554,16 +554,16 @@ const Academy: React.FC = () => {
 
               {/* Área de Anotações ("Suas Anotações") */}
               <div className="pt-8 border-t border-white/5 flex flex-col gap-4">
-                <label className="flex items-center gap-3 text-[11px] font-black text-gray-500 uppercase tracking-[0.3em]">
+                <label className="flex items-center gap-3 text-[11px] font-extrabold text-c-text-secondary uppercase tracking-[0.3em]">
                   <MessageCircle size={18} className="text-brand" /> Suas Anotações e Respostas
                 </label>
                 <div className="relative group">
-                  <div className="absolute -inset-1 bg-gradient-to-b from-brand/20 to-transparent rounded-[32px] blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+                  <div className="absolute -inset-1 bg-gradient-to-b from-brand/20 to-transparent rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
                   <textarea
                     value={reflectionText}
                     onChange={e => setReflectionText(e.target.value)}
                     placeholder="Escreva aqui tudo o que chamou sua atenção, anote suas respostas das tarefas ou insights do dia..."
-                    className="w-full h-48 bg-[#0b0e14] border border-white/5 rounded-[32px] p-8 text-white font-medium text-sm md:text-base focus:ring-2 focus:ring-brand/30 outline-none resize-none placeholder:text-gray-800 italic font-serif leading-relaxed relative z-10"
+                    className="w-full h-48 bg-brand-bg border border-white/5 rounded-2xl p-8 text-white font-medium text-sm md:text-base focus:ring-2 focus:ring-brand/30 outline-none resize-none placeholder:text-gray-800 italic font-serif leading-relaxed relative z-10"
                   />
                 </div>
               </div>
@@ -571,7 +571,7 @@ const Academy: React.FC = () => {
             </div>
 
             {/* Footer de Ação ("CONCLUIR TAREFA") */}
-            <div className="p-6 md:p-8 border-t border-white/5 bg-[#0b0e14] flex-shrink-0 z-10 shadow-[0_-20px_30px_rgba(0,0,0,0.5)]">
+            <div className="p-6 md:p-8 border-t border-white/5 bg-brand-bg flex-shrink-0 z-10 shadow-[0_-20px_30px_rgba(0,0,0,0.5)]">
               <button 
                 onClick={() => {
                   if (reflectionText.trim()) handleSaveReflection();
@@ -582,7 +582,7 @@ const Academy: React.FC = () => {
                   setSelectedLesson(null);
                   setIsTimerRunning(false);
                 }} 
-                className={`w-full py-6 md:py-8 rounded-[32px] font-black uppercase flex items-center justify-center gap-4 text-xs md:text-sm tracking-[0.4em] transition-all transform hover:translate-y-[-2px] ${
+                className={`w-full py-6 md:py-8 rounded-2xl font-extrabold uppercase flex items-center justify-center gap-4 text-xs md:text-sm tracking-[0.4em] transition-all transform hover:translate-y-[-2px] ${
                   progress.completedLessons.includes(activeResource.id) 
                     ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 hover:bg-emerald-500/20 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)]' 
                     : 'bg-gradient-to-r from-brand to-[#9d5cff] text-white shadow-[0_15px_30px_rgba(var(--brand-rgb),0.4)] hover:shadow-[0_20px_40px_rgba(var(--brand-rgb),0.6)]'

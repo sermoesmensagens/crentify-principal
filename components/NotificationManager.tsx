@@ -111,10 +111,10 @@ const NotificationManager: React.FC = () => {
     if (showPopup) {
         return (
             <div className="fixed top-0 left-0 right-0 bottom-0 z-[20000] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-                <div className="bg-[#1c232b] border-[3px] border-brand p-8 rounded-[40px] shadow-[0_0_100px_rgba(135,67,242,0.8)] max-w-sm w-full animate-in zoom-in duration-300">
+                <div className="bg-[#1c232b] border-[3px] border-brand p-8 rounded-3xl shadow-[0_0_100px_rgba(108,59,255,0.8)] max-w-sm w-full animate-in zoom-in duration-300">
                     <div className="flex flex-col items-center text-center gap-6">
                         <div className="relative">
-                            <div className="w-24 h-24 bg-brand rounded-[32px] flex items-center justify-center text-white shadow-2xl animate-bounce">
+                            <div className="w-24 h-24 bg-brand rounded-2xl flex items-center justify-center text-white shadow-2xl animate-bounce">
                                 <Zap size={48} className="fill-white" />
                             </div>
                             <div className="absolute -top-2 -right-2 w-10 h-10 bg-green-500 rounded-full flex items-center justify-center border-4 border-[#1c232b]">
@@ -122,12 +122,12 @@ const NotificationManager: React.FC = () => {
                             </div>
                         </div>
                         <div>
-                            <h3 className="text-white font-black uppercase text-2xl tracking-tighter mb-2">{showPopup.title}</h3>
-                            <p className="text-gray-400 font-bold uppercase text-xs leading-relaxed">{showPopup.body}</p>
+                            <h3 className="text-white font-extrabold uppercase text-2xl tracking-tighter mb-2">{showPopup.title}</h3>
+                            <p className="text-c-text-secondary font-bold uppercase text-xs leading-relaxed">{showPopup.body}</p>
                         </div>
                         <button 
                             onClick={() => setShowPopup(null)}
-                            className="w-full bg-brand hover:bg-brand-light text-white font-black py-5 rounded-2xl uppercase tracking-[0.2em] shadow-lg transition-all active:scale-95"
+                            className="w-full bg-brand hover:bg-brand-light text-white font-extrabold py-5 rounded-2xl uppercase tracking-[0.2em] shadow-lg transition-all active:scale-95"
                         >
                             FECHAR AVISO
                         </button>
@@ -144,7 +144,7 @@ const NotificationManager: React.FC = () => {
                 <div className={`w-full ${permission === 'denied' ? 'bg-red-600' : 'bg-brand'} p-3 flex items-center justify-center gap-4 shadow-2xl`}>
                     <div className="flex items-center gap-3">
                         {permission === 'denied' ? <AlertTriangle className="text-white shrink-0" size={24} /> : <Bell className="text-white animate-bounce shrink-0" size={24} />}
-                        <span className="text-white font-black uppercase text-[11px] tracking-tight leading-tight">
+                        <span className="text-white font-extrabold uppercase text-[11px] tracking-tight leading-tight">
                             {permission === 'denied' 
                                 ? '⚠️ NOTIFICAÇÕES BLOQUEADAS! No cadeado (topo esquerdo), mude para "Permitir" e recarregue.' 
                                 : '⚠️ ATIVE AS NOTIFICAÇÕES PARA RECEBER SEUS LEMBRETES NO HORÁRIO CORRETO'
@@ -154,7 +154,7 @@ const NotificationManager: React.FC = () => {
                     {permission !== 'denied' && (
                         <button 
                             onClick={handlePermission}
-                            className="bg-white text-brand px-6 py-2 rounded-full font-black text-[11px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg shrink-0"
+                            className="bg-white text-brand px-6 py-2 rounded-full font-extrabold text-[11px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg shrink-0"
                         >
                             ATIVAR AGORA
                         </button>

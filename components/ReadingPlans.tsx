@@ -135,24 +135,24 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
   if (showQuiz) {
     return (
       <div className="h-full flex flex-col items-center justify-center p-6 animate-in fade-in zoom-in duration-500">
-        <div className="bg-[#161b22] w-full max-w-2xl border border-white/5 rounded-[48px] p-10 md:p-16 shadow-2xl relative overflow-hidden">
-          <button onClick={() => setShowQuiz(false)} className="absolute top-8 right-8 text-gray-500 hover:text-white transition-colors">
+        <div className="bg-brand-card w-full max-w-2xl border border-white/5 rounded-[48px] p-10 md:p-16 shadow-2xl relative overflow-hidden">
+          <button onClick={() => setShowQuiz(false)} className="absolute top-8 right-8 text-c-text-secondary hover:text-white transition-colors">
             <X size={24} />
           </button>
           {quizStep === 0 && (
             <div className="space-y-8 text-center animate-in slide-in-from-bottom-4 duration-500">
-              <div className="w-20 h-20 bg-brand/10 border border-brand/20 rounded-[32px] flex items-center justify-center text-brand mx-auto">
+              <div className="w-20 h-20 bg-brand/10 border border-brand/20 rounded-2xl flex items-center justify-center text-brand mx-auto">
                 <Sparkles size={40} />
               </div>
               <div>
-                <h2 className="text-3xl font-black text-white uppercase tracking-tighter mb-4">Seu Mentor Espiritual</h2>
-                <p className="text-gray-400 font-medium text-lg leading-relaxed">Shalom! Deixe-me preparar uma jornada sob medida. O que o seu coração busca hoje?</p>
+                <h2 className="text-3xl font-extrabold text-white uppercase tracking-tighter mb-4">Seu Mentor Espiritual</h2>
+                <p className="text-c-text-secondary font-medium text-lg leading-relaxed">Shalom! Deixe-me preparar uma jornada sob medida. O que o seu coração busca hoje?</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {['Disciplina e Oração', 'Superando Ansiedade', 'Vencendo Vícios', 'Sabedoria Profissional', 'Relacionamentos', 'Conhecendo a Deus'].map(topic => (
                   <button key={topic} onClick={() => { setQuizAnswers({ ...quizAnswers, focus: topic }); setQuizStep(1); }}
-                    className="bg-[#0b0e14] border border-white/10 hover:border-brand/40 hover:bg-brand/5 p-6 rounded-3xl text-sm font-black text-white uppercase tracking-widest transition-all hover:scale-[1.02] active:scale-95 text-left flex justify-between items-center group">
-                    {topic}<ChevronRight size={18} className="text-gray-700 group-hover:text-brand" />
+                    className="bg-brand-bg border border-white/10 hover:border-brand/40 hover:bg-brand/5 p-6 rounded-3xl text-sm font-extrabold text-white uppercase tracking-widest transition-all hover:scale-[1.02] active:scale-95 text-left flex justify-between items-center group">
+                    {topic}<ChevronRight size={18} className="text-c-text-muted group-hover:text-brand" />
                   </button>
                 ))}
               </div>
@@ -160,12 +160,12 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
           )}
           {quizStep === 1 && (
             <div className="space-y-8 animate-in slide-in-from-right duration-500">
-              <h3 className="text-2xl font-black text-white uppercase tracking-tighter">Disponibilidade</h3>
-              <p className="text-gray-400">Quanto tempo por dia?</p>
+              <h3 className="text-2xl font-extrabold text-white uppercase tracking-tighter">Disponibilidade</h3>
+              <p className="text-c-text-secondary">Quanto tempo por dia?</p>
               <div className="grid grid-cols-1 gap-4">
                 {[{ label: 'Rápido (5-10 min)', value: 'fast' }, { label: 'Médio (20-30 min)', value: 'medium' }, { label: 'Imersivo (45+ min)', value: 'deep' }].map(opt => (
                   <button key={opt.value} onClick={() => { setQuizAnswers({ ...quizAnswers, time: opt.value }); setQuizStep(2); }}
-                    className="bg-[#0b0e14] border border-white/10 hover:border-brand/40 p-6 rounded-3xl text-sm font-black text-white uppercase tracking-widest transition-all text-left">
+                    className="bg-brand-bg border border-white/10 hover:border-brand/40 p-6 rounded-3xl text-sm font-extrabold text-white uppercase tracking-widest transition-all text-left">
                     {opt.label}
                   </button>
                 ))}
@@ -181,16 +181,16 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
                     <div className="absolute inset-0 border-4 border-brand border-t-transparent rounded-full animate-spin"></div>
                     <Sparkles size={32} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-brand animate-pulse" />
                   </div>
-                  <h3 className="text-2xl font-black text-white uppercase tracking-tighter">Consultando as Escrituras...</h3>
+                  <h3 className="text-2xl font-extrabold text-white uppercase tracking-tighter">Consultando as Escrituras...</h3>
                 </div>
               ) : (
                 <div className="space-y-8">
-                  <div className="w-20 h-20 bg-emerald-500/10 border border-emerald-500/20 rounded-[32px] flex items-center justify-center text-emerald-500 mx-auto">
+                  <div className="w-20 h-20 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-500 mx-auto">
                     <Target size={40} />
                   </div>
                   <div>
-                    <h2 className="text-3xl font-black text-white uppercase tracking-tighter mb-2">Tudo Pronto!</h2>
-                    <p className="text-gray-400">Plano focado em <span className="text-brand">"{quizAnswers.focus}"</span> pronto para gerar.</p>
+                    <h2 className="text-3xl font-extrabold text-white uppercase tracking-tighter mb-2">Tudo Pronto!</h2>
+                    <p className="text-c-text-secondary">Plano focado em <span className="text-brand">"{quizAnswers.focus}"</span> pronto para gerar.</p>
                   </div>
                   <button onClick={async () => {
                     setIsGenerating(true);
@@ -219,7 +219,7 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
                     setPlans([newAiPlan, ...plans]);
                     setPlanContent([...planContent, ...newContent]);
                     setIsGenerating(false); setShowQuiz(false); setQuizStep(0); setSelectedPlan(newAiPlan);
-                  }} className="w-full bg-brand text-white py-6 rounded-[32px] font-black uppercase tracking-[0.3em] hover:scale-[1.02] transition-all">
+                  }} className="w-full bg-brand text-white py-6 rounded-2xl font-extrabold uppercase tracking-[0.3em] hover:scale-[1.02] transition-all">
                     Gerar Meu Plano Agora
                   </button>
                 </div>
@@ -256,29 +256,29 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
     return (
       <div className="flex flex-col pt-24 md:pt-0 animate-in fade-in duration-500 pb-20">
         {/* Header */}
-        <div className="bg-brand/5 p-6 rounded-[40px] border border-brand/10 mb-8 flex flex-col md:flex-row gap-6 items-center">
+        <div className="bg-brand/5 p-6 rounded-3xl border border-brand/10 mb-8 flex flex-col md:flex-row gap-6 items-center">
           <button onClick={closePlan}
-            className="w-12 h-12 bg-[#0b0e14] border border-white/5 rounded-2xl flex items-center justify-center hover:bg-brand/20 hover:text-brand transition-all flex-shrink-0">
+            className="w-12 h-12 bg-brand-bg border border-white/5 rounded-2xl flex items-center justify-center hover:bg-brand/20 hover:text-brand transition-all flex-shrink-0">
             <X size={20} />
           </button>
-          <div className="w-24 h-24 rounded-[32px] bg-[#0b0e14] border border-white/5 overflow-hidden shadow-2xl flex items-center justify-center">
+          <div className="w-24 h-24 rounded-2xl bg-brand-bg border border-white/5 overflow-hidden shadow-2xl flex items-center justify-center">
             {selectedPlan.thumbnailUrl
               ? <img src={selectedPlan.thumbnailUrl} className="w-full h-full object-cover" alt="" />
-              : <ReadingPlanIcon size={40} className="text-gray-700" />}
+              : <ReadingPlanIcon size={40} className="text-c-text-muted" />}
           </div>
           <div className="flex-1 text-center md:text-left">
-            <h2 className="text-2xl font-black text-white uppercase tracking-tighter mb-2">{selectedPlan.title}</h2>
-            <p className="text-gray-500 text-sm max-w-2xl leading-relaxed">{selectedPlan.description}</p>
+            <h2 className="text-2xl font-extrabold text-white uppercase tracking-tighter mb-2">{selectedPlan.title}</h2>
+            <p className="text-c-text-secondary text-sm max-w-2xl leading-relaxed">{selectedPlan.description}</p>
           </div>
-          <div className="bg-black/40 p-6 rounded-[32px] border border-white/5 text-center min-w-[200px]">
+          <div className="bg-black/40 p-6 rounded-2xl border border-white/5 text-center min-w-[200px]">
             <div className="flex justify-between items-center mb-2">
-              <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Progresso</p>
-              <p className="text-xl font-black text-brand">{progressPct}%</p>
+              <p className="text-[9px] font-extrabold text-c-text-secondary uppercase tracking-widest">Progresso</p>
+              <p className="text-xl font-extrabold text-brand">{progressPct}%</p>
             </div>
             <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
               <div className="h-full bg-brand transition-all duration-1000" style={{ width: `${progressPct}%` }} />
             </div>
-            <p className="text-[8px] font-black text-gray-600 uppercase tracking-widest mt-2">
+            <p className="text-[8px] font-extrabold text-c-text-muted uppercase tracking-widest mt-2">
               {progress[selectedPlan.id]?.completedResources.length || 0} de {planDays.reduce((a, b) => a + (b.resources?.length || 0), 0)} Concluídas
             </p>
           </div>
@@ -290,25 +290,25 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
             const isExpanded = expandedWeeks.includes(weekName);
             const weekContent = groupedByWeek[weekName];
             return (
-              <div key={weekName} className={`border rounded-[32px] overflow-hidden transition-all duration-300 ${isExpanded ? 'bg-[#161b22] border-brand/20' : 'bg-[#0b0e14] border-white/5 hover:border-white/10'}`}>
+              <div key={weekName} className={`border rounded-2xl overflow-hidden transition-all duration-300 ${isExpanded ? 'bg-brand-card border-brand/20' : 'bg-brand-bg border-white/5 hover:border-white/10'}`}>
                 <div onClick={() => toggleWeek(weekName)} className="p-6 flex items-center justify-between cursor-pointer">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-brand/10 text-brand flex items-center justify-center">
                       <Calendar size={20} />
                     </div>
                     <div>
-                      <h3 className="text-lg font-black text-white uppercase tracking-tighter">{weekName}</h3>
-                      <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">{weekContent.length} Dias</p>
+                      <h3 className="text-lg font-extrabold text-white uppercase tracking-tighter">{weekName}</h3>
+                      <p className="text-[9px] text-c-text-secondary font-bold uppercase tracking-widest">{weekContent.length} Dias</p>
                     </div>
                   </div>
-                  <ChevronDown size={24} className={`text-gray-500 transition-transform duration-300 ${isExpanded ? 'rotate-180 text-white' : ''}`} />
+                  <ChevronDown size={24} className={`text-c-text-secondary transition-transform duration-300 ${isExpanded ? 'rotate-180 text-white' : ''}`} />
                 </div>
 
                 {isExpanded && (
                   <div className="p-6 pt-0 space-y-6 animate-in slide-in-from-top-2 duration-300">
                     {weekContent.map(day => (
-                      <div key={day.id} className="bg-black/20 border border-white/5 rounded-[24px] p-6">
-                        <h4 className="text-[12px] font-black text-white uppercase tracking-widest mb-4 flex items-center gap-2">
+                      <div key={day.id} className="bg-black/20 border border-white/5 rounded-2xl p-6">
+                        <h4 className="text-[12px] font-extrabold text-white uppercase tracking-widest mb-4 flex items-center gap-2">
                           <div className="w-1.5 h-1.5 rounded-full bg-brand"></div>
                           {day.day} • {day.title}
                         </h4>
@@ -320,18 +320,18 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
                               ? `${Math.floor(savedTime / 60).toString().padStart(2,'0')}:${(savedTime % 60).toString().padStart(2,'0')}`
                               : null;
                             return (
-                              <div key={res.id} className={`flex flex-col md:flex-row md:items-center justify-between p-4 rounded-2xl border transition-all ${isDone ? 'bg-white/5 border-emerald-500/10' : 'bg-[#161b22] border-white/5 hover:border-brand/30'}`}>
+                              <div key={res.id} className={`flex flex-col md:flex-row md:items-center justify-between p-4 rounded-2xl border transition-all ${isDone ? 'bg-white/5 border-emerald-500/10' : 'bg-brand-card border-white/5 hover:border-brand/30'}`}>
                                 <div className="flex items-center gap-4 flex-1">
                                   <button onClick={() => toggleResourceCompletion(selectedPlan.id, res.id)}
                                     className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all ${isDone ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-gray-700 hover:border-brand'}`}>
                                     {isDone && <CheckCircle2 size={14} strokeWidth={4} />}
                                   </button>
                                   <div className="flex flex-col">
-                                    <span className={`text-sm font-black uppercase tracking-tight ${isDone ? 'text-gray-600 line-through' : 'text-gray-200'}`}>
+                                    <span className={`text-sm font-extrabold uppercase tracking-tight ${isDone ? 'text-c-text-muted line-through' : 'text-gray-200'}`}>
                                       {res.title}
                                     </span>
                                     {isDone && fmtSaved && (
-                                      <span className="flex items-center gap-1 text-[9px] font-black text-emerald-500 uppercase tracking-widest mt-1">
+                                      <span className="flex items-center gap-1 text-[9px] font-extrabold text-emerald-500 uppercase tracking-widest mt-1">
                                         <Clock size={10} /> {fmtSaved} lidos
                                       </span>
                                     )}
@@ -340,11 +340,11 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
                                 <div className="flex items-center gap-3 mt-4 md:mt-0">
                                   <button
                                     onClick={() => handleBibleNavigation(res, selectedPlan.id)}
-                                    className="flex-1 md:flex-none px-6 py-2.5 bg-brand/10 text-brand border border-brand/20 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-brand hover:text-white transition-all flex items-center justify-center gap-2"
+                                    className="flex-1 md:flex-none px-6 py-2.5 bg-brand/10 text-brand border border-brand/20 rounded-xl text-[10px] font-extrabold uppercase tracking-widest hover:bg-brand hover:text-white transition-all flex items-center justify-center gap-2"
                                   >
                                     <BookOpen size={14} /> LER NO PLANO
                                   </button>
-                                  <button className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-gray-500 hover:text-white transition-colors">
+                                  <button className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-c-text-secondary hover:text-white transition-colors">
                                     <Eye size={16} />
                                   </button>
                                 </div>
@@ -365,7 +365,7 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
         {readingResource && (
           <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 md:p-10">
             <div className="absolute inset-0 bg-black/95 backdrop-blur-xl" onClick={closeReader} />
-            <div className="relative bg-[#161b22] w-full max-w-4xl h-full md:max-h-[90vh] rounded-[40px] border border-white/10 shadow-2xl flex flex-col overflow-hidden">
+            <div className="relative bg-brand-card w-full max-w-4xl h-full md:max-h-[90vh] rounded-3xl border border-white/10 shadow-2xl flex flex-col overflow-hidden">
               {/* Modal Header */}
               <div className="p-6 md:p-8 border-b border-white/5 bg-black/30 flex items-center justify-between shrink-0">
                 <div className="flex items-center gap-4">
@@ -373,10 +373,10 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
                     <BookOpen size={22} />
                   </div>
                   <div>
-                    <h3 className="text-xl font-black text-white uppercase tracking-tighter">
+                    <h3 className="text-xl font-extrabold text-white uppercase tracking-tighter">
                       {readingResource.bookName} {readingResource.chapterIndex + 1}
                     </h3>
-                    <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Leitura do Plano</p>
+                    <p className="text-[10px] font-extrabold text-c-text-secondary uppercase tracking-widest">Leitura do Plano</p>
                   </div>
                 </div>
                 <button onClick={closeReader} className="w-12 h-12 bg-white/5 hover:bg-rose-500/20 hover:text-rose-400 rounded-2xl flex items-center justify-center transition-all">
@@ -387,16 +387,16 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
               {/* Scrollable content */}
               <div ref={modalScrollRef} className="flex-1 overflow-y-auto p-6 md:p-12 space-y-8">
                 {/* Timer */}
-                <div className="bg-black/40 border border-white/5 rounded-[28px] p-6 flex flex-col items-center max-w-xs mx-auto">
-                  <div className={`text-5xl font-black tabular-nums mb-4 ${isTimerRunning ? 'text-brand' : 'text-gray-600'}`}>
+                <div className="bg-black/40 border border-white/5 rounded-2xl p-6 flex flex-col items-center max-w-xs mx-auto">
+                  <div className={`text-5xl font-extrabold tabular-nums mb-4 ${isTimerRunning ? 'text-brand' : 'text-c-text-muted'}`}>
                     {formatTime(timerSeconds)}
                   </div>
                   <div className="flex items-center gap-3">
                     <button onClick={() => setIsTimerRunning(v => !v)}
-                      className={`px-5 py-2.5 rounded-xl font-black text-[9px] tracking-widest uppercase flex items-center gap-2 ${isTimerRunning ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}`}>
+                      className={`px-5 py-2.5 rounded-xl font-extrabold text-[9px] tracking-widest uppercase flex items-center gap-2 ${isTimerRunning ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}`}>
                       {isTimerRunning ? <><StopCircle size={13} /> PAUSAR</> : <><Play size={13} fill="currentColor" /> RETOMAR</>}
                     </button>
-                    <button onClick={() => setTimerSeconds(0)} className="w-10 h-10 bg-white/5 text-gray-500 rounded-xl flex items-center justify-center hover:text-white border border-white/5">
+                    <button onClick={() => setTimerSeconds(0)} className="w-10 h-10 bg-white/5 text-c-text-secondary rounded-xl flex items-center justify-center hover:text-white border border-white/5">
                       <RefreshCw size={13} />
                     </button>
                   </div>
@@ -411,16 +411,16 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
                     const chapter = book?.chapters[readingResource.chapterIndex];
 
                     if (!chapter) return (
-                      <div className="text-center py-16 bg-black/20 rounded-[24px] border border-white/5">
-                        <BookOpen size={40} className="text-gray-700 mx-auto mb-4" />
-                        <p className="text-gray-500 font-black uppercase tracking-widest text-xs">Capítulo não encontrado</p>
-                        <p className="text-[11px] text-gray-700 mt-2">Livro: "{readingResource.bookName}" • Cap. {readingResource.chapterIndex + 1}</p>
+                      <div className="text-center py-16 bg-black/20 rounded-2xl border border-white/5">
+                        <BookOpen size={40} className="text-c-text-muted mx-auto mb-4" />
+                        <p className="text-c-text-secondary font-extrabold uppercase tracking-widest text-xs">Capítulo não encontrado</p>
+                        <p className="text-[11px] text-c-text-muted mt-2">Livro: "{readingResource.bookName}" • Cap. {readingResource.chapterIndex + 1}</p>
                       </div>
                     );
 
                     return chapter.verses.map((v, idx) => (
                       <div key={idx} className="flex gap-4">
-                        <span className="text-brand font-black text-xs pt-1 opacity-50 shrink-0">{v.number}</span>
+                        <span className="text-brand font-extrabold text-xs pt-1 opacity-50 shrink-0">{v.number}</span>
                         <p className="text-lg text-gray-300 font-serif leading-relaxed">{v.text}</p>
                       </div>
                     ));
@@ -430,7 +430,7 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
 
               {/* Footer */}
               <div className="p-6 md:p-8 bg-black/50 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4 shrink-0">
-                <div className="hidden md:flex items-center gap-2 text-gray-600 text-[10px] font-black uppercase tracking-widest">
+                <div className="hidden md:flex items-center gap-2 text-c-text-muted text-[10px] font-extrabold uppercase tracking-widest">
                   <Clock size={14} />
                   <span>{readingResource.resource.duration || '1 cap'}</span>
                 </div>
@@ -439,7 +439,7 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
                     toggleResourceCompletion(readingResource.planId, readingResource.resource.id, timerSeconds);
                     closeReader();
                   }}
-                  className="w-full md:w-auto px-10 py-4 bg-brand text-white rounded-3xl font-black uppercase tracking-widest text-xs hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 shadow-lg shadow-brand/20"
+                  className="w-full md:w-auto px-10 py-4 bg-brand text-white rounded-3xl font-extrabold uppercase tracking-widest text-xs hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 shadow-lg shadow-brand/20"
                 >
                   CONCLUIR LEITURA <CheckCircle2 size={18} />
                 </button>
@@ -459,17 +459,17 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
           <Sparkles size={200} className="text-brand" />
         </div>
         <div className="relative z-10 max-w-2xl">
-          <div className="flex items-center gap-3 text-brand font-black uppercase text-[10px] tracking-[0.4em] mb-6 animate-pulse">
+          <div className="flex items-center gap-3 text-brand font-extrabold uppercase text-[10px] tracking-[0.4em] mb-6 animate-pulse">
             <Sparkles size={16} /> NOVIDADE: MENTOR ESPIRITUAL
           </div>
-          <h1 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter mb-4 leading-none">
+          <h1 className="text-3xl md:text-5xl font-extrabold text-white uppercase tracking-tighter mb-4 leading-none">
             O que o seu coração <span className="text-brand">busca hoje?</span>
           </h1>
-          <p className="text-gray-400 text-lg font-medium mb-8 leading-relaxed">
+          <p className="text-c-text-secondary text-lg font-medium mb-8 leading-relaxed">
             Crie uma jornada personalizada de leitura e oração baseada nas suas necessidades.
           </p>
           <button onClick={() => setShowQuiz(true)}
-            className="bg-brand text-white px-10 py-5 rounded-[28px] font-black uppercase tracking-[0.3em] text-xs shadow-xl shadow-brand/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-3">
+            className="bg-brand text-white px-10 py-5 rounded-2xl font-extrabold uppercase tracking-[0.3em] text-xs shadow-xl shadow-brand/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-3">
             GERAR PLANO COM IA <ChevronRight size={18} />
           </button>
         </div>
@@ -477,24 +477,24 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
 
       <div className="flex flex-col">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
-          <h2 className="text-2xl font-black text-white uppercase tracking-tighter flex items-center gap-3">
+          <h2 className="text-2xl font-extrabold text-white uppercase tracking-tighter flex items-center gap-3">
             <ReadingPlanIcon size={24} className="text-brand" /> Planos de Leitura
           </h2>
-          <div className="flex w-full md:w-auto items-center bg-[#0b0e14] border border-white/5 rounded-2xl px-6 py-3">
-            <Search size={18} className="text-gray-600 mr-4" />
+          <div className="flex w-full md:w-auto items-center bg-brand-bg border border-white/5 rounded-2xl px-6 py-3">
+            <Search size={18} className="text-c-text-muted mr-4" />
             <input type="text" placeholder="Buscar plano..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
-              className="bg-transparent border-none outline-none text-white font-black text-sm uppercase tracking-tighter w-full md:w-48 placeholder:text-gray-800" />
+              className="bg-transparent border-none outline-none text-white font-extrabold text-sm uppercase tracking-tighter w-full md:w-48 placeholder:text-gray-800" />
           </div>
         </div>
 
         <div className="flex gap-3 mb-8 overflow-x-auto pb-2 scrollbar-none">
           <button onClick={() => setActiveCategory('all')}
-            className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all ${activeCategory === 'all' ? 'bg-brand text-white' : 'bg-white/5 text-gray-500 hover:text-white'}`}>
+            className={`px-6 py-3 rounded-xl text-[10px] font-extrabold uppercase tracking-widest whitespace-nowrap transition-all ${activeCategory === 'all' ? 'bg-brand text-white' : 'bg-white/5 text-c-text-secondary hover:text-white'}`}>
             Todos
           </button>
           {categories.map(cat => (
             <button key={cat.id} onClick={() => setActiveCategory(cat.id)}
-              className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all ${activeCategory === cat.id ? 'bg-brand text-white' : 'bg-white/5 text-gray-500 hover:text-white'}`}>
+              className={`px-6 py-3 rounded-xl text-[10px] font-extrabold uppercase tracking-widest whitespace-nowrap transition-all ${activeCategory === cat.id ? 'bg-brand text-white' : 'bg-white/5 text-c-text-secondary hover:text-white'}`}>
               {cat.name}
             </button>
           ))}
@@ -506,30 +506,30 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
             const done = pp === 100;
             return (
               <div key={plan.id} onClick={() => openPlan(plan)}
-                className="bg-[#0b0e14] border border-white/5 rounded-[40px] p-6 hover:border-brand/40 hover:bg-brand/5 transition-all cursor-pointer group">
-                <div className="aspect-[16/10] bg-[#161b22] rounded-[32px] mb-6 overflow-hidden relative border border-white/5">
+                className="bg-brand-bg border border-white/5 rounded-3xl p-6 hover:border-brand/40 hover:bg-brand/5 transition-all cursor-pointer group">
+                <div className="aspect-[16/10] bg-brand-card rounded-2xl mb-6 overflow-hidden relative border border-white/5">
                   {plan.thumbnailUrl
                     ? <img src={plan.thumbnailUrl} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="" />
                     : <div className="w-full h-full flex items-center justify-center text-gray-800"><ReadingPlanIcon size={64} /></div>}
                   <div className="absolute top-4 left-4">
-                    <span className="bg-black/60 backdrop-blur-md px-4 py-2 rounded-full text-[8px] font-black uppercase tracking-widest text-white border border-white/10">
+                    <span className="bg-black/60 backdrop-blur-md px-4 py-2 rounded-full text-[8px] font-extrabold uppercase tracking-widest text-white border border-white/10">
                       {plan.durationDays} DIAS
                     </span>
                   </div>
                 </div>
                 <div className="space-y-4">
-                  <h3 className="text-xl font-black text-white uppercase tracking-tight group-hover:text-brand transition-colors line-clamp-1">{plan.title}</h3>
-                  <p className="text-xs text-gray-500 font-medium line-clamp-2">{plan.description}</p>
+                  <h3 className="text-xl font-extrabold text-white uppercase tracking-tight group-hover:text-brand transition-colors line-clamp-1">{plan.title}</h3>
+                  <p className="text-xs text-c-text-secondary font-medium line-clamp-2">{plan.description}</p>
                   <div className="pt-4 border-t border-white/5">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-[9px] font-black text-gray-600 uppercase tracking-widest">Progresso</span>
-                      <span className="text-[10px] font-black text-brand">{pp}%</span>
+                      <span className="text-[9px] font-extrabold text-c-text-muted uppercase tracking-widest">Progresso</span>
+                      <span className="text-[10px] font-extrabold text-brand">{pp}%</span>
                     </div>
                     <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
                       <div className={`h-full transition-all duration-1000 ${done ? 'bg-emerald-500' : 'bg-brand'}`} style={{ width: `${pp}%` }} />
                     </div>
                   </div>
-                  <div className="flex items-center justify-between text-[8px] font-black text-gray-700 uppercase tracking-widest">
+                  <div className="flex items-center justify-between text-[8px] font-extrabold text-c-text-muted uppercase tracking-widest">
                     <span>{categories.find(c => c.id === plan.categoryId)?.name}</span>
                     <div className="flex items-center gap-1 group-hover:text-brand transition-colors">
                       CONTINUAR <ChevronRight size={12} />

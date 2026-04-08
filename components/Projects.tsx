@@ -12,7 +12,7 @@ const ProjectColors = [
   { name: 'Verde', value: 'bg-emerald-500' },
   { name: 'Azul', value: 'bg-blue-500' },
   { name: 'Rosa', value: 'bg-pink-500' },
-  { name: 'Laranja', value: 'bg-orange-500' },
+  { name: 'Laranja', value: 'bg-brand-accent' },
   { name: 'Amarelo', value: 'bg-amber-500' },
   { name: 'Cinza', value: 'bg-zinc-500' }
 ];
@@ -418,7 +418,7 @@ const Projects: React.FC = () => {
       LIFE: 'text-pink-400 bg-pink-500/10 border-pink-500/20',
       EDUCATION: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20',
       SPIRITUALITY: 'text-indigo-400 bg-indigo-500/10 border-indigo-500/20',
-      EXERCISES: 'text-orange-400 bg-orange-500/10 border-orange-500/20',
+      EXERCISES: 'text-orange-400 bg-brand-accent/10 border-brand-accent/20',
     };
     return map[cat] || 'text-zinc-400 bg-zinc-500/10 border-zinc-500/20';
   };
@@ -432,7 +432,7 @@ const Projects: React.FC = () => {
   const TableView = ({ project }: { project: Project }) => (
     <div className="overflow-x-auto rounded-3xl border border-zinc-800/50 bg-[#0c0c0e]">
       <table className="w-full text-left text-xs">
-        <thead className="bg-zinc-900/50 border-b border-zinc-800 text-zinc-500 uppercase font-black tracking-widest">
+        <thead className="bg-zinc-900/50 border-b border-zinc-800 text-zinc-500 uppercase font-extrabold tracking-widest">
           <tr>
             <th className="px-6 py-4 w-12 text-center">✓</th>
             <th className="px-6 py-4">Tarefa</th>
@@ -453,7 +453,7 @@ const Projects: React.FC = () => {
               </td>
               <td className={`px-6 py-4 font-bold ${m.status === 'DONE' ? 'text-zinc-600 line-through' : 'text-zinc-100'}`}>{m.title}</td>
               <td className="px-6 py-4">
-                <select value={m.status || (m.completed ? 'DONE' : 'TODO')} onChange={e => updateMilestoneStatus(project.id, m.id, e.target.value as any)} className={`px-2 py-1 rounded-md text-[9px] font-black uppercase bg-black border border-zinc-800 outline-none ${m.status === 'DONE' ? 'text-green-500' : m.status === 'IN_PROGRESS' ? 'text-blue-400' : 'text-red-500'}`}>
+                <select value={m.status || (m.completed ? 'DONE' : 'TODO')} onChange={e => updateMilestoneStatus(project.id, m.id, e.target.value as any)} className={`px-2 py-1 rounded-md text-[9px] font-extrabold uppercase bg-black border border-zinc-800 outline-none ${m.status === 'DONE' ? 'text-green-500' : m.status === 'IN_PROGRESS' ? 'text-blue-400' : 'text-red-500'}`}>
                   <option value="TODO">Inicial</option>
                   <option value="IN_PROGRESS">Em Andamento</option>
                   <option value="DONE">Concluído</option>
@@ -507,7 +507,7 @@ const Projects: React.FC = () => {
               <div className="flex-1 flex">
                 {timelineMonths.map((m,i) => (
                   <div key={`${m.month}-${m.year}`} className={`flex flex-col ${i!==0?'border-l border-zinc-800/30':''}`} style={{width:`${m.days*DW}px`}}>
-                    <span className="text-[9px] font-black text-zinc-500 uppercase px-2 mb-1">{m.name} {m.year}</span>
+                    <span className="text-[9px] font-extrabold text-zinc-500 uppercase px-2 mb-1">{m.name} {m.year}</span>
                     <div className="flex px-1">
                       {Array.from({length:m.days},(_,i)=>i+1).map(d=><span key={d} className="text-[7px] text-zinc-700 font-bold w-[30px] text-center">{d}</span>)}
                     </div>
@@ -517,7 +517,7 @@ const Projects: React.FC = () => {
             </div>
             <div className="space-y-4">
               {project.milestones.length === 0 ? (
-                <div className="text-center py-10 text-zinc-700 text-[10px] font-black uppercase">Adicione tarefas para visualizar o cronograma</div>
+                <div className="text-center py-10 text-zinc-700 text-[10px] font-extrabold uppercase">Adicione tarefas para visualizar o cronograma</div>
               ) : project.milestones.map(m => {
                 const sD = new Date(m.startDate || new Date());
                 const eD = new Date(m.endDate || m.dueDate || new Date());
@@ -528,7 +528,7 @@ const Projects: React.FC = () => {
                     <div className="w-[200px] shrink-0 text-[10px] font-bold text-zinc-500 truncate pr-4">{m.title}</div>
                     <div className="flex-1 h-8 relative flex items-center bg-zinc-900/10 rounded-lg">
                       <div className={`h-4 rounded-full ${m.color||'bg-purple-500'} ${m.status==='DONE'?'opacity-30':'shadow-lg'} relative group cursor-pointer transition-all hover:scale-y-125`} style={{width:`${dur*DW}px`,left:`${offset*DW}px`}}>
-                        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 bg-zinc-900 border border-zinc-800 p-2 rounded-lg z-20 whitespace-nowrap text-[9px] font-black uppercase pointer-events-none">
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 bg-zinc-900 border border-zinc-800 p-2 rounded-lg z-20 whitespace-nowrap text-[9px] font-extrabold uppercase pointer-events-none">
                           {sD.toLocaleDateString('pt-BR')} → {eD.toLocaleDateString('pt-BR')}
                         </div>
                       </div>
@@ -548,16 +548,16 @@ const Projects: React.FC = () => {
     <div className="space-y-8 animate-in fade-in duration-500">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="space-y-4 bg-zinc-900/30 p-8 rounded-[2.5rem] border border-zinc-800/50">
-          <h4 className="text-[10px] font-black text-purple-500 uppercase tracking-[0.2em] mb-4">Plano Diretor e Visão</h4>
+          <h4 className="text-[10px] font-extrabold text-purple-500 uppercase tracking-[0.2em] mb-4">Plano Diretor e Visão</h4>
           <textarea value={project.strategyDoc||''} onChange={e=>updateProjectField(project.id,'strategyDoc',e.target.value)} placeholder="Descreva a visão de longo prazo deste projeto..." className="w-full h-64 bg-black/50 border border-zinc-800/50 rounded-2xl p-6 text-sm text-zinc-300 outline-none focus:ring-1 ring-purple-500/50 transition-all resize-none" />
         </div>
         <div className="space-y-8">
           <div className="bg-zinc-900/30 p-8 rounded-[2.5rem] border border-zinc-800/50">
-            <h4 className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.2em] mb-4">Categorias / Tipos</h4>
+            <h4 className="text-[10px] font-extrabold text-emerald-500 uppercase tracking-[0.2em] mb-4">Categorias / Tipos</h4>
             <textarea value={project.contentTypes||''} onChange={e=>updateProjectField(project.id,'contentTypes',e.target.value)} placeholder="Ex: Metas mensais, Hábitos, Conquistas..." className="w-full h-24 bg-black/50 border border-zinc-800/50 rounded-2xl p-6 text-sm text-zinc-300 outline-none focus:ring-1 ring-emerald-500/50 transition-all resize-none" />
           </div>
           <div className="bg-zinc-900/30 p-8 rounded-[2.5rem] border border-zinc-800/50">
-            <h4 className="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em] mb-4">Pilares</h4>
+            <h4 className="text-[10px] font-extrabold text-blue-500 uppercase tracking-[0.2em] mb-4">Pilares</h4>
             <textarea value={project.contentPilars||''} onChange={e=>updateProjectField(project.id,'contentPilars',e.target.value)} placeholder="Quais são os temas principais que você abordará?" className="w-full h-24 bg-black/50 border border-zinc-800/50 rounded-2xl p-6 text-sm text-zinc-300 outline-none focus:ring-1 ring-blue-500/50 transition-all resize-none" />
           </div>
         </div>
@@ -585,13 +585,13 @@ const Projects: React.FC = () => {
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-4">
             <button onClick={()=>{ if(currentMonth===0){setCurrentMonth(11);setCurrentYear(cy=>cy-1);}else setCurrentMonth(m=>m-1); }} className="text-zinc-600 hover:text-white transition-colors">←</button>
-            <h4 className="text-xl font-black uppercase tracking-tighter text-white">{MONTHS[currentMonth]} {currentYear}</h4>
+            <h4 className="text-xl font-extrabold uppercase tracking-tighter text-white">{MONTHS[currentMonth]} {currentYear}</h4>
             <button onClick={()=>{ if(currentMonth===11){setCurrentMonth(0);setCurrentYear(cy=>cy+1);}else setCurrentMonth(m=>m+1); }} className="text-zinc-600 hover:text-white transition-colors">→</button>
           </div>
-          <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">Calendário do Projeto</p>
+          <p className="text-[9px] font-extrabold text-zinc-500 uppercase tracking-widest">Calendário do Projeto</p>
         </div>
         <div className="grid grid-cols-7 gap-2">
-          {['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'].map(d=><div key={d} className="text-center text-[10px] font-black text-zinc-700 uppercase py-2">{d}</div>)}
+          {['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'].map(d=><div key={d} className="text-center text-[10px] font-extrabold text-zinc-700 uppercase py-2">{d}</div>)}
           {Array.from({length:firstDay}).map((_,i)=><div key={`e-${i}`} className="aspect-square bg-zinc-900/10 rounded-2xl border border-zinc-800/10 opacity-20"></div>)}
           {Array.from({length:daysInMonth}).map((_,i)=>{
             const day=i+1;
@@ -599,7 +599,7 @@ const Projects: React.FC = () => {
             const dayPosts=(project.contentCalendar||[]).filter(p=>p.date===fullDate);
             return (
               <div key={day} onClick={()=>{setPostDate(fullDate);setShowPostModal(true);}} className="aspect-[1/1.2] bg-zinc-900/20 border border-zinc-800/40 rounded-2xl p-2 cursor-pointer hover:border-purple-500/40 transition-all flex flex-col overflow-hidden group">
-                <span className="text-[10px] font-black text-zinc-600 mb-1 group-hover:text-purple-500 transition-colors">{day}</span>
+                <span className="text-[10px] font-extrabold text-zinc-600 mb-1 group-hover:text-purple-500 transition-colors">{day}</span>
                 <div className="space-y-0.5 overflow-y-auto custom-scrollbar">
                   {dayPosts.map(p=><div key={p.id} className="bg-purple-500/20 border border-purple-500/30 p-1 rounded-lg text-[8px] font-bold text-zinc-200 line-clamp-2">{p.title}</div>)}
                 </div>
@@ -610,12 +610,12 @@ const Projects: React.FC = () => {
         {showPostModal && (
           <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm">
             <div className="bg-zinc-900 w-full max-w-sm rounded-[2rem] border border-zinc-800 p-8 space-y-4">
-              <h3 className="text-lg font-black uppercase text-white">Agendar Ação</h3>
+              <h3 className="text-lg font-extrabold uppercase text-white">Agendar Ação</h3>
               <p className="text-[10px] text-zinc-500 font-bold uppercase">{new Date(postDate+'T12:00:00').toLocaleDateString('pt-BR')}</p>
               <input autoFocus value={postTitle} onChange={e=>setPostTitle(e.target.value)} onKeyDown={e=>e.key==='Enter'&&addPost()} placeholder="Título ou ideia..." className="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-xs font-bold outline-none focus:ring-2 ring-purple-500/30 text-white" />
               <div className="flex gap-3">
-                <button onClick={()=>setShowPostModal(false)} className="flex-1 py-3 bg-zinc-800 rounded-xl text-[9px] font-black uppercase text-white">Cancelar</button>
-                <button onClick={addPost} className="flex-1 py-3 bg-gradient-to-r from-brand to-brand-light rounded-xl text-[9px] font-black uppercase text-white">Agendar</button>
+                <button onClick={()=>setShowPostModal(false)} className="flex-1 py-3 bg-zinc-800 rounded-xl text-[9px] font-extrabold uppercase text-white">Cancelar</button>
+                <button onClick={addPost} className="flex-1 py-3 bg-gradient-to-r from-brand to-brand-light rounded-xl text-[9px] font-extrabold uppercase text-white">Agendar</button>
               </div>
             </div>
           </div>
@@ -745,17 +745,17 @@ const Projects: React.FC = () => {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div className="flex bg-zinc-900/50 p-1.5 rounded-2xl border border-zinc-800/50">
             {(['hoje', 'pendentes', 'todas'] as const).map(f => (
-              <button key={f} onClick={() => setFilter(f)} className={`px-4 py-2 text-[9px] font-black uppercase tracking-widest rounded-xl transition-all ${filter === f ? 'bg-zinc-800 text-brand shadow-xl' : 'text-zinc-500 hover:text-zinc-300'}`}>
+              <button key={f} onClick={() => setFilter(f)} className={`px-4 py-2 text-[9px] font-extrabold uppercase tracking-widest rounded-xl transition-all ${filter === f ? 'bg-zinc-800 text-brand shadow-xl' : 'text-zinc-500 hover:text-zinc-300'}`}>
                 {f}
               </button>
             ))}
           </div>
-          <button onClick={() => openModal()} className="px-6 py-3 bg-brand text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:scale-105 transition-all">+ Add Lembrete</button>
+          <button onClick={() => openModal()} className="px-6 py-3 bg-brand text-white text-[10px] font-extrabold uppercase tracking-widest rounded-xl hover:scale-105 transition-all">+ Add Lembrete</button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {filtered.length === 0 ? (
-            <div className="col-span-full py-12 text-center border-2 border-dashed border-zinc-800/50 rounded-3xl"><p className="text-[10px] text-zinc-600 font-black uppercase">Nenhum lembrete</p></div>
+            <div className="col-span-full py-12 text-center border-2 border-dashed border-zinc-800/50 rounded-3xl"><p className="text-[10px] text-zinc-600 font-extrabold uppercase">Nenhum lembrete</p></div>
           ) : filtered.map(r => (
             <div key={r.id} className={`p-5 rounded-3xl border transition-all ${r.completions[today] ? 'bg-green-500/10 border-green-500/20' : 'bg-zinc-900/30 border-zinc-800/50 hover:border-zinc-700'}`}>
               <div className="flex justify-between items-start mb-3">
@@ -764,8 +764,8 @@ const Projects: React.FC = () => {
                     {r.completions[today] && <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"/></svg>}
                   </button>
                   <div>
-                    <h4 className={`font-black text-sm uppercase ${r.completions[today] ? 'text-zinc-500 line-through' : 'text-white'}`}>{r.title}</h4>
-                    {r.milestoneId && <p className="text-[8px] font-black text-brand uppercase mt-0.5">Etapa: {project.milestones.find(m => m.id === r.milestoneId)?.title || 'Desconhecida'}</p>}
+                    <h4 className={`font-extrabold text-sm uppercase ${r.completions[today] ? 'text-zinc-500 line-through' : 'text-white'}`}>{r.title}</h4>
+                    {r.milestoneId && <p className="text-[8px] font-extrabold text-brand uppercase mt-0.5">Etapa: {project.milestones.find(m => m.id === r.milestoneId)?.title || 'Desconhecida'}</p>}
                   </div>
                 </div>
                 <div className="flex gap-2">
@@ -775,7 +775,7 @@ const Projects: React.FC = () => {
               </div>
               {r.description && <p className={`text-[10px] font-medium mb-3 ${r.completions[today] ? 'text-zinc-600' : 'text-zinc-400'}`}>{r.description}</p>}
               <div className="flex items-center gap-2">
-                <span className="text-[8px] font-black bg-zinc-950 px-2 py-1 rounded text-zinc-500 uppercase tracking-widest">{formatActivityDate(r)}</span>
+                <span className="text-[8px] font-extrabold bg-zinc-950 px-2 py-1 rounded text-zinc-500 uppercase tracking-widest">{formatActivityDate(r)}</span>
               </div>
             </div>
           ))}
@@ -784,27 +784,27 @@ const Projects: React.FC = () => {
         {showModal && (
           <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm">
             <div className="bg-zinc-900 w-full max-w-md rounded-[2.5rem] border border-zinc-800 p-8 space-y-6">
-              <h3 className="text-xl font-black uppercase text-white">{editingId ? 'Editar Lembrete' : 'Novo Lembrete'}</h3>
+              <h3 className="text-xl font-extrabold uppercase text-white">{editingId ? 'Editar Lembrete' : 'Novo Lembrete'}</h3>
               
               <div className="space-y-4">
                 <div className="space-y-1">
-                  <label className="text-[9px] font-black uppercase text-zinc-500 ml-1">Vincular a uma Etapa (Opcional)</label>
+                  <label className="text-[9px] font-extrabold uppercase text-zinc-500 ml-1">Vincular a uma Etapa (Opcional)</label>
                   <select value={rMilestoneId} onChange={handleMilestoneSelect} className="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-xs font-bold outline-none text-white focus:ring-1 ring-brand/50">
                     <option value="">Nenhuma etapa vinculada</option>
                     {project.milestones.map(m => <option key={m.id} value={m.id}>{m.title}</option>)}
                   </select>
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[9px] font-black uppercase text-zinc-500 ml-1">Título</label>
+                  <label className="text-[9px] font-extrabold uppercase text-zinc-500 ml-1">Título</label>
                   <input autoFocus value={rTitle} onChange={e => setRTitle(e.target.value)} className="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-xs font-bold outline-none text-white focus:ring-1 ring-brand/50" />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[9px] font-black uppercase text-zinc-500 ml-1">Descrição</label>
+                  <label className="text-[9px] font-extrabold uppercase text-zinc-500 ml-1">Descrição</label>
                   <textarea value={rDesc} onChange={e => setRDesc(e.target.value)} rows={2} className="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-xs font-bold outline-none text-white focus:ring-1 ring-brand/50 resize-none" />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <label className="text-[9px] font-black uppercase text-zinc-500 ml-1">Frequência</label>
+                    <label className="text-[9px] font-extrabold uppercase text-zinc-500 ml-1">Frequência</label>
                     <select value={rFreq} onChange={e => setRFreq(e.target.value as any)} className="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-xs font-bold outline-none text-white focus:ring-1 ring-brand/50">
                       <option value="once">Único</option>
                       <option value="period">Período</option>
@@ -817,17 +817,17 @@ const Projects: React.FC = () => {
                   {rFreq === 'period' ? (
                     <div className="flex gap-2 col-span-2">
                        <div className="flex-1 space-y-1">
-                        <label className="text-[9px] font-black uppercase text-zinc-500 ml-1">Início</label>
+                        <label className="text-[9px] font-extrabold uppercase text-zinc-500 ml-1">Início</label>
                         <input type="date" value={rStartDate} onChange={e => setRStartDate(e.target.value)} className="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-xs font-bold outline-none text-white focus:ring-1 ring-brand/50 [&::-webkit-calendar-picker-indicator]:invert" />
                       </div>
                       <div className="flex-1 space-y-1">
-                        <label className="text-[9px] font-black uppercase text-zinc-500 ml-1">Fim</label>
+                        <label className="text-[9px] font-extrabold uppercase text-zinc-500 ml-1">Fim</label>
                         <input type="date" value={rEndDate} onChange={e => setREndDate(e.target.value)} className="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-xs font-bold outline-none text-white focus:ring-1 ring-brand/50 [&::-webkit-calendar-picker-indicator]:invert" />
                       </div>
                     </div>
                   ) : (rFreq === 'once' || rFreq === 'monthly' || rFreq === 'annual') && (
                     <div className="space-y-1">
-                      <label className="text-[9px] font-black uppercase text-zinc-500 ml-1">Data</label>
+                      <label className="text-[9px] font-extrabold uppercase text-zinc-500 ml-1">Data</label>
                       <input type="date" value={rDate} onChange={e => setRDate(e.target.value)} className="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-xs font-bold outline-none text-white focus:ring-1 ring-brand/50 [&::-webkit-calendar-picker-indicator]:invert" />
                     </div>
                   )}
@@ -835,8 +835,8 @@ const Projects: React.FC = () => {
               </div>
 
               <div className="flex gap-3 pt-2">
-                <button onClick={() => setShowModal(false)} className="flex-1 py-4 bg-zinc-800 rounded-2xl text-[10px] font-black uppercase text-white hover:bg-zinc-700 transition-colors">Cancelar</button>
-                <button onClick={handleSave} className="flex-1 py-4 bg-gradient-to-r from-brand to-brand-light rounded-2xl text-[10px] font-black uppercase text-white hover:scale-105 active:scale-95 transition-all">Salvar</button>
+                <button onClick={() => setShowModal(false)} className="flex-1 py-4 bg-zinc-800 rounded-2xl text-[10px] font-extrabold uppercase text-white hover:bg-zinc-700 transition-colors">Cancelar</button>
+                <button onClick={handleSave} className="flex-1 py-4 bg-gradient-to-r from-brand to-brand-light rounded-2xl text-[10px] font-extrabold uppercase text-white hover:scale-105 active:scale-95 transition-all">Salvar</button>
               </div>
             </div>
           </div>
@@ -850,15 +850,15 @@ const Projects: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/5 pb-8">
         <div>
-          <h1 className="text-5xl font-black text-white tracking-tighter uppercase neon-text flex items-center gap-4">
+          <h1 className="text-5xl font-extrabold text-white tracking-tighter uppercase neon-text flex items-center gap-4">
             <svg className="w-10 h-10 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
             Projetos
           </h1>
-          <p className="text-gray-500 mt-2 font-medium">Gerencie seus projetos de vida, finanças, saúde e muito mais.</p>
+          <p className="text-c-text-secondary mt-2 font-medium">Gerencie seus projetos de vida, finanças, saúde e muito mais.</p>
         </div>
         <div className="flex items-center gap-3">
-          {isLoading && <div className="flex items-center gap-2 bg-brand/10 border border-brand/20 px-3 py-1.5 rounded-full"><div className="w-3 h-3 border-2 border-brand/20 border-t-brand rounded-full animate-spin"></div><span className="text-[9px] font-black uppercase text-brand tracking-widest">Sincronizando...</span></div>}
-          <button onClick={()=>{resetForm();setShowModal(true);}} className="px-6 py-4 bg-gradient-to-r from-brand to-brand-light text-white font-black rounded-2xl shadow-xl shadow-brand/20 hover:scale-[1.02] active:scale-[0.98] transition-all text-xs uppercase tracking-widest flex items-center gap-2">
+          {isLoading && <div className="flex items-center gap-2 bg-brand/10 border border-brand/20 px-3 py-1.5 rounded-full"><div className="w-3 h-3 border-2 border-brand/20 border-t-brand rounded-full animate-spin"></div><span className="text-[9px] font-extrabold uppercase text-brand tracking-widest">Sincronizando...</span></div>}
+          <button onClick={()=>{resetForm();setShowModal(true);}} className="px-6 py-4 bg-gradient-to-r from-brand to-brand-light text-white font-extrabold rounded-2xl shadow-xl shadow-brand/20 hover:scale-[1.02] active:scale-[0.98] transition-all text-xs uppercase tracking-widest flex items-center gap-2">
             <span className="text-lg">+</span> Novo Projeto
           </button>
         </div>
@@ -869,19 +869,19 @@ const Projects: React.FC = () => {
         <div className="lg:col-span-4 space-y-4 max-h-[85vh] overflow-y-auto pr-2 custom-scrollbar">
           {projects.length === 0 ? (
             <div className="bg-zinc-900/40 border-2 border-dashed border-zinc-800 rounded-[2.5rem] py-20 text-center px-8">
-              <p className="text-zinc-600 font-black uppercase tracking-widest text-[10px]">Nenhum projeto ainda...</p>
+              <p className="text-zinc-600 font-extrabold uppercase tracking-widest text-[10px]">Nenhum projeto ainda...</p>
             </div>
           ) : projects.map(project => (
             <div key={project.id} onClick={()=>{setSelectedProject(project);setActiveHubTab('STAGES');}} className={`group p-6 rounded-[2rem] border transition-all cursor-pointer relative overflow-hidden ${selectedProject?.id===project.id?'bg-zinc-900/80 border-brand/50 ring-1 ring-brand/20 shadow-2xl shadow-brand/5':'bg-zinc-900/30 border-zinc-800/50 hover:border-zinc-700'}`}>
               <div className="flex justify-between items-start mb-4">
-                <span className={`px-3 py-1 rounded-lg text-[8px] font-black uppercase tracking-widest border ${getCategoryColor(project.category)}`}>{getCategoryLabel(project.category)}</span>
+                <span className={`px-3 py-1 rounded-lg text-[8px] font-extrabold uppercase tracking-widest border ${getCategoryColor(project.category)}`}>{getCategoryLabel(project.category)}</span>
                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button onClick={e=>{e.stopPropagation();setIsEditing(true);setFormData({title:project.title,description:project.description,category:project.category,status:project.status});setSelectedProject(project);setShowModal(true);}} className="p-1.5 bg-zinc-800 rounded-lg text-zinc-500 hover:text-white"><svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
                   <button onClick={e=>{e.stopPropagation();deleteProject(project.id);}} className="p-1.5 bg-zinc-800 rounded-lg text-zinc-500 hover:text-red-500"><svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
                 </div>
               </div>
-              <h3 className="text-lg font-black text-white leading-tight mb-4">{project.title}</h3>
-              <div className="flex justify-between text-[9px] font-black uppercase tracking-widest mb-2">
+              <h3 className="text-lg font-extrabold text-white leading-tight mb-4">{project.title}</h3>
+              <div className="flex justify-between text-[9px] font-extrabold uppercase tracking-widest mb-2">
                 <span className="text-zinc-500">Progresso</span>
                 <span className="text-brand">{project.progress}%</span>
               </div>
@@ -898,7 +898,7 @@ const Projects: React.FC = () => {
             <div className="bg-[#111113] border border-zinc-800/50 rounded-[2.5rem] flex flex-col overflow-hidden shadow-2xl min-h-[600px]">
               <div className="flex border-b border-zinc-800/50 p-2">
                 {[{id:'STAGES',label:'Etapas'},{id:'STRATEGY',label:'Estratégia'},{id:'CALENDAR',label:'Calendário'},{id:'LEMBRETES',label:'Lembretes'}].map(tab=>(
-                  <button key={tab.id} onClick={()=>setActiveHubTab(tab.id as HubTab)} className={`flex-1 py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all relative ${activeHubTab===tab.id?'text-white':'text-zinc-600 hover:text-zinc-400'}`}>
+                  <button key={tab.id} onClick={()=>setActiveHubTab(tab.id as HubTab)} className={`flex-1 py-4 text-[10px] font-extrabold uppercase tracking-[0.2em] transition-all relative ${activeHubTab===tab.id?'text-white':'text-zinc-600 hover:text-zinc-400'}`}>
                     {tab.label}
                     {activeHubTab===tab.id && <div className="absolute bottom-0 left-4 right-4 h-1 bg-gradient-to-r from-brand to-brand-light rounded-full"></div>}
                   </button>
@@ -909,12 +909,12 @@ const Projects: React.FC = () => {
                   <div className="space-y-8">
                     <div className="flex justify-between items-center flex-wrap gap-4">
                       <div>
-                        <span className="text-[10px] font-black text-brand uppercase tracking-widest">{selectedProject.status}</span>
-                        <h2 className="text-3xl font-black tracking-tighter text-white uppercase mt-1">{selectedProject.title}</h2>
+                        <span className="text-[10px] font-extrabold text-brand uppercase tracking-widest">{selectedProject.status}</span>
+                        <h2 className="text-3xl font-extrabold tracking-tighter text-white uppercase mt-1">{selectedProject.title}</h2>
                       </div>
                       <div className="flex bg-zinc-900/50 p-1.5 rounded-2xl border border-zinc-800/50">
                         {(['LIST','TABLE','GANTT'] as MilestoneView[]).map(v=>(
-                          <button key={v} onClick={()=>setActiveMilestoneView(v)} className={`px-4 py-2 text-[9px] font-black uppercase tracking-widest rounded-xl transition-all ${activeMilestoneView===v?'bg-zinc-800 text-brand shadow-xl':'text-zinc-500 hover:text-zinc-300'}`}>
+                          <button key={v} onClick={()=>setActiveMilestoneView(v)} className={`px-4 py-2 text-[9px] font-extrabold uppercase tracking-widest rounded-xl transition-all ${activeMilestoneView===v?'bg-zinc-800 text-brand shadow-xl':'text-zinc-500 hover:text-zinc-300'}`}>
                             {v==='LIST'?'Lista':v==='TABLE'?'Quadro':'Timeline'}
                           </button>
                         ))}
@@ -926,20 +926,20 @@ const Projects: React.FC = () => {
                       <input value={milestoneFormData.title} onChange={e=>setMilestoneFormData({...milestoneFormData,title:e.target.value})} placeholder="Nome da etapa..." className="w-full h-12 bg-black border border-zinc-800/50 rounded-xl px-4 text-xs font-bold focus:ring-1 ring-brand/50 outline-none placeholder:text-zinc-700 text-white" />
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                         <div className="relative">
-                          <label className="absolute -top-2 left-3 bg-zinc-900 px-2 text-[8px] font-black text-zinc-500 uppercase">Início</label>
-                          <input type="date" value={milestoneFormData.startDate} onChange={e=>setMilestoneFormData({...milestoneFormData,startDate:e.target.value})} className="w-full h-12 bg-black text-white border border-zinc-800/50 rounded-xl px-4 text-[10px] font-black outline-none focus:ring-1 ring-brand/50 [&::-webkit-calendar-picker-indicator]:invert" />
+                          <label className="absolute -top-2 left-3 bg-zinc-900 px-2 text-[8px] font-extrabold text-zinc-500 uppercase">Início</label>
+                          <input type="date" value={milestoneFormData.startDate} onChange={e=>setMilestoneFormData({...milestoneFormData,startDate:e.target.value})} className="w-full h-12 bg-black text-white border border-zinc-800/50 rounded-xl px-4 text-[10px] font-extrabold outline-none focus:ring-1 ring-brand/50 [&::-webkit-calendar-picker-indicator]:invert" />
                         </div>
                         <div className="relative">
-                          <label className="absolute -top-2 left-3 bg-zinc-900 px-2 text-[8px] font-black text-zinc-500 uppercase">Término</label>
-                          <input type="date" value={milestoneFormData.endDate} onChange={e=>setMilestoneFormData({...milestoneFormData,endDate:e.target.value})} className="w-full h-12 bg-black text-white border border-zinc-800/50 rounded-xl px-4 text-[10px] font-black outline-none focus:ring-1 ring-brand/50 [&::-webkit-calendar-picker-indicator]:invert" />
+                          <label className="absolute -top-2 left-3 bg-zinc-900 px-2 text-[8px] font-extrabold text-zinc-500 uppercase">Término</label>
+                          <input type="date" value={milestoneFormData.endDate} onChange={e=>setMilestoneFormData({...milestoneFormData,endDate:e.target.value})} className="w-full h-12 bg-black text-white border border-zinc-800/50 rounded-xl px-4 text-[10px] font-extrabold outline-none focus:ring-1 ring-brand/50 [&::-webkit-calendar-picker-indicator]:invert" />
                         </div>
                         <div className="relative">
-                          <label className="absolute -top-2 left-3 bg-zinc-900 px-2 text-[8px] font-black text-zinc-500 uppercase">Cor</label>
-                          <select value={milestoneFormData.color} onChange={e=>setMilestoneFormData({...milestoneFormData,color:e.target.value})} className="w-full h-12 bg-black border border-zinc-800/50 rounded-xl px-4 text-[10px] font-black outline-none text-white">
+                          <label className="absolute -top-2 left-3 bg-zinc-900 px-2 text-[8px] font-extrabold text-zinc-500 uppercase">Cor</label>
+                          <select value={milestoneFormData.color} onChange={e=>setMilestoneFormData({...milestoneFormData,color:e.target.value})} className="w-full h-12 bg-black border border-zinc-800/50 rounded-xl px-4 text-[10px] font-extrabold outline-none text-white">
                             {ProjectColors.map(c=><option key={c.value} value={c.value}>{c.name}</option>)}
                           </select>
                         </div>
-                        <button onClick={()=>saveMilestone(selectedProject.id)} className="h-12 bg-gradient-to-r from-brand to-brand-light text-white rounded-xl font-black text-sm flex items-center justify-center shadow-lg transition-transform active:scale-95">
+                        <button onClick={()=>saveMilestone(selectedProject.id)} className="h-12 bg-gradient-to-r from-brand to-brand-light text-white rounded-xl font-extrabold text-sm flex items-center justify-center shadow-lg transition-transform active:scale-95">
                           {editingMilestoneId ? '✓ Salvar' : '+ Adicionar'}
                         </button>
                       </div>
@@ -949,7 +949,7 @@ const Projects: React.FC = () => {
                     {activeMilestoneView==='LIST' && (
                       <div className="space-y-3">
                         {selectedProject.milestones.length===0 ? (
-                          <div className="py-20 text-center border-2 border-dashed border-zinc-900 rounded-[2.5rem]"><p className="text-[10px] font-black uppercase text-zinc-700">Adicione etapas ao projeto.</p></div>
+                          <div className="py-20 text-center border-2 border-dashed border-zinc-900 rounded-[2.5rem]"><p className="text-[10px] font-extrabold uppercase text-zinc-700">Adicione etapas ao projeto.</p></div>
                         ) : selectedProject.milestones.map(m=>(
                           <div key={m.id} className="space-y-2">
                             <div className={`group p-5 bg-zinc-900/30 border border-zinc-800/40 rounded-3xl flex items-center justify-between hover:border-zinc-700 transition-all ${expandedMilestones[m.id] ? 'border-brand/30 bg-zinc-900/50' : ''}`}>
@@ -964,15 +964,15 @@ const Projects: React.FC = () => {
                                   <div className="flex items-center justify-between">
                                     <p className={`font-bold text-sm ${m.status==='DONE'?'text-zinc-600 line-through':'text-zinc-200'}`}>{m.title}</p>
                                     {m.tasks && m.tasks.length > 0 && (
-                                      <span className="text-[9px] font-black text-brand uppercase">{m.tasks.filter(t=>t.completed).length}/{m.tasks.length}</span>
+                                      <span className="text-[9px] font-extrabold text-brand uppercase">{m.tasks.filter(t=>t.completed).length}/{m.tasks.length}</span>
                                     )}
                                   </div>
                                   <div className="flex items-center gap-3 mt-1">
                                     <div className={`w-2 h-2 rounded-full ${m.color||'bg-brand'}`}></div>
-                                    <span className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">
+                                    <span className="text-[9px] font-extrabold text-zinc-500 uppercase tracking-widest">
                                       {m.startDate?new Date(m.startDate+'T12:00:00').toLocaleDateString('pt-BR'):'...'} → {m.endDate||m.dueDate?new Date((m.endDate||m.dueDate)!+'T12:00:00').toLocaleDateString('pt-BR'):'...'}
                                     </span>
-                                    <span className={`px-1.5 py-0.5 rounded text-[8px] font-black uppercase ${m.status==='DONE'?'bg-green-500/10 text-green-500':m.status==='IN_PROGRESS'?'bg-blue-500/10 text-blue-400':'bg-red-500/10 text-red-500'}`}>
+                                    <span className={`px-1.5 py-0.5 rounded text-[8px] font-extrabold uppercase ${m.status==='DONE'?'bg-green-500/10 text-green-500':m.status==='IN_PROGRESS'?'bg-blue-500/10 text-blue-400':'bg-red-500/10 text-red-500'}`}>
                                       {m.status==='DONE'?'Concluído':m.status==='IN_PROGRESS'?'Em Andamento':'Aberto'}
                                     </span>
                                   </div>
@@ -1051,7 +1051,7 @@ const Projects: React.FC = () => {
               <div className="w-24 h-24 bg-zinc-900/50 rounded-[2.5rem] flex items-center justify-center mb-6 border border-zinc-800/50">
                 <svg className="w-10 h-10 text-zinc-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
               </div>
-              <h3 className="text-xl font-black text-zinc-700 uppercase tracking-tighter">Selecione um projeto</h3>
+              <h3 className="text-xl font-extrabold text-zinc-700 uppercase tracking-tighter">Selecione um projeto</h3>
             </div>
           )}
         </div>
@@ -1064,20 +1064,20 @@ const Projects: React.FC = () => {
           <div className="bg-zinc-900 w-full max-w-xl rounded-[2.5rem] border border-zinc-800 shadow-2xl relative z-10 overflow-hidden">
             <div className="h-2 w-full bg-gradient-to-r from-brand to-brand-light"></div>
             <div className="p-10 space-y-6">
-              <h3 className="text-2xl font-black uppercase tracking-tighter text-white">{isEditing?'Editar Projeto':'Novo Projeto'}</h3>
+              <h3 className="text-2xl font-extrabold uppercase tracking-tighter text-white">{isEditing?'Editar Projeto':'Novo Projeto'}</h3>
               <div className="space-y-4">
                 <div className="space-y-1">
-                  <label className="text-[9px] font-black uppercase tracking-widest text-zinc-500 ml-1">Título</label>
+                  <label className="text-[9px] font-extrabold uppercase tracking-widest text-zinc-500 ml-1">Título</label>
                   <input value={formData.title} onChange={e=>setFormData({...formData,title:e.target.value})} className="w-full bg-black border border-zinc-800 rounded-2xl px-6 py-4 text-xs font-bold outline-none ring-brand/30 focus:ring-2 text-white" />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[9px] font-black uppercase tracking-widest text-zinc-500 ml-1">Descrição</label>
+                  <label className="text-[9px] font-extrabold uppercase tracking-widest text-zinc-500 ml-1">Descrição</label>
                   <textarea value={formData.description} onChange={e=>setFormData({...formData,description:e.target.value})} rows={3} className="w-full bg-black border border-zinc-800 rounded-2xl px-6 py-4 text-xs font-medium outline-none ring-brand/30 focus:ring-2 resize-none text-white" />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="text-[9px] font-black uppercase tracking-widest text-zinc-500 ml-1">Categoria</label>
-                    <select value={formData.category} onChange={e=>setFormData({...formData,category:e.target.value as any})} className="w-full bg-black border border-zinc-800 rounded-2xl px-6 py-4 text-[10px] font-black uppercase outline-none text-white">
+                    <label className="text-[9px] font-extrabold uppercase tracking-widest text-zinc-500 ml-1">Categoria</label>
+                    <select value={formData.category} onChange={e=>setFormData({...formData,category:e.target.value as any})} className="w-full bg-black border border-zinc-800 rounded-2xl px-6 py-4 text-[10px] font-extrabold uppercase outline-none text-white">
                       <option value="LIFE">Vida</option>
                       <option value="FINANCES">Finanças</option>
                       <option value="EDUCATION">Educação</option>
@@ -1090,8 +1090,8 @@ const Projects: React.FC = () => {
                     </select>
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[9px] font-black uppercase tracking-widest text-zinc-500 ml-1">Status</label>
-                    <select value={formData.status} onChange={e=>setFormData({...formData,status:e.target.value as any})} className="w-full bg-black border border-zinc-800 rounded-2xl px-6 py-4 text-[10px] font-black uppercase outline-none text-white">
+                    <label className="text-[9px] font-extrabold uppercase tracking-widest text-zinc-500 ml-1">Status</label>
+                    <select value={formData.status} onChange={e=>setFormData({...formData,status:e.target.value as any})} className="w-full bg-black border border-zinc-800 rounded-2xl px-6 py-4 text-[10px] font-extrabold uppercase outline-none text-white">
                       <option value="PLANNING">Planejamento</option>
                       <option value="ACTIVE">Ativo</option>
                       <option value="ON_HOLD">Pausado</option>
@@ -1101,8 +1101,8 @@ const Projects: React.FC = () => {
                 </div>
               </div>
               <div className="flex gap-4 pt-4">
-                <button onClick={()=>setShowModal(false)} className="flex-1 py-4 bg-zinc-800 rounded-2xl text-[10px] font-black uppercase text-white">Cancelar</button>
-                <button onClick={handleSaveProject} className="flex-[2] py-4 bg-gradient-to-r from-brand to-brand-light rounded-2xl text-[10px] font-black uppercase text-white shadow-xl">{isEditing?'Salvar':'Criar'}</button>
+                <button onClick={()=>setShowModal(false)} className="flex-1 py-4 bg-zinc-800 rounded-2xl text-[10px] font-extrabold uppercase text-white">Cancelar</button>
+                <button onClick={handleSaveProject} className="flex-[2] py-4 bg-gradient-to-r from-brand to-brand-light rounded-2xl text-[10px] font-extrabold uppercase text-white shadow-xl">{isEditing?'Salvar':'Criar'}</button>
               </div>
             </div>
           </div>

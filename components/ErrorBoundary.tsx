@@ -26,15 +26,15 @@ class ErrorBoundary extends Component<Props, State> {
     public render() {
         if (this.state.hasError) {
             return (
-                <div className="min-h-screen bg-[#0b0e14] text-white flex flex-col items-center justify-center p-4">
+                <div className="min-h-screen bg-brand-bg text-white flex flex-col items-center justify-center p-4">
                     <h1 className="text-3xl font-bold mb-4 text-red-500">Ops, algo deu errado.</h1>
-                    <p className="mb-4 text-gray-400">Por favor, recarregue a página ou tente novamente mais tarde.</p>
+                    <p className="mb-4 text-c-text-secondary">Por favor, recarregue a página ou tente novamente mais tarde.</p>
                     <pre className="bg-black/30 p-4 rounded text-sm text-red-400 max-w-lg overflow-auto">
                         {this.state.error && this.state.error.toString()}
                     </pre>
                     <button
                         onClick={() => window.location.reload()}
-                        className="mt-6 px-6 py-2 bg-[#8743f2] rounded-lg hover:bg-[#8743f2]/80 transition-colors"
+                        className="mt-6 px-6 py-2 bg-[#6C3BFF] rounded-lg hover:bg-[#6C3BFF]/80 transition-colors"
                     >
                         Recarregar
                     </button>
