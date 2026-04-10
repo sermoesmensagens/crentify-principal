@@ -49,7 +49,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection, onPr
               width="40"
               height="40"
               className="relative rounded-xl object-contain drop-shadow-2xl"
-              onError={(e) => { e.currentTarget.src = '/favicon.png'; }}
+              onError={(e) => { e.currentTarget.src = '/logo.png'; }}
             />
           ) : (
             <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center">

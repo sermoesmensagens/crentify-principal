@@ -78,7 +78,7 @@ const AdminPanel: React.FC = () => {
   const [isWaitingForQuota, setIsWaitingForQuota] = useState(false);
 
   // Estados para upload de logo
-  const [currentLogoUrl, setCurrentLogoUrl] = useState<string>('/logo-v2.png');
+  const [currentLogoUrl, setCurrentLogoUrl] = useState<string>('/logo.png');
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   const logoInputRef = useRef<HTMLInputElement>(null);
 
@@ -1415,7 +1415,7 @@ const AdminPanel: React.FC = () => {
                   alt="Logo Atual"
                   className="w-32 h-32 object-contain rounded-2xl"
                   style={{ filter: 'saturate(1.5) brightness(1.15) hue-rotate(-10deg)' }}
-                  onError={(e) => { e.currentTarget.src = '/logo-v2.png'; }}
+                  onError={(e) => { e.currentTarget.src = '/logo.png'; }}
                 />
               </div>
 
