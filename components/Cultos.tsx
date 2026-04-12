@@ -562,6 +562,11 @@ const Cultos: React.FC = () => {
                   return acc;
                 }, {} as Record<string, ServiceDetail[]>);
 
+                // Se estivermos adicionando uma nova igreja rapidamente, garante que ela apareça na lista
+                if (isQuickAddingDetail && !groupedByChurch[isQuickAddingDetail]) {
+                  groupedByChurch[isQuickAddingDetail] = [];
+                }
+
                 return Object.keys(groupedByChurch).map(church => {
                    const items = groupedByChurch[church];
                    const isExpanded = expandedChurches.includes(church);
