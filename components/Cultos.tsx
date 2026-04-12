@@ -134,6 +134,7 @@ const Cultos: React.FC = () => {
     };
     setServiceDetails([...serviceDetails, detail]);
     resetDetailForm();
+    setIsQuickAddingDetail(null);
     setActiveTab('list');
   };
 
@@ -396,6 +397,7 @@ const Cultos: React.FC = () => {
                 if (tab.id === 'list') {
                   setSelectedEventId(null);
                   setExpandedChurches([]);
+                  setIsQuickAddingDetail(null);
                 }
               }}
               className={`px-5 py-2.5 rounded-xl text-[10px] font-extrabold uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === tab.id ? 'bg-brand text-white shadow-lg' : 'text-c-text-secondary hover:text-white'}`}
@@ -479,7 +481,7 @@ const Cultos: React.FC = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-brand/5 to-transparent pointer-events-none"></div>
 
               <button
-                onClick={() => { setSelectedEventId(null); setExpandedChurches([]); }}
+                onClick={() => { setSelectedEventId(null); setExpandedChurches([]); setIsQuickAddingDetail(null); }}
                 className="w-14 h-14 bg-brand-bg border border-white/5 rounded-2xl flex items-center justify-center text-c-text-secondary hover:text-brand hover:bg-brand/10 transition-all flex-shrink-0 z-10"
               >
                 <ChevronLeft size={24} />
@@ -512,7 +514,7 @@ const Cultos: React.FC = () => {
                </div>
 
                <button
-                 onClick={() => { setSelectedEventId(null); setExpandedChurches([]); }}
+                 onClick={() => { setSelectedEventId(null); setExpandedChurches([]); setIsQuickAddingDetail(null); }}
                  className="absolute top-6 right-6 w-10 h-10 bg-white/5 rounded-full flex items-center justify-center text-c-text-secondary hover:bg-rose-500 hover:text-white transition-all z-20 group"
                  title="Voltar para Lista"
                >
@@ -785,7 +787,7 @@ const Cultos: React.FC = () => {
                     </button>
                   </div>
                 ))}
-                {currentEventDetails.length === 0 && (
+                {currentEventDetails.length === 0 && !isQuickAddingDetail && (
                   <div className="py-10 text-center opacity-30 italic text-xs font-extrabold uppercase text-c-text-muted">Nenhuma programação cadastrada.</div>
                 )}
               </div>
