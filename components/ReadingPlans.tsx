@@ -296,19 +296,25 @@ const ReadingPlans: React.FC<ReadingPlansProps> = () => {
           {sortedWeeks.map(weekName => {
             const isExpanded = expandedWeeks.includes(weekName);
             const weekContent = groupedByWeek[weekName];
+            const isWeekComplete = weekContent.every(day => 
+              day.resources.every(res => (progress[selectedPlan.id]?.completedResources || []).includes(res.id))
+            ) && weekContent.length > 0;
+
             return (
               <div key={weekName} className={`border rounded-2xl overflow-hidden transition-all duration-300 ${isExpanded ? 'bg-brand-card border-brand/20' : 'bg-brand-bg border-white/5 hover:border-white/10'}`}>
-                <div onClick={() => toggleWeek(weekName)} className="p-6 flex items-center justify-between cursor-pointer">
+                <div onClick={() => toggleWeek(weekName)} className="p-6 flex items-center justify-between cursor-pointer group">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-brand/10 text-brand flex items-center justify-center">
-                      <Calendar size={20} />
+                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-extrabold shadow-lg transition-colors ${isWeekComplete ? 'bg-emerald-500/10 text-emerald-500' : 'bg-brand/10 text-brand'}`}>
+                      {isWeekComplete ? <CheckCircle2 size={24} /> : <Calendar size={20} />}
                     </div>
                     <div>
-                      <h3 className="text-lg font-extrabold text-white uppercase tracking-tighter">{weekName}</h3>
-                      <p className="text-[9px] text-c-text-secondary font-bold uppercase tracking-widest">{weekContent.length} Dias</p>
+                      <h3 className={`text-lg font-extrabold uppercase tracking-tighter transition-colors ${isExpanded ? 'text-white' : 'text-gray-300 group-hover:text-white'}`}>{weekName}</h3>
+                      <p className="text-[9px] text-c-text-secondary font-bold uppercase tracking-widest mt-1">
+                        {weekContent.length} dias • {weekContent.reduce((acc, d) => acc + (d.resources?.length || 0), 0)} tarefas
+                      </p>
                     </div>
                   </div>
-                  <ChevronDown size={24} className={`text-c-text-secondary transition-transform duration-300 ${isExpanded ? 'rotate-180 text-white' : ''}`} />
+                  <ChevronDown size={24} className={`transition-transform duration-300 ${isExpanded ? 'rotate-180 text-white' : 'text-c-text-secondary'}`} />
                 </div>
 
                 {isExpanded && (
