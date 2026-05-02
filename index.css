@@ -40,21 +40,21 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(108, 59, 255, 0.15);
+  background: rgba(138, 92, 255, 0.15);
   border-radius: 10px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(108, 59, 255, 0.3);
+  background: rgba(138, 92, 255, 0.3);
 }
 
 /* For Firefox */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(108, 59, 255, 0.15) transparent;
+  scrollbar-color: rgba(138, 92, 255, 0.15) transparent;
 }
 
 /* Ensure dropdown options have high contrast in dark mode */
 option {
-  background-color: #12182A;
+  background-color: #121B2B;
   color: white;
 }
