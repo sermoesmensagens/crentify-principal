@@ -4,8 +4,8 @@
     "description": "Sua Jornada com Propósito - Aplicativo completo para gerenciar sua vida espiritual, hábitos e mais",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#0b0e14",
-    "theme_color": "#8743f2",
+    "background_color": "#0B0F1A",
+    "theme_color": "#8A5CFF",
     "orientation": "portrait-primary",
     "icons": [
         {
