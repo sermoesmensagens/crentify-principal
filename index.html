@@ -16,16 +16,21 @@
     rel="stylesheet">
   <style>
     :root {
-      --brand-purple: #6C3BFF;
-      --brand-purple-glow: rgba(108, 59, 255, 0.4);
+      --brand-purple: #8A5CFF;
+      --brand-pink: #FF2D6F;
       --brand-accent: #FF7A18;
+      --brand-yellow: #FFBE0B;
+      --brand-purple-glow: rgba(138, 92, 255, 0.4);
       --brand-accent-glow: rgba(255, 122, 24, 0.3);
-      --brand-accent-hot: #FF3D5A;
-      --text-secondary: #B8C0D9;
-      --text-muted: #6B7280;
+      --brand-gradient: linear-gradient(to right, #8A5CFF, #FF2D6F, #FF7A18, #FFBE0B);
+      --text-secondary: #E6E8F0;
+      --text-muted: #9CA3AF;
       --surface-bg: #0B0F1A;
-      --surface-secondary: #12182A;
-      --surface-card: #1A2240;
+      --surface-secondary: #121B2B;
+      --surface-card: #121B2B;
+      --support-cyan: #00D4FF;
+      --support-green: #7CFF6B;
+      --support-red: #E63946;
     }
 
     body {
@@ -44,7 +49,7 @@
     }
 
     ::-webkit-scrollbar-thumb {
-      background: #6C3BFF;
+      background: #8A5CFF;
       border-radius: 10px;
     }
 
@@ -57,12 +62,12 @@
     }
 
     .neon-border {
-      border-color: rgba(108, 59, 255, 0.3);
-      box-shadow: inset 0 0 10px rgba(108, 59, 255, 0.1);
+      border-color: rgba(138, 92, 255, 0.3);
+      box-shadow: inset 0 0 10px rgba(138, 92, 255, 0.1);
     }
 
     .glass-card {
-      background: rgba(26, 34, 64, 0.7);
+      background: rgba(18, 27, 43, 0.7);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.05);
     }
@@ -72,11 +77,11 @@
     }
 
     .accent-gradient {
-      background: linear-gradient(135deg, #FF7A18, #FF3D5A);
+      background: var(--brand-gradient);
     }
 
     .accent-gradient-hover:hover {
-      box-shadow: 0 0 30px rgba(255, 122, 24, 0.4), 0 0 60px rgba(255, 61, 90, 0.2);
+      box-shadow: 0 0 30px rgba(138, 92, 255, 0.4), 0 0 60px rgba(255, 45, 111, 0.2);
     }
   </style>
   <script>
@@ -88,21 +93,24 @@
           },
           colors: {
             brand: {
-              DEFAULT: '#6C3BFF',
-              light: '#8A5CFF',
-              dark: '#4B2BBF',
+              DEFAULT: '#8A5CFF',
+              light: '#FF2D6F',
+              dark: '#FF7A18',
               bg: '#0B0F1A',
-              surface: '#12182A',
-              card: '#1A2240',
-              accent: '#FF7A18',
-              'accent-warm': '#FFB347',
-              'accent-hot': '#FF3D5A',
-              primary: '#6C3BFF',
+              surface: '#121B2B',
+              card: '#121B2B',
+              accent: '#FFBE0B',
+              'accent-warm': '#FF7A18',
+              'accent-hot': '#FF2D6F',
+              primary: '#8A5CFF',
+              cyan: '#00D4FF',
+              green: '#7CFF6B',
+              red: '#E63946',
             },
             'c-text': {
               DEFAULT: '#FFFFFF',
-              secondary: '#B8C0D9',
-              muted: '#6B7280',
+              secondary: '#E6E8F0',
+              muted: '#9CA3AF',
             }
           }
         }
