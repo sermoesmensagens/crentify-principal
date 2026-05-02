@@ -1,5 +1,5 @@
 // Service Worker for CRENTIFY PWA
-const CACHE_NAME = 'crentify-v19';
+const CACHE_NAME = 'crentify-v20';
 const urlsToCache = [
     '/',
     '/index.html',
